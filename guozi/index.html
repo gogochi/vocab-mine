@@ -1,0 +1,3175 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#17120e">
+<title>國字挖礦</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="國字挖礦">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="apple-touch-icon.png">
+<style>
+:root {
+  --bg: #17120e;
+  --rock: #2c241d;
+  --rock-2: #3a3027;
+  --rock-line: #0d0a07;
+  --paper: #f8f3e8;
+  --paper-2: #ebe1cd;
+  --paper-line: #d6c8ad;
+  --ink: #221c16;
+  --ink-2: #54493d;
+  --ink-3: #85786a;
+  --emerald: #2f9e55;
+  --emerald-lo: #1d6b38;
+  --red: #c8392b;
+  --red-soft: #fbe6e2;
+  --gold: #f2c230;
+  --gold-ink: #6b4d00;
+  --diamond: #5fe0d6;
+  --hl: #0f7a57;
+  --focus: #ffd447;
+  --seg-unseen: #8b5a2b;
+  --seg-stone: #8b8b8b;
+  --seg-iron: #e2b48c;
+  --seg-gold: #f2c230;
+  --seg-diamond: #4fd6cc;
+  --font-ui: system-ui, -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", "Segoe UI", sans-serif;
+  --font-en: "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-type: ui-monospace, "SF Mono", Menlo, Consolas, "Roboto Mono", monospace;
+  --font-kk: "Lucida Sans Unicode", "Segoe UI", "Arial Unicode MS", "Noto Sans", sans-serif;
+  --bevel: inset -3px -4px 0 rgba(0, 0, 0, 0.28), inset 3px 3px 0 rgba(255, 255, 255, 0.2);
+  --lift: 0 6px 0 var(--rock-line);
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--paper);
+  font: 16px/1.6 var(--font-ui);
+  background-color: var(--bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' shape-rendering='crispEdges'%3E%3Crect width='48' height='48' fill='%2317120e'/%3E%3Crect x='6' y='8' width='6' height='6' fill='%23201912'/%3E%3Crect x='30' y='3' width='6' height='6' fill='%231c1510'/%3E%3Crect x='18' y='27' width='6' height='6' fill='%23231b14'/%3E%3Crect x='39' y='33' width='6' height='6' fill='%231b140f'/%3E%3Crect x='3' y='39' width='6' height='6' fill='%23211912'/%3E%3C/svg%3E");
+}
+button, input, select { font: inherit; }
+h1, h2, h3 { line-height: 1.25; margin: 0 0 8px; }
+p { margin: 0 0 10px; }
+[lang="en"] { font-family: var(--font-en); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.muted { color: var(--ink-3); font-size: 14px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+.screen { max-width: 860px; margin: 0 auto; padding: 16px 16px 56px; }
+
+/* ---------- pixel bits ---------- */
+.px { width: 24px; height: 24px; display: inline-block; vertical-align: middle; flex: none; }
+.card {
+  background: var(--paper);
+  color: var(--ink);
+  border: 3px solid var(--rock-line);
+  box-shadow: inset -4px -4px 0 var(--paper-2), inset 4px 4px 0 #fffdf7, var(--lift);
+  padding: 20px;
+  margin: 18px 0 24px;
+}
+.chip {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 2px 10px;
+  border: 2px solid var(--rock-line);
+  background: var(--rock-2);
+  color: #fff;
+  margin-bottom: 12px;
+}
+.chip-new { background: var(--gold); color: var(--gold-ink); }
+.chip-cloze { background: var(--hl); }
+.chip-listen { background: #2f6fb0; }
+.chip-forms { background: #7a4bb0; }
+
+/* ---------- buttons ---------- */
+.btn {
+  appearance: none;
+  border: 3px solid var(--rock-line);
+  border-radius: 0;
+  min-height: 48px;
+  padding: 10px 18px;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.2;
+  color: #fff;
+  background: var(--rock-2);
+  box-shadow: var(--bevel);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition: transform 0.06s, filter 0.12s;
+}
+.btn:hover { filter: brightness(1.1); }
+.btn:active { transform: translateY(2px); box-shadow: inset -3px -1px 0 rgba(0, 0, 0, 0.28), inset 3px 3px 0 rgba(255, 255, 255, 0.2); }
+.btn:focus-visible, .icon-btn:focus-visible, .block:focus-visible, .menu-btn:focus-visible, .toggle:focus-visible,
+.tab:focus-visible, .word-row-btn:focus-visible, .word-chip:focus-visible, .speak:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+.btn-primary { background: var(--emerald); }
+.btn-gold { background: var(--gold); color: var(--gold-ink); text-shadow: none; }
+.btn-red { background: var(--red); }
+.btn-dark { background: var(--rock); }
+.btn-ghost { background: transparent; color: var(--ink-2); border-color: var(--paper-line); box-shadow: none; text-shadow: none; }
+.btn-big { font-size: 22px; min-height: 62px; padding: 14px 30px; }
+.btn-sm { min-height: 40px; font-size: 15px; padding: 6px 14px; }
+.btn-wide { width: 100%; margin-top: 12px; }
+.icon-btn {
+  appearance: none; border: 3px solid var(--rock-line); background: var(--rock-2); color: #fff;
+  width: 44px; height: 44px; font-size: 20px; cursor: pointer; box-shadow: var(--bevel); flex: none;
+}
+.speak {
+  appearance: none; border: 2px solid var(--paper-line); background: #fff; cursor: pointer;
+  width: 44px; height: 44px; font-size: 20px; line-height: 1; vertical-align: middle;
+}
+.speak:hover { background: #fff8e1; }
+.speak-sm { width: 34px; height: 34px; font-size: 15px; }
+
+/* ---------- home ---------- */
+.home-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-top: 8px; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand h1 { font-size: 34px; letter-spacing: 0.06em; margin: 0; text-shadow: 3px 3px 0 var(--rock-line); }
+.brand p { margin: 0; color: #c9b99f; font-size: 14px; letter-spacing: 0.04em; }
+.brand-ore { width: 52px; height: 52px; filter: drop-shadow(3px 3px 0 var(--rock-line)); }
+.countdown { background: var(--rock); border: 3px solid var(--rock-line); padding: 8px 14px; color: #f3e6c8; box-shadow: var(--bevel); }
+.countdown b { color: var(--gold); font-size: 26px; padding: 0 2px; }
+
+.intro ol { margin: 0 0 12px; padding-left: 22px; }
+.intro li { margin-bottom: 6px; }
+.intro .px { width: 20px; height: 20px; margin: 0 2px; }
+.warn { background: var(--red-soft); }
+
+.mission { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px; }
+.mission h2 { font-size: 26px; margin: 0 0 4px; }
+.mission-meta { color: var(--ink-2); margin: 0; }
+.mission-ores { display: flex; }
+.mission-ores .px { width: 44px; height: 44px; margin-right: -6px; filter: drop-shadow(2px 3px 0 rgba(0, 0, 0, 0.35)); }
+.mission.done { grid-template-columns: auto 1fr; }
+.mission-actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; }
+
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 0 24px; }
+.stat { display: flex; align-items: center; gap: 10px; background: var(--rock); border: 3px solid var(--rock-line); padding: 10px 12px; box-shadow: var(--bevel); }
+.stat .px { width: 34px; height: 34px; }
+.stat b { display: block; font-size: 26px; line-height: 1; color: #fff; }
+.stat span { font-size: 13px; color: #cbbca3; }
+.stat-emoji { font-size: 28px; width: 34px; text-align: center; }
+
+.mine { background: #120e0b; border: 3px solid var(--rock-line); padding: 16px; box-shadow: inset 0 0 0 3px #241c15; margin-bottom: 24px; }
+.section-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+.section-head h2 { font-size: 20px; margin: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; color: #cbbca3; }
+.legend .px { width: 16px; height: 16px; margin-right: 4px; }
+.mine-unit { margin-top: 12px; }
+.mine-label { display: flex; gap: 10px; align-items: baseline; margin-bottom: 6px; color: #cbbca3; font-size: 14px; }
+.mine-label b { color: #fff; font-size: 16px; }
+.mine-grid { display: flex; flex-wrap: wrap; gap: 3px; }
+.block { appearance: none; border: 0; padding: 0; background: none; width: 30px; height: 30px; cursor: pointer; transition: transform 0.08s; }
+.block .px { width: 100%; height: 100%; }
+.block:hover { transform: translateY(-3px); }
+
+.menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.menu-btn {
+  appearance: none; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 12px;
+  align-items: center; text-align: left; padding: 14px; cursor: pointer; color: #fff;
+  background: var(--rock); border: 3px solid var(--rock-line); box-shadow: var(--bevel); transition: transform 0.06s, filter 0.12s;
+}
+.menu-btn:hover { filter: brightness(1.15); }
+.menu-btn:active { transform: translateY(2px); }
+.menu-btn .px { grid-row: span 2; width: 38px; height: 38px; }
+.menu-btn b { font-size: 18px; }
+.menu-btn span { font-size: 13px; color: #cbbca3; }
+.foot { margin-top: 28px; text-align: center; color: #9a8b76; font-size: 13px; }
+
+/* ---------- back bar & lists ---------- */
+.back-bar { display: flex; align-items: center; gap: 14px; padding-top: 6px; }
+.back-bar h1 { margin: 0; font-size: 24px; text-shadow: 2px 2px 0 var(--rock-line); }
+.word-list, .mistakes { list-style: none; margin: 12px 0 0; padding: 0; }
+.mistakes { counter-reset: m; }
+.word-row-btn {
+  appearance: none; width: 100%; display: flex; align-items: center; gap: 10px; text-align: left;
+  background: none; border: 0; border-bottom: 2px dashed var(--paper-line); padding: 10px 4px; cursor: pointer; color: var(--ink);
+}
+.word-row-btn:hover { background: #fff8e8; }
+.word-row-btn b { font-size: 18px; min-width: 7.5em; }
+.wl-meaning { color: var(--ink-2); flex: 1; font-size: 15px; }
+.wl-ng { color: var(--red); font-size: 13px; font-weight: 700; white-space: nowrap; }
+
+.tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+.tab, .toggle {
+  appearance: none; border: 3px solid var(--rock-line); background: var(--paper-2); color: var(--ink);
+  padding: 8px 16px; font-weight: 700; cursor: pointer; min-height: 44px;
+}
+.tab[aria-selected="true"], .toggle[aria-pressed="true"] { background: var(--emerald); color: #fff; box-shadow: var(--bevel); }
+.toggle-group { border: 0; padding: 0; margin: 0 0 18px; }
+.toggle-group legend { font-weight: 700; margin-bottom: 8px; }
+.toggles { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.tracks { margin-top: 18px; }
+.tracks h3 { font-size: 16px; }
+.track { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 8px; }
+.track-name { font-family: var(--font-type); font-size: 14px; color: var(--ink-2); min-width: 7.5em; }
+.track audio { height: 36px; max-width: 100%; }
+
+/* ---------- session ---------- */
+.session-bar { display: flex; align-items: center; gap: 12px; }
+.session-title { font-weight: 700; color: #f3e6c8; white-space: nowrap; }
+.progress { flex: 1; height: 18px; background: #0f0c09; border: 3px solid var(--rock-line); box-shadow: inset 0 0 0 2px #2a2119; }
+.progress span { display: block; height: 100%; background: repeating-linear-gradient(90deg, #52c97a 0 12px, var(--emerald) 12px 15px); transition: width 0.25s; }
+.count { font-family: var(--font-type); color: #f3e6c8; white-space: nowrap; }
+.combo-badge {
+  display: inline-flex; align-items: center; gap: 2px; padding: 2px 8px; white-space: nowrap;
+  background: #3a1d0c; border: 3px solid var(--rock-line); color: #ffcf6b; animation: pop 0.3s ease-out;
+}
+.combo-badge b { font-family: var(--font-type); font-size: 18px; }
+.best-combo { font-weight: 700; color: #b5651d; }
+.boss-bar { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+.boss-icon { width: 34px; height: 34px; }
+.hp { flex: 1; height: 16px; background: #2a0d08; border: 3px solid var(--rock-line); }
+.hp span { display: block; height: 100%; background: repeating-linear-gradient(90deg, #e2553f 0 10px, #b8432a 10px 12px); transition: width 0.3s; }
+.hp-num { font-weight: 700; color: #ffb8a8; white-space: nowrap; }
+
+.word-row { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.word { font-family: var(--font-en); font-size: 44px; font-weight: 800; margin: 0; letter-spacing: 0.01em; color: var(--ink); }
+.kk { font-family: var(--font-kk); color: var(--ink-2); font-size: 18px; }
+.meaning { font-size: 20px; font-weight: 700; margin: 6px 0 12px; }
+.notes { list-style: none; padding: 12px 0; margin: 0 0 12px; border-top: 2px dashed var(--paper-line); border-bottom: 2px dashed var(--paper-line); }
+.notes li { display: flex; gap: 10px; margin-bottom: 6px; font-size: 15px; }
+.note-label { flex: none; height: fit-content; min-width: 1.8em; text-align: center; background: #3b3b3b; color: #fff; font-size: 13px; font-weight: 700; padding: 1px 5px; }
+.note-items { display: flex; flex-direction: column; }
+.note-item.alt { color: var(--ink-3); padding-left: 1.6em; }
+.examples .example { margin-bottom: 12px; }
+.example .en { font-size: 18px; margin: 0; }
+.example .zh { color: var(--ink-2); margin: 2px 0 0; font-size: 15px; }
+.hl { color: var(--hl); font-weight: 800; }
+
+.quiz-card, .fb-card, .learn-card { margin-top: 18px; }
+.q-hint { color: var(--ink-3); font-size: 14px; margin-bottom: 8px; }
+.q-meaning { font-size: 28px; font-weight: 800; margin: 0 0 4px; }
+.q-kk { margin-bottom: 10px; }
+.letters { display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0 14px; }
+.letter {
+  width: 30px; height: 38px; display: inline-flex; align-items: center; justify-content: center;
+  font: 700 22px var(--font-type); background: #fff; border: 2px solid var(--paper-line); border-bottom: 4px solid var(--ink-2);
+}
+.letter.given { background: #e3f5ea; color: var(--emerald-lo); border-bottom-color: var(--emerald); }
+.letter.sym, .letter.more { background: none; border-color: transparent; }
+.letter.typed { color: var(--ink); background: #fffbea; }
+.letter.given.typed { color: var(--emerald-lo); background: #e3f5ea; }
+.letters.too-long .letter { border-bottom-color: var(--red); }
+input.answer {
+  width: 100%; font: 600 28px var(--font-type); padding: 10px 14px; color: var(--ink);
+  background: #fff; border: 3px solid var(--rock-line); border-radius: 0; box-shadow: inset 3px 3px 0 rgba(0, 0, 0, 0.08);
+}
+input.answer:focus { outline: 3px solid var(--focus); outline-offset: 2px; }
+input.answer::placeholder { color: #b5a891; }
+.quiz-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.listen-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 4px 0 10px; }
+.btn-speak { background: #2f6fb0; font-size: 20px; }
+
+.cloze-sentence { font-family: var(--font-en); font-size: 23px; line-height: 2.3; margin: 0 0 6px; }
+.blank { display: inline-flex; align-items: baseline; white-space: nowrap; }
+.blank-first { font: 800 23px var(--font-type); color: var(--hl); }
+input.answer.blank-input {
+  width: auto; min-width: 3ch; font-size: 21px; padding: 0 2px; border: 0; border-bottom: 3px solid var(--ink);
+  background: #fff6db; box-shadow: none; color: var(--ink);
+}
+.cloze-zh { font-size: 17px; color: var(--ink-2); }
+
+.forms-base { font-size: 20px; }
+.forms-base b { font-size: 32px; margin-right: 12px; font-family: var(--font-en); }
+.forms-meaning { color: var(--ink-2); }
+.forms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.forms-grid label span { display: block; font-weight: 700; margin-bottom: 4px; }
+
+.fb-head { display: flex; gap: 14px; align-items: flex-start; background: var(--red-soft); border-left: 8px solid var(--red); padding: 12px 14px; margin-bottom: 12px; }
+.fb-icon { font-size: 30px; line-height: 1; color: var(--red); font-weight: 900; }
+.fb-answer { font-size: 22px; margin-top: 2px; }
+.fb-answer b { color: var(--emerald-lo); font-size: 26px; }
+.fb-yours s { color: var(--red); font-family: var(--font-type); }
+.fb-info { padding: 6px 0 12px; border-bottom: 2px dashed var(--paper-line); margin-bottom: 14px; }
+.fb-info .word { font-size: 30px; }
+.retype-fields { display: grid; gap: 10px; margin-bottom: 12px; }
+input.answer.nope { border-color: var(--red); animation: shake 0.3s; }
+@keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+/* ---------- result, boss ---------- */
+.result { text-align: center; }
+.result h1 { font-size: 32px; }
+.result-score { font-size: 20px; }
+.result-score b { font-size: 40px; color: var(--emerald-lo); }
+.result-block { margin: 16px 0; }
+.result-block h2 { font-size: 17px; color: var(--ink-2); }
+.ups { list-style: none; padding: 0; display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; font-size: 18px; font-weight: 700; }
+.ups .px { width: 36px; height: 36px; margin-right: 6px; }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.word-chip { appearance: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 2px solid var(--paper-line); background: #fff; font-size: 17px; cursor: pointer; }
+.word-chip .px { width: 20px; height: 20px; }
+.result-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+.result-boss, .boss-big { width: 72px; height: 72px; }
+.boss-intro { text-align: center; }
+.boss-intro p { text-align: left; }
+.boss-history ul, .boss-history { list-style: none; padding: 0; text-align: left; }
+.all-right { font-size: 18px; font-weight: 700; color: var(--emerald-lo); }
+
+/* ---------- toast & modal ---------- */
+/* Hidden = faded out and visibility:hidden, not just moved up: from top:66px a percentage
+ * shift left the lower part of the toast stuck at the top edge of the screen. */
+#toast {
+  position: fixed; left: 50%; top: 66px; z-index: 60; pointer-events: none;
+  transform: translate(-50%, -24px); opacity: 0; visibility: hidden;
+  transition: transform 0.28s cubic-bezier(0.2, 1.4, 0.4, 1), opacity 0.2s ease, visibility 0s linear 0.28s;
+}
+#toast.show {
+  transform: translate(-50%, 0); opacity: 1; visibility: visible;
+  transition: transform 0.28s cubic-bezier(0.2, 1.4, 0.4, 1), opacity 0.2s ease, visibility 0s;
+}
+.toast { display: flex; align-items: center; gap: 12px; background: var(--paper); color: var(--ink); border: 3px solid var(--rock-line); box-shadow: 0 5px 0 var(--rock-line); padding: 8px 16px 8px 10px; min-width: 200px; }
+.toast.good { border-color: var(--emerald-lo); }
+.toast.bad { background: var(--red-soft); }
+.toast-body { display: flex; align-items: center; gap: 12px; }
+.toast-text { display: flex; flex-direction: column; line-height: 1.3; }
+.toast-text b { font-size: 20px; }
+.toast-ore { width: 40px; height: 40px; animation: pop 0.45s ease-out; }
+.toast-combo { font-weight: 800; color: #c25a00; }
+.is-combo .toast-text { animation: pop 0.4s ease-out; }
+.is-diamond .toast-ore { animation: pop 0.45s ease-out, shine 0.9s 0.45s ease-in-out 2; }
+@keyframes pop { 0% { transform: scale(0.3) rotate(-15deg); } 60% { transform: scale(1.25) rotate(5deg); } 100% { transform: scale(1) rotate(0); } }
+@keyframes shine { 50% { filter: drop-shadow(0 0 8px var(--diamond)) brightness(1.3); } }
+
+.overlay { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 50; background: rgba(8, 6, 4, 0.72); display: flex; align-items: flex-start; justify-content: center; padding: 24px 16px; overflow-y: auto; }
+.modal { position: relative; width: min(720px, 100%); margin: 0; }
+.modal-close { position: absolute; top: 10px; right: 10px; }
+.detail-head { display: flex; align-items: center; gap: 14px; padding-right: 50px; }
+.detail-ore { width: 48px; height: 48px; }
+.detail-status { color: var(--ink-3); font-size: 14px; }
+
+/* ---------- version & update ---------- */
+.update-banner {
+  position: sticky; top: 0; z-index: 40; display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 10px; padding: 8px 16px; background: #2b2206; color: #fff1bf; border-bottom: 3px solid var(--rock-line);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.35);
+}
+.update-banner b { color: var(--gold); }
+.update-ore { width: 24px; height: 24px; }
+.whats-new { background: #fff8dc; }
+.whats-new h2 { font-size: 20px; }
+.whats-new ul { margin: 0 0 8px; padding-left: 22px; }
+.foot p { margin: 0 0 4px; }
+.foot .version { font-family: var(--font-type); font-size: 12px; color: #7d6f5d; }
+.changelog { list-style: none; padding: 0; margin: 0; font-size: 14px; }
+.changelog li { display: grid; grid-template-columns: 7.5em 1fr; gap: 8px; padding: 6px 0; border-bottom: 1px dashed var(--paper-line); }
+.changelog b { font-family: var(--font-type); font-weight: 600; color: var(--ink-2); }
+
+/* ---------- stepping back / resuming ---------- */
+.learn-nav, .review-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.learn-nav .btn-primary, .review-nav .btn-primary { flex: 1 1 220px; }
+.quiz-actions .btn-nav { margin-right: auto; }
+.chip-review { background: #5b6b7a; }
+.review-badge { font-weight: 800; font-size: 18px; margin: 0 0 8px; }
+.review-badge.good { color: var(--emerald-lo); }
+.review-badge.bad { color: var(--red); }
+.review-answer { font-size: 20px; }
+.review-answer b { color: var(--emerald-lo); font-size: 24px; }
+.mission.resume { grid-template-columns: auto 1fr auto; }
+.mission-progress { margin-top: 8px; max-width: 360px; height: 16px; }
+.mission-cta { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+
+/* ---------- lock ---------- */
+.lock { max-width: 440px; margin: 10vh auto 0; text-align: center; }
+.lock h1 { font-size: 30px; letter-spacing: 0.06em; margin-top: 8px; }
+.lock-ore { width: 72px; height: 72px; }
+.lock-hint { color: var(--ink-2); }
+.lock input.answer { text-align: center; margin: 6px 0 4px; }
+.lock-msg { color: var(--red); font-weight: 700; margin: 8px 0 0; }
+
+/* ---------- parent ---------- */
+.unit-bars { display: grid; gap: 10px; margin: 12px 0; }
+.unit-bar { display: grid; grid-template-columns: 3em 1fr 4em; align-items: center; gap: 10px; }
+.bar { display: flex; height: 28px; border: 3px solid var(--rock-line); background: var(--paper-2); }
+.seg { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5); min-width: 0; overflow: hidden; }
+.seg-unseen { background: var(--seg-unseen); }
+.seg-stone { background: var(--seg-stone); }
+.seg-iron { background: var(--seg-iron); color: var(--ink); text-shadow: none; }
+.seg-gold { background: var(--seg-gold); color: var(--ink); text-shadow: none; }
+.seg-diamond { background: var(--seg-diamond); color: var(--ink); text-shadow: none; }
+.bar-total { font-family: var(--font-type); font-size: 14px; }
+.table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.table th, .table td { border-bottom: 2px solid var(--paper-line); padding: 6px 8px; text-align: right; }
+.table th:first-child, .table td:first-child { text-align: left; }
+.field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; }
+.field-label { font-weight: 700; }
+.field-hint { font-size: 13px; color: var(--ink-3); }
+.field input[type="date"], .field select { max-width: 360px; min-height: 44px; padding: 6px 10px; border: 3px solid var(--rock-line); background: #fff; color: var(--ink); }
+.checks { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.check { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; }
+.check input { width: 20px; height: 20px; }
+.rate { display: flex; align-items: center; gap: 12px; }
+.confirm { margin-top: 14px; padding: 12px; background: #fff3cd; border: 3px solid var(--gold); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.confirm p { margin: 0; flex-basis: 100%; }
+
+/* ---------- paper test ---------- */
+.paper-tools p { flex: 1; color: #e7dcc6; margin: 0; }
+.paper { background: #fff; color: #000; padding: 28px 32px; margin-top: 16px; border: 3px solid var(--rock-line); }
+.sheet h1 { font-size: 22px; text-align: center; }
+.sheet h2 { font-size: 16px; margin-top: 18px; }
+.sheet-meta { text-align: center; font-size: 15px; }
+.sheet-list { padding-left: 24px; margin: 6px 0; }
+.sheet-list li { margin-bottom: 10px; break-inside: avoid; }
+.sheet-list li > span { display: inline-block; min-width: 50%; }
+.sheet-list .ans { font-family: var(--font-en); letter-spacing: 0.05em; }
+.sheet-list.cloze p { margin: 0; font-family: var(--font-en); }
+.sheet-list.cloze .zh { font-family: var(--font-ui); color: #444; font-size: 14px; }
+.answer-key { margin-top: 36px; padding-top: 18px; border-top: 3px dashed #999; }
+.key-list { columns: 2; padding-left: 24px; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 640px) {
+  .brand h1 { font-size: 28px; }
+  .mission, .mission.resume { grid-template-columns: 1fr; text-align: center; }
+  .mission-progress { margin-left: auto; margin-right: auto; }
+  .mission-ores { justify-content: center; }
+  .stats { gap: 8px; }
+  .stat { flex-direction: column; text-align: center; gap: 4px; padding: 8px 4px; }
+  .menu { grid-template-columns: repeat(2, 1fr); }
+  .word { font-size: 36px; }
+  .q-meaning { font-size: 24px; }
+  .cloze-sentence { font-size: 20px; }
+  .forms-grid { grid-template-columns: 1fr; }
+  .wl-meaning { display: none; }
+  .block { width: 26px; height: 26px; }
+  .paper { padding: 18px 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+@media print {
+  body { background: #fff; color: #000; }
+  body > svg, #toast, #modal-root, .no-print { display: none !important; }
+  .screen { max-width: none; padding: 0; }
+  .paper { border: 0; padding: 0; margin: 0; }
+  .answer-key { break-before: page; page-break-before: always; border-top: 0; margin-top: 0; }
+}
+
+/* ---------- 國字: phrases, 田字格 pad, model characters, 注音 keypad ---------- */
+:root {
+  --font-kai: "BiauKai", "DFKai-SB", "標楷體", "TW-Kai", "Kaiti TC", "STKaiti", "KaiTi", var(--font-ui);
+  --grid-line: #e2a69c;
+  --grid: repeating-linear-gradient(to right, var(--grid-line) 0 8px, transparent 8px 14px) center / 100% 2px no-repeat,
+    repeating-linear-gradient(to bottom, var(--grid-line) 0 8px, transparent 8px 14px) center / 2px 100% no-repeat, #fff;
+}
+.kai { font-family: var(--font-kai); }
+.chip-write { background: var(--hl); }
+.chip-zhuyin { background: #2f6fb0; }
+.chip-review { background: var(--rock-2); }
+.phrase { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 2px; font-size: 34px; line-height: 1.15; margin: 8px 0 14px; color: var(--ink); }
+.phrase-big { font-size: 46px; }
+.ph-ch { display: inline-block; }
+.proper { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 7px; }
+.ph-target { display: inline-flex; flex-direction: column; align-items: center; }
+.ph-zy { font-family: var(--font-ui); font-size: 16px; font-weight: 800; color: var(--hl); letter-spacing: 1px; min-height: 1.3em; white-space: nowrap; }
+.phrase-big .ph-zy { font-size: 20px; }
+.ph-zy-empty { color: var(--ink-3); }
+.ph-char { background: #fff3c4; border-bottom: 4px solid var(--gold); padding: 0 3px; }
+.ph-box { display: inline-block; width: 1.05em; height: 1.05em; border: 3px dashed var(--hl); background: #f2fbf6; }
+
+.pad-wrap { display: flex; justify-content: center; margin: 6px 0 8px; }
+.pad { position: relative; border: 3px solid var(--rock-line); background: var(--grid); box-shadow: var(--lift); }
+.pad-canvas { position: absolute; top: 0; left: 0; touch-action: none; -webkit-user-select: none; user-select: none; cursor: crosshair; }
+.pad-guide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; line-height: 1; color: rgba(29, 23, 18, 0.17); pointer-events: none; }
+.pad.nope, .zy-display.nope { animation: shake 0.3s; border-color: var(--red); }
+.pad-tools { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
+.pad-status { text-align: center; color: var(--ink-2); min-height: 1.5em; margin: 6px 0 0; font-weight: 700; }
+
+.learn-model { display: flex; align-items: center; gap: 18px; margin: 4px 0 14px; }
+.model-char { width: 124px; height: 124px; display: flex; align-items: center; justify-content: center; font-family: var(--font-kai); font-size: 100px; line-height: 1; color: var(--ink); border: 3px solid var(--rock-line); background: var(--grid); }
+.learn-zy { font-size: 30px; font-weight: 800; color: var(--hl); letter-spacing: 2px; }
+.note { margin-top: 4px; font-size: 14px; }
+
+.selfcheck h2 { font-size: 21px; }
+.compare { display: flex; justify-content: center; flex-wrap: wrap; gap: 18px; margin: 10px 0 6px; }
+.compare figure { margin: 0; text-align: center; }
+.compare-img, .compare .model-char { width: 168px; height: 168px; }
+.compare-img { display: block; border: 3px solid var(--rock-line); background: var(--grid); }
+.compare .model-char { font-size: 136px; }
+.compare figcaption { margin-top: 6px; font-weight: 800; color: var(--ink-2); }
+
+.zy-pad { margin-top: 6px; }
+.zy-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.zy-display { flex: 1; min-height: 60px; display: flex; align-items: center; justify-content: center; border: 3px solid var(--rock-line); background: #fff; font-size: 34px; font-weight: 800; color: var(--hl); letter-spacing: 3px; }
+.zy-placeholder { font-size: 16px; font-weight: 400; letter-spacing: 0; color: var(--ink-3); }
+.zy-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 10px; }
+.zy-label { flex: none; width: 2.6em; padding-top: 13px; font-size: 13px; font-weight: 800; color: var(--ink-3); }
+.zy-keys { display: flex; flex-wrap: wrap; gap: 7px; }
+.zy-key {
+  appearance: none; min-width: 48px; height: 48px; padding: 0 6px; font: 700 23px var(--font-ui); color: var(--ink);
+  border: 2px solid var(--paper-line); border-radius: 0; background: #fff; box-shadow: 0 3px 0 var(--paper-line); cursor: pointer;
+}
+.zy-key:active { transform: translateY(2px); box-shadow: none; }
+.zy-key[aria-pressed="true"] { background: var(--emerald); color: #fff; border-color: var(--emerald-lo); box-shadow: 0 3px 0 var(--emerald-lo); }
+.zy-key:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.zy-tone { min-width: 60px; font-size: 20px; }
+
+.wl-no { min-width: 2.2em; text-align: right; font-size: 13px; color: var(--ink-3); }
+.word-row-btn b.kai { font-size: 22px; min-width: 5em; }
+.confirm-list { padding-left: 18px; }
+.confirm-list li { margin-bottom: 10px; }
+.paper-note { color: #e7dcc6; margin: 6px 0 0; }
+.paper-tools .toggle-group { margin: 0; }
+.paper-grid { columns: 2; column-gap: 36px; padding-left: 34px; }
+.paper-grid li { break-inside: avoid; margin-bottom: 12px; font-size: 18px; }
+.paper-prompt { font-weight: 700; }
+.paper-line { margin-left: 6px; }
+.key-list.kai { columns: 4; font-size: 18px; }
+
+@media (max-width: 640px) {
+  .phrase { font-size: 30px; }
+  .phrase-big { font-size: 38px; }
+  .model-char { width: 104px; height: 104px; font-size: 84px; }
+  .compare-img, .compare .model-char { width: 136px; height: 136px; }
+  .compare .model-char { font-size: 110px; }
+  .zy-key { min-width: 42px; height: 44px; font-size: 21px; }
+  .zy-label { width: 100%; padding-top: 0; }
+  .zy-row { flex-wrap: wrap; gap: 4px; }
+  .paper-grid { columns: 1; }
+  .key-list.kai { columns: 3; }
+}
+@media print {
+  .paper-grid li { font-size: 15px; margin-bottom: 9px; }
+}
+
+</style>
+</head>
+<body>
+<div id="app"><noscript><p style="padding:24px">這個練習需要開啟 JavaScript。</p></noscript></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="modal-root"></div>
+<script>
+window.APP_BUILD = {"version":"2026-10-07 16:31"};
+window.VOCAB_LOCKED = {"salt":"LmvYw1+ZtRDhTyUsJ/8Czw==","iv":"ydD14Wob7orpOLtc","iter":250000,"data":"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"};
+</script>
+<script>
+/* 國字挖礦 core: pure scheduling, question and scoring logic (no DOM).
+ * Loaded as a plain <script> in the page (exposes window.Core) and required by node tests. */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.Core = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, () => {
+  'use strict';
+
+  // ---------- constants ----------
+  const MAX_LEVEL = 3;
+  // Days until the next review after reaching each level (index = level just reached).
+  const INTERVAL_DAYS = [1, 1, 2, 4];
+  const LEVEL_NAMES = ['石頭', '鐵礦', '金礦', '鑽石'];
+  const MISSION_MAX_REVIEWS = 30;
+  const MISSION_MAX_TOTAL = 40;       // handwriting is slower than typing: a lighter daily load
+  const MIN_REVIEWS_WITH_NEW = 20;    // new questions are reserved first; reviews still get at least this many
+  const FINAL_PHASE_DAYS = 3;         // last days before the exam: drill every non-diamond question
+  const REVIEW_ONLY_DAYS = 3;         // auto plan finishes new questions this many days before the exam
+  const MIN_AUTO_NEW = 8;
+  const NEW_BATCH_SIZE = 5;
+  const MAX_RETRIES = 2;
+  const RETRY_GAP = 3;
+  const QTYPES = ['write', 'zhuyin'];  // write = 看注音寫國字 (handwriting), zhuyin = 看國字寫注音 (keypad)
+  const ISO_RE = /^\d{4}-\d{2}-\d{2}$/;
+  const DEFAULT_SETTINGS = Object.freeze({
+    examDate: '2026-10-15',
+    newPerDay: 'auto',
+    recognize: true,                   // send strokes to the handwriting recognizer; off = always self-check
+    sound: true,
+    volume: 1,
+    introSeen: false,
+  });
+
+  // ---------- dates (local calendar days as YYYY-MM-DD) ----------
+  const pad = (n) => String(n).padStart(2, '0');
+  const todayISO = (now = new Date()) =>
+    `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  const toUTC = (iso) => {
+    const [y, m, d] = iso.split('-').map(Number);
+    return Date.UTC(y, m - 1, d);
+  };
+  function addDays(iso, n) {
+    const t = new Date(toUTC(iso) + n * 86400000);
+    return `${t.getUTCFullYear()}-${pad(t.getUTCMonth() + 1)}-${pad(t.getUTCDate())}`;
+  }
+  const diffDays = (a, b) => Math.round((toUTC(a) - toUTC(b)) / 86400000);
+
+  // ---------- randomness ----------
+  function seededRng(seed) {
+    let a = seed >>> 0;
+    return () => {
+      a = (a + 0x6d2b79f5) >>> 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffle(list, rng = Math.random) {
+    const a = list.slice();
+    for (let i = a.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(rng() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  const pick = (list, rng = Math.random) => list[Math.floor(rng() * list.length)];
+
+  // ---------- 注音 ----------
+  const INITIALS = 'ㄅㄆㄇㄈㄉㄊㄋㄌㄍㄎㄏㄐㄑㄒㄓㄔㄕㄖㄗㄘㄙ';
+  const MEDIALS = 'ㄧㄨㄩ';
+  const FINALS = 'ㄚㄛㄜㄝㄞㄟㄠㄡㄢㄣㄤㄥㄦ';
+  const TONE_MARKS = 'ˊˇˋ';
+  const LIGHT = '˙';
+  const emptySlots = () => ({ initial: '', medial: '', final: '', tone: '' });
+
+  /** "ㄑㄧˋ" -> {initial:'ㄑ', medial:'ㄧ', final:'', tone:'ˋ'}; "˙ㄕ" -> tone '˙'. null if not one syllable. */
+  function parseZhuyin(text) {
+    // No NFKC here: it would split the light-tone mark ˙ (U+02D9) into a space and a combining dot.
+    const s = String(text).replace(/[\s　]/g, '').replace(/ˉ/g, '');
+    if (!s) return null;
+    const slots = emptySlots();
+    let rest = s;
+    if (rest.includes(LIGHT)) {
+      if ((rest.match(/˙/g) || []).length > 1) return null;
+      slots.tone = LIGHT;
+      rest = rest.replace(LIGHT, '');
+    }
+    const last = rest.slice(-1);
+    if (TONE_MARKS.includes(last)) {
+      if (slots.tone) return null;
+      slots.tone = last;
+      rest = rest.slice(0, -1);
+    }
+    for (const ch of rest) {
+      const slot = INITIALS.includes(ch) ? 'initial' : MEDIALS.includes(ch) ? 'medial' : FINALS.includes(ch) ? 'final' : null;
+      if (!slot || slots[slot]) return null;
+      slots[slot] = ch;
+    }
+    const order = ['initial', 'medial', 'final'].filter((k) => slots[k]).map((k) => slots[k]).join('');
+    if (!order || order !== rest) return null; // symbols must come in 聲母 → 介音 → 韻母 order
+    return slots;
+  }
+
+  /** Light tone is written in front (˙ㄕ), the other marks after the symbols (ㄑㄧˋ); first tone has no mark. */
+  function formatZhuyin(slots) {
+    const body = `${slots.initial}${slots.medial}${slots.final}`;
+    if (!body) return '';
+    return slots.tone === LIGHT ? `${LIGHT}${body}` : `${body}${slots.tone}`;
+  }
+
+  function zhuyinEqual(a, b) {
+    const x = parseZhuyin(a);
+    const y = parseZhuyin(b);
+    return Boolean(x && y) && formatZhuyin(x) === formatZhuyin(y);
+  }
+
+  /** Which slot a keypad key fills. '' is the first-tone key; note that "abc".includes('') is true. */
+  function slotOfKey(key) {
+    if (key === '' || key === LIGHT || (key.length === 1 && TONE_MARKS.includes(key))) return 'tone';
+    if (key.length !== 1) return null;
+    if (INITIALS.includes(key)) return 'initial';
+    if (MEDIALS.includes(key)) return 'medial';
+    if (FINALS.includes(key)) return 'final';
+    return null;
+  }
+
+  /** Composer for the on-screen keypad: tapping a symbol fills its slot, tapping it again empties it. */
+  function tapZhuyin(slots, key) {
+    const slot = typeof key === 'string' ? slotOfKey(key) : null;
+    if (!slot) return slots;
+    return Object.assign({}, slots, { [slot]: slots[slot] === key ? '' : key });
+  }
+
+  // ---------- items (one per question of the worksheet) ----------
+  function buildItems(doc) {
+    const seenIds = new Set();
+    return doc.items.map((q) => {
+      const id = `q${q.no}`;
+      if (seenIds.has(id)) throw new Error(`duplicate item id ${id}`);
+      seenIds.add(id);
+      if (!['char', 'zhuyin'].includes(q.type)) throw new Error(`bad type for ${id}`);
+      return {
+        id, no: q.no, unit: q.type, type: q.type,
+        before: q.before, after: q.after, prompt: q.prompt, answer: q.answer,
+        char: q.char, zhuyin: q.zhuyin, underline: q.underline || [], note: q.note || '', review: Boolean(q.review),
+      };
+    });
+  }
+
+  const phraseOf = (it) => `${it.before}${it.char}${it.after}`;
+
+  /** Marks which characters of the phrase carry a 專名號 (proper-noun underline). */
+  function properMask(it) {
+    const phrase = phraseOf(it);
+    const mask = [...phrase].map(() => false);
+    (it.underline || []).forEach((u) => {
+      const plain = u.replace(/[「」]/g, '').replace(it.prompt, it.char);
+      const at = phrase.indexOf(plain);
+      if (at >= 0) [...plain].forEach((_, k) => { mask[at + k] = true; });
+    });
+    return mask;
+  }
+
+  // ---------- per-question state & grading ----------
+  // last = day of the last level change or mistake; answered = day of the last answer of any kind;
+  // run = correct answers in a row since the last mistake (0 means the last answer was wrong).
+  const newState = () => ({ lv: 0, seen: null, due: null, last: null, answered: null, ok: 0, ng: 0, run: 0, lastNg: null, self: 0 });
+  const getState = (states, id) => states[id] || newState();
+  const isDue = (st, today) => !st.seen || !st.due || st.due <= today;
+
+  /** Wrong: back to stone, due tomorrow. Correct: one level up per day, only when due. */
+  function grade(st, correct, today) {
+    const base = Object.assign({}, st, { seen: st.seen || today, answered: today });
+    if (!correct) {
+      return Object.assign(base, { lv: 0, due: addDays(today, 1), last: today, ng: st.ng + 1, run: 0, lastNg: today });
+    }
+    const canLevelUp = isDue(st, today) && st.last !== today;
+    if (!canLevelUp) return Object.assign(base, { ok: st.ok + 1, run: st.run + 1 });
+    const lv = Math.min(MAX_LEVEL, st.lv + 1);
+    return Object.assign(base, { lv, due: addDays(today, INTERVAL_DAYS[lv]), last: today, ok: st.ok + 1, run: st.run + 1 });
+  }
+
+  // ---------- daily mission ----------
+  function autoNewPerDay(unseen, daysLeft) {
+    if (unseen <= 0) return 0;
+    const learningDays = daysLeft - REVIEW_ONLY_DAYS;
+    if (learningDays <= 0) return Math.min(unseen, MISSION_MAX_TOTAL);
+    return Math.min(unseen, Math.max(MIN_AUTO_NEW, Math.ceil(unseen / learningDays)));
+  }
+
+  const byPriority = (a, b) =>
+    a.st.lv - b.st.lv || String(a.st.due).localeCompare(String(b.st.due)) || b.st.ng - a.st.ng;
+
+  /** newToday = questions first seen today (keeps today's target stable across sessions). */
+  function buildMission(items, states, today, settings, newToday = 0) {
+    const daysLeft = diffDays(settings.examDate, today);
+    const finalPhase = daysLeft >= 0 && daysLeft <= FINAL_PHASE_DAYS;
+    const rows = items.map((it) => ({ it, st: getState(states, it.id) }));
+    const seen = rows.filter((r) => r.st.seen);
+    const unseen = rows.filter((r) => !r.st.seen);
+    const wanted = finalPhase
+      ? (r) => r.st.lv < MAX_LEVEL && r.st.answered !== today
+      : (r) => isDue(r.st, today) && r.st.answered !== today;
+    const perDay = settings.newPerDay === 'auto'
+      ? autoNewPerDay(unseen.length + newToday, daysLeft)
+      : Number(settings.newPerDay) || 0;
+    // New questions come first so all of them are learned before the review-only days.
+    const freshCount = Math.max(0, Math.min(perDay - newToday, unseen.length));
+    const reviewCap = Math.min(MISSION_MAX_REVIEWS, Math.max(MIN_REVIEWS_WITH_NEW, MISSION_MAX_TOTAL - freshCount));
+    const reviews = seen.filter(wanted).sort(byPriority).slice(0, reviewCap);
+    return {
+      reviews: reviews.map((r) => r.it),
+      fresh: unseen.slice(0, freshCount).map((r) => r.it),
+      daysLeft, finalPhase, perDay,
+    };
+  }
+
+  const typeOf = (it) => (it.type === 'char' ? 'write' : 'zhuyin');
+
+  /** Reviews first, then new questions in batches: learn 5 cards, then answer those 5. */
+  function buildQueue(reviews, fresh, rng = Math.random) {
+    const queue = shuffle(reviews, rng).map((it) => ({ kind: 'quiz', id: it.id, qtype: typeOf(it) }));
+    for (let i = 0; i < fresh.length; i += NEW_BATCH_SIZE) {
+      const batch = fresh.slice(i, i + NEW_BATCH_SIZE);
+      batch.forEach((it) => queue.push({ kind: 'learn', id: it.id }));
+      shuffle(batch, rng).forEach((it) => queue.push({ kind: 'quiz', id: it.id, qtype: typeOf(it), fresh: true }));
+    }
+    return queue;
+  }
+
+  /** Re-ask a missed question a few steps later (at most MAX_RETRIES times per session). */
+  function insertRetry(queue, pos, step, retryCount) {
+    if (retryCount > MAX_RETRIES) return queue;
+    const at = Math.min(queue.length, pos + 1 + RETRY_GAP);
+    const retry = { kind: 'quiz', id: step.id, qtype: step.qtype, retry: true };
+    return [...queue.slice(0, at), retry, ...queue.slice(at)];
+  }
+
+  /** "先跳過" is for an unanswered question that is not the last step, once per question. */
+  function canSkipStep(queue, pos) {
+    const step = queue[pos];
+    return Boolean(step && step.kind === 'quiz' && !step.skipped && pos < queue.length - 1);
+  }
+
+  function skipStep(queue, pos) {
+    if (!canSkipStep(queue, pos)) return queue;
+    return [...queue.slice(0, pos), ...queue.slice(pos + 1), Object.assign({}, queue[pos], { skipped: true })];
+  }
+
+  function makeQuestion(item) {
+    return {
+      type: typeOf(item), id: item.id, no: item.no, before: item.before, after: item.after,
+      prompt: item.prompt, answer: item.answer, char: item.char, zhuyin: item.zhuyin,
+    };
+  }
+
+  /** Handwriting: only the recognizer's first guess counts as an automatic pass (a look-alike must not pass). */
+  function judgeRecognition(candidates, answer) {
+    const list = Array.isArray(candidates) ? candidates : [];
+    if (list[0] === answer) return 'match';
+    return list.slice(0, 5).includes(answer) ? 'close' : 'miss';
+  }
+
+  /** zhuyin: value is the composed text; write: value is {verdict:'right'|'wrong'} decided by the UI. */
+  function checkQuestion(q, value) {
+    if (q.type === 'zhuyin') return { correct: zhuyinEqual(String(value || ''), q.answer) };
+    return { correct: Boolean(value && value.verdict === 'right') };
+  }
+
+  const answerTexts = (q) => [q.answer];
+  /** What a learner reads as the answer: the character with its 注音, or the character then the 注音. */
+  const displayAnswer = (q) => (q.type === 'write' ? `${q.answer}（${q.zhuyin}）` : `${q.char} ${q.answer}`);
+
+  // ---------- other practice modes ----------
+  /** Weak questions first (stone → gold), then new ones, then diamonds. */
+  function selectPractice(items, states, units, count, rng = Math.random) {
+    const pool = items.filter((it) => units.includes(it.unit));
+    const rows = pool.map((it) => ({ it, st: getState(states, it.id) }));
+    const weak = shuffle(rows.filter((r) => r.st.seen && r.st.lv < MAX_LEVEL), rng).sort((a, b) => a.st.lv - b.st.lv);
+    const fresh = rows.filter((r) => !r.st.seen);
+    const strong = shuffle(rows.filter((r) => r.st.seen && r.st.lv === MAX_LEVEL), rng);
+    const chosen = [...weak, ...fresh, ...strong].slice(0, count);
+    return {
+      review: chosen.filter((r) => r.st.seen).map((r) => r.it),
+      fresh: chosen.filter((r) => !r.st.seen).map((r) => r.it),
+    };
+  }
+
+  const selectBoss = (items, states, count, rng = Math.random) =>
+    shuffle(items.filter((it) => getState(states, it.id).seen), rng).slice(0, count);
+
+  /** Questions whose latest answer was wrong (a correct answer moves them out until the next mistake). */
+  const errorBook = (items, states) => items.filter((it) => {
+    const st = getState(states, it.id);
+    return st.seen && st.lv === 0 && st.ng > 0 && st.run === 0;
+  });
+
+  // ---------- stats ----------
+  function unitProgress(items, states) {
+    const out = {};
+    items.forEach((it) => {
+      const u = out[it.unit] || (out[it.unit] = { total: 0, unseen: 0, levels: [0, 0, 0, 0] });
+      const st = getState(states, it.id);
+      u.total += 1;
+      if (!st.seen) u.unseen += 1;
+      else u.levels[st.lv] += 1;
+    });
+    return out;
+  }
+
+  const countDiamonds = (items, states) => items.filter((it) => getState(states, it.id).lv === MAX_LEVEL).length;
+
+  const topMistakes = (items, states, n = 15) => items
+    .map((it) => ({ it, st: getState(states, it.id) }))
+    .filter((r) => r.st.ng > 0)
+    .sort((a, b) => b.st.ng - a.st.ng || String(b.st.lastNg).localeCompare(String(a.st.lastNg)))
+    .slice(0, n);
+
+  /** Consecutive practice days ending today (or yesterday, if today is not done yet). */
+  function streakDays(log, today) {
+    let day = log[today] && log[today].q > 0 ? today : addDays(today, -1);
+    let n = 0;
+    while (log[day] && log[day].q > 0) {
+      n += 1;
+      day = addDays(day, -1);
+    }
+    return n;
+  }
+
+  const LOG_KEYS = ['q', 'ok', 'ms', 'fresh', 'mined'];
+  function addToLog(log, day, delta) {
+    const cur = log[day] || { q: 0, ok: 0, ms: 0, fresh: 0, mined: 0 };
+    const next = {};
+    LOG_KEYS.forEach((k) => { next[k] = (cur[k] || 0) + (delta[k] || 0); });
+    return Object.assign({}, log, { [day]: next });
+  }
+
+  // ---------- versions ----------
+  const GENERIC_UPDATE_NOTE = '一些小改進與修正。';
+
+  /** Notes to show once after an update, or null when there is nothing to announce.
+   * Versions are build times "YYYY-MM-DD HH:mm", so plain string order is time order. */
+  function whatsNewNotes(changelog, seen, current, hasProgress) {
+    if (!current || seen === current) return null;
+    if (seen && seen > current) return null; // an older cached copy: say nothing
+    if (!seen) return hasProgress && changelog.length ? changelog[0].notes.slice() : null;
+    const fresh = changelog.filter((c) => c.version > seen && c.version <= current);
+    return fresh.length ? fresh.reduce((all, c) => all.concat(c.notes), []) : [GENERIC_UPDATE_NOTE];
+  }
+
+  // ---------- printable test ----------
+  const PAPER_WEIGHT = (st) => (!st.seen ? 1 : [4, 3, 2, 1][st.lv]);
+  const paperRow = (it) => ({ no: it.no, type: it.type, before: it.before, prompt: it.prompt, after: it.after, answer: it.answer, underline: it.underline });
+
+  /** all = the whole worksheet in its own order; otherwise weak questions first, `size` of them, by number. */
+  function buildPaperTest(items, states, rng = Math.random, size = 30, all = false) {
+    if (all) return items.map(paperRow);
+    return shuffle(items, rng)
+      .map((it) => ({ it, w: PAPER_WEIGHT(getState(states, it.id)) + rng() }))
+      .sort((a, b) => b.w - a.w)
+      .slice(0, size)
+      .map((r) => r.it)
+      .sort((a, b) => a.no - b.no)
+      .map(paperRow);
+  }
+
+  // ---------- persistence (validate everything read from storage or files) ----------
+  const isDate = (d) => typeof d === 'string' && ISO_RE.test(d);
+  const intIn = (n, lo, hi, dflt) => (Number.isInteger(n) && n >= lo && n <= hi ? n : dflt);
+  const bool = (b, dflt) => (typeof b === 'boolean' ? b : dflt);
+
+  function sanitizeState(st) {
+    if (!st || typeof st !== 'object') return null;
+    return {
+      lv: intIn(st.lv, 0, MAX_LEVEL, 0),
+      seen: isDate(st.seen) ? st.seen : null,
+      due: isDate(st.due) ? st.due : null,
+      last: isDate(st.last) ? st.last : null,
+      answered: isDate(st.answered) ? st.answered : null,
+      ok: intIn(st.ok, 0, 1e6, 0),
+      ng: intIn(st.ng, 0, 1e6, 0),
+      run: intIn(st.run, 0, 1e6, 0),
+      lastNg: isDate(st.lastNg) ? st.lastNg : null,
+      self: intIn(st.self, 0, 1e6, 0),
+    };
+  }
+
+  function mergeSettings(s) {
+    const d = DEFAULT_SETTINGS;
+    const src = s && typeof s === 'object' ? s : {};
+    const volume = typeof src.volume === 'number' && src.volume >= 0.1 && src.volume <= 1 ? src.volume : d.volume;
+    const perDayOk = src.newPerDay === 'auto' || intIn(src.newPerDay, 0, 60, -1) >= 0;
+    return {
+      examDate: isDate(src.examDate) ? src.examDate : d.examDate,
+      newPerDay: perDayOk ? src.newPerDay : d.newPerDay,
+      recognize: bool(src.recognize, d.recognize),
+      sound: bool(src.sound, d.sound),
+      volume,
+      introSeen: bool(src.introSeen, false),
+    };
+  }
+
+  // rev counts saves, so a tab can tell that another tab wrote newer progress.
+  const emptyStore = () => ({ v: 1, rev: 0, states: {}, log: {}, settings: mergeSettings(null), boss: [] });
+
+  /** Throws a user-facing message when data is not a progress file of this app. */
+  function sanitizeStore(data, validIds) {
+    if (!data || typeof data !== 'object' || data.v !== 1 || !data.states || typeof data.states !== 'object') {
+      throw new Error('這不是國字挖礦的進度檔。');
+    }
+    const states = {};
+    Object.entries(data.states).forEach(([id, st]) => {
+      const clean = validIds.has(id) ? sanitizeState(st) : null;
+      if (clean) states[id] = clean;
+    });
+    const log = {};
+    Object.entries(data.log && typeof data.log === 'object' ? data.log : {}).forEach(([day, e]) => {
+      if (!isDate(day) || !e || typeof e !== 'object') return;
+      log[day] = {
+        q: intIn(e.q, 0, 1e5, 0), ok: intIn(e.ok, 0, 1e5, 0), ms: intIn(e.ms, 0, 864e5, 0),
+        fresh: intIn(e.fresh, 0, 1e4, 0), mined: intIn(e.mined, 0, 1e5, 0),
+      };
+    });
+    const boss = (Array.isArray(data.boss) ? data.boss : [])
+      .filter((b) => b && isDate(b.date) && Number.isInteger(b.score) && Number.isInteger(b.total) && b.total > 0)
+      .map((b) => ({ date: b.date, score: Math.min(b.score, b.total), total: b.total }))
+      .slice(-50);
+    return { v: 1, rev: intIn(data.rev, 0, 1e9, 0), states, log, settings: mergeSettings(data.settings), boss };
+  }
+
+  // ---------- a mission saved mid-way (separate key; never touches the progress format) ----------
+  const SESSION_MAX_STEPS = 400;
+  // Today's mission and 「多學新題」 can be picked up again; practice, error book and boss restart instead.
+  const RESUMABLE_MODES = Object.freeze(['mission', 'extra']);
+  const isText = (s, max) => typeof s === 'string' && s.length <= (max || 400);
+
+  function sanitizeStep(s, validIds) {
+    if (!s || typeof s !== 'object' || !validIds.has(s.id)) return null;
+    if (s.kind === 'learn') return { kind: 'learn', id: s.id };
+    if (s.kind !== 'quiz' || !QTYPES.includes(s.qtype)) return null;
+    const out = { kind: 'quiz', id: s.id, qtype: s.qtype };
+    ['fresh', 'retry', 'skipped'].forEach((k) => { if (s[k] === true) out[k] = true; });
+    return out;
+  }
+
+  /** The question on screen when the app was closed, if it still fits the step. */
+  function savedQuestion(q, step) {
+    if (!q || typeof q !== 'object' || step.kind !== 'quiz' || q.id !== step.id || !QTYPES.includes(q.type)) return null;
+    const ok = ['before', 'after', 'prompt', 'answer', 'char', 'zhuyin'].every((k) => isText(q[k], 60));
+    return ok ? q : null;
+  }
+
+  function sanitizeResult(r) {
+    if (!r || typeof r !== 'object' || typeof r.correct !== 'boolean') return null;
+    return {
+      correct: r.correct, gaveUp: r.gaveUp === true, self: r.self === true,
+      type: QTYPES.includes(r.type) ? r.type : 'write',
+      answer: isText(r.answer, 60) ? r.answer : '', given: isText(r.given, 60) ? r.given : '',
+    };
+  }
+
+  const cleanMap = (obj, keep) => Object.entries(obj && typeof obj === 'object' ? obj : {})
+    .reduce((out, [k, v]) => { const c = keep(k, v); return c === null ? out : Object.assign(out, { [k]: c }); }, {});
+
+  /** Resumable only on the same day, for a resumable mode, and only if every step is still valid. */
+  function sanitizeSavedSession(data, validIds, today) {
+    if (!data || typeof data !== 'object' || data.v !== 1 || data.day !== today) return null;
+    if (!RESUMABLE_MODES.includes(data.mode)) return null;
+    if (!Array.isArray(data.queue) || !data.queue.length || data.queue.length > SESSION_MAX_STEPS) return null;
+    const queue = data.queue.map((s) => sanitizeStep(s, validIds));
+    const pos = intIn(data.pos, 0, queue.length - 1, -1);
+    if (queue.some((s) => !s) || pos < 0) return null;
+    const q = savedQuestion(data.q, queue[pos]);
+    const fb = q && data.fb && typeof data.fb === 'object' && isText(data.fb.given, 60)
+      ? { given: data.fb.given, gaveUp: data.fb.gaveUp === true, lostLevel: intIn(data.fb.lostLevel, 0, MAX_LEVEL, 0) }
+      : null;
+    const answered = intIn(data.answered, 0, 1e4, 0);
+    return {
+      mode: data.mode, queue, pos, q, fb,
+      results: cleanMap(data.results, (k, r) => (intIn(Number(k), 0, pos, -1) >= 0 ? sanitizeResult(r) : null)),
+      retries: cleanMap(data.retries, (id, n) => (validIds.has(id) ? intIn(n, 0, 10, 0) : null)),
+      ups: Array.isArray(data.ups) && data.ups.length === 4 ? data.ups.map((n) => intIn(n, 0, 1e4, 0)) : [0, 0, 0, 0],
+      answered,
+      correct: Math.min(intIn(data.correct, 0, 1e4, 0), answered),
+      wrongIds: (Array.isArray(data.wrongIds) ? data.wrongIds : []).filter((id) => validIds.has(id)),
+      combo: intIn(data.combo, 0, 1e4, 0),
+      bestCombo: intIn(data.bestCombo, 0, 1e4, 0),
+    };
+  }
+
+  return {
+    MAX_LEVEL, LEVEL_NAMES, INTERVAL_DAYS, DEFAULT_SETTINGS, NEW_BATCH_SIZE, MAX_RETRIES, QTYPES,
+    INITIALS, MEDIALS, FINALS, TONE_MARKS, LIGHT,
+    todayISO, addDays, diffDays, seededRng, shuffle, pick,
+    parseZhuyin, formatZhuyin, zhuyinEqual, tapZhuyin, slotOfKey, emptySlots,
+    buildItems, phraseOf, properMask,
+    newState, getState, isDue, grade,
+    autoNewPerDay, buildMission, buildQueue, insertRetry, typeOf,
+    makeQuestion, judgeRecognition, checkQuestion, answerTexts, displayAnswer,
+    selectPractice, selectBoss, errorBook,
+    unitProgress, countDiamonds, topMistakes, streakDays, addToLog,
+    buildPaperTest, whatsNewNotes, sanitizeState, mergeSettings, emptyStore, sanitizeStore,
+    canSkipStep, skipStep, sanitizeSavedSession, RESUMABLE_MODES,
+  };
+});
+
+</script>
+<script>
+(function () {
+'use strict';
+// ---- dom.js ----
+/* DOM helpers, pixel-block sprites and shared bits of UI. */
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+function appendAll(node, children) {
+  children.flat(Infinity).forEach((c) => {
+    if (c === null || c === undefined || c === false) return;
+    node.append(c instanceof Node ? c : document.createTextNode(String(c)));
+  });
+  return node;
+}
+
+/** Like Element.replaceChildren (which older iPad Safari lacks). */
+function setChildren(node, ...children) {
+  while (node.firstChild) node.removeChild(node.firstChild);
+  return appendAll(node, children);
+}
+
+/** el('button', {class, onclick, 'aria-label'}, ...children) — never parses HTML. */
+function el(tag, attrs, ...children) {
+  const node = document.createElement(tag);
+  Object.entries(attrs || {}).forEach(([k, v]) => {
+    if (v === null || v === undefined || v === false) return;
+    if (k === 'class') node.className = v;
+    else if (k.startsWith('on') && typeof v === 'function') node.addEventListener(k.slice(2), v);
+    else node.setAttribute(k, v === true ? '' : String(v));
+  });
+  return appendAll(node, children);
+}
+
+// ---------- 8×8 pixel blocks (drawn once as <symbol>s, reused with <use>) ----------
+const SPRITE_MAPS = {
+  stone: ['SSLSSSDS', 'SDSSLSSS', 'SSSDSSSL', 'LSSSSDSS', 'SSDSSSSS', 'SSSSLSDS', 'DSLSSSSS', 'SSSSDSSL'],
+  ore: ['........', '.OO.....', '.Oo..OO.', '.....Oo.', '..OO....', '..Oo..O.', '......o.', '........'],
+  dirt: ['GGGGGGGG', 'gGgGGgGg', 'BbBBBbBB', 'BBBbBBBb', 'bBBBBBbB', 'BBbBBBBB', 'BBBBbBBb', 'bBBBBBBB'],
+  boss: ['.MMMMMM.', 'MMMMMMMM', 'MEEMMEEM', 'MEEMMEEM', 'MMMMMMMM', 'MMM..MMM', '.M.MM.M.', '.MMMMMM.'],
+};
+const STONE_COLORS = { S: '#8b8b8b', D: '#6c6c6c', L: '#a9a9a9' };
+const SPRITES = {
+  'blk-dirt': { layers: ['dirt'], colors: { G: '#6cbf3f', g: '#4f9a2c', B: '#8b5a2b', b: '#6a4222' } },
+  'blk-stone': { layers: ['stone'], colors: STONE_COLORS },
+  'blk-iron': { layers: ['stone', 'ore'], colors: Object.assign({ O: '#ecc7a3', o: '#a8714b' }, STONE_COLORS) },
+  'blk-gold': { layers: ['stone', 'ore'], colors: Object.assign({ O: '#ffe14d', o: '#c48a12' }, STONE_COLORS) },
+  'blk-diamond': { layers: ['stone', 'ore'], colors: Object.assign({ O: '#8ff7ef', o: '#17a59d' }, STONE_COLORS) },
+  'blk-boss': { layers: ['boss'], colors: { M: '#b8432a', E: '#ffd23f' } },
+};
+const LEVEL_SPRITES = ['blk-stone', 'blk-iron', 'blk-gold', 'blk-diamond'];
+
+function spritePixels(spec) {
+  const pixels = [];
+  spec.layers.forEach((layer) => SPRITE_MAPS[layer].forEach((row, y) => [...row].forEach((ch, x) => {
+    if (spec.colors[ch]) pixels.push({ x, y, fill: spec.colors[ch] });
+  })));
+  // Later layers win: keep only the last pixel drawn at each position.
+  const top = new Map(pixels.map((p) => [`${p.x},${p.y}`, p]));
+  return [...top.values()];
+}
+
+function installSprites() {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('style', 'position:absolute;width:0;height:0;overflow:hidden');
+  Object.entries(SPRITES).forEach(([id, spec]) => {
+    const symbol = document.createElementNS(SVG_NS, 'symbol');
+    symbol.setAttribute('id', id);
+    symbol.setAttribute('viewBox', '0 0 8 8');
+    spritePixels(spec).forEach((p) => {
+      const r = document.createElementNS(SVG_NS, 'rect');
+      [['x', p.x], ['y', p.y], ['width', 1], ['height', 1], ['fill', p.fill]].forEach(([k, v]) => r.setAttribute(k, v));
+      symbol.append(r);
+    });
+    svg.append(symbol);
+  });
+  document.body.prepend(svg);
+}
+
+function sprite(id, cls) {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('class', cls ? `px ${cls}` : 'px');
+  svg.setAttribute('viewBox', '0 0 8 8');
+  svg.setAttribute('shape-rendering', 'crispEdges');
+  svg.setAttribute('aria-hidden', 'true');
+  const use = document.createElementNS(SVG_NS, 'use');
+  use.setAttribute('href', `#${id}`);
+  svg.append(use);
+  return svg;
+}
+
+const oreSprite = (st, cls) => sprite(st.seen ? LEVEL_SPRITES[st.lv] : 'blk-dirt', cls);
+const levelName = (st) => (st.seen ? Core.LEVEL_NAMES[st.lv] : '還沒學');
+
+// ---------- text ----------
+function markedText(text, cls) {
+  return el('span', { class: cls }, Core.parseMarked(text).map((p) => (p.hl ? el('b', { class: 'hl' }, p.text) : p.text)));
+}
+
+const kkText = (ipa) => (ipa ? el('span', { class: 'kk', lang: 'en' }, `[${ipa}]`) : null);
+
+function notesList(notes) {
+  return el('ul', { class: 'notes' }, notes.map((n) => {
+    const numbered = n.items.filter((it) => !it.startsWith('=')).length > 1;
+    let k = 0;
+    const lines = n.items.map((it) => {
+      const isAlt = it.startsWith('=');
+      if (!isAlt) k += 1;
+      return el('span', { class: isAlt ? 'note-item alt' : 'note-item' }, numbered && !isAlt ? `(${k}) ` : '', it);
+    });
+    return el('li', {}, el('span', { class: 'note-label' }, n.label), el('span', { class: 'note-items' }, lines));
+  }));
+}
+
+const WEEKDAYS = '日一二三四五六';
+function fmtDate(iso) {
+  const [, m, d] = iso.split('-').map(Number);
+  return `${m}/${d}`;
+}
+const fmtDateW = (iso) => `${fmtDate(iso)}（${WEEKDAYS[new Date(`${iso}T00:00:00`).getDay()]}）`;
+
+function backBar(title, onBack) {
+  return el('header', { class: 'back-bar' },
+    el('button', { class: 'btn btn-dark btn-sm', onclick: onBack || (() => go('home')) }, '← 回礦坑'),
+    el('h1', {}, title));
+}
+
+// ---------- toast & modal ----------
+let toastTimer = null;
+function showToast(content, tone) {
+  const host = document.getElementById('toast');
+  setChildren(host, el('div', { class: `toast ${tone || ''}` }, content));
+  host.classList.remove('show');
+  void host.offsetWidth; // restart the slide-in animation
+  host.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => host.classList.remove('show'), 1700);
+}
+
+function openModal(content) {
+  const root = document.getElementById('modal-root');
+  const lastFocus = document.activeElement;
+  const onKey = (e) => { if (e.key === 'Escape') close(); };
+  function close() {
+    setChildren(root);
+    document.removeEventListener('keydown', onKey);
+    Speech.stop();
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  const closeBtn = el('button', { class: 'icon-btn modal-close', 'aria-label': '關閉', onclick: close }, '✕');
+  const box = el('div', { class: 'modal card', role: 'dialog', 'aria-modal': 'true' }, closeBtn, content);
+  const overlay = el('div', { class: 'overlay', onclick: (e) => { if (e.target === overlay) close(); } }, box);
+  setChildren(root, overlay);
+  document.addEventListener('keydown', onKey);
+  closeBtn.focus();
+  return close;
+}
+
+// ---- audio.js ----
+/* Pronunciation through the browser's built-in speech (works offline with local voices),
+ * and tiny generated sound effects (no audio files needed). */
+const Speech = (() => {
+  const supported = typeof window !== 'undefined' && 'speechSynthesis' in window
+    && typeof window.SpeechSynthesisUtterance === 'function';
+  const listeners = new Set();
+  let english = [];
+  let chosen = null;
+  let preferred = '';
+  let volume = 1;
+  const isEnglish = (v) => /^en([-_]|$)/i.test(v.lang);
+
+  function refresh() {
+    if (!supported) return;
+    english = window.speechSynthesis.getVoices().filter(isEnglish);
+    chosen = english.find((v) => v.name === preferred)
+      || english.find((v) => /en[-_]US/i.test(v.lang) && v.localService)
+      || english.find((v) => /en[-_]US/i.test(v.lang))
+      || english.find((v) => /en[-_]GB/i.test(v.lang))
+      || english[0] || null;
+    listeners.forEach((fn) => fn());
+  }
+
+  function init(name) {
+    preferred = name || '';
+    if (!supported) return;
+    refresh();
+    const synth = window.speechSynthesis;
+    if (typeof synth.addEventListener === 'function') synth.addEventListener('voiceschanged', refresh);
+    else synth.onvoiceschanged = refresh;
+  }
+
+  /** Unknown until voices load, so assume yes; no once voices exist but none is English. */
+  function isAvailable() {
+    if (!supported) return false;
+    return window.speechSynthesis.getVoices().length === 0 || english.length > 0;
+  }
+
+  function utter(text, rate) {
+    const u = new window.SpeechSynthesisUtterance(text);
+    u.lang = chosen ? chosen.lang : 'en-US';
+    if (chosen) u.voice = chosen;
+    u.rate = rate;
+    u.volume = volume;
+    window.speechSynthesis.speak(u);
+  }
+
+  // Optional loud pre-recorded pronunciations (see pron.js): { play(text, rate) -> bool, stop() }.
+  let clips = null;
+
+  function speak(text, rate) {
+    if (!text) return;
+    if (clips && clips.play(text, rate)) {
+      if (supported) window.speechSynthesis.cancel();
+      return;
+    }
+    speakWithBrowser(text, rate);
+  }
+
+  function speakWithBrowser(text, rate) {
+    if (!supported || !text) return;
+    const synth = window.speechSynthesis;
+    if (synth.speaking || synth.pending) {
+      synth.cancel();
+      setTimeout(() => utter(text, rate), 60); // Chrome drops a speak() issued right after cancel()
+    } else {
+      utter(text, rate);
+    }
+  }
+
+  return {
+    init,
+    speak,
+    speakWithBrowser,
+    isAvailable,
+    useClips(player) { clips = player; },
+    stop() {
+      if (clips) clips.stop();
+      if (supported) window.speechSynthesis.cancel();
+    },
+    voices() { return english.map((v) => ({ name: v.name, lang: v.lang })); },
+    setPreferred(name) { preferred = name || ''; refresh(); },
+    setVolume(v) { volume = v; },
+    onChange(fn) { listeners.add(fn); },
+  };
+})();
+
+/** One Web Audio context for the whole page (iPad allows only a few). iPad keeps it silent until it is
+ * resumed during a tap, so the first touch of any kind starts it. */
+const AudioOut = (() => {
+  let ctx = null;
+
+  function context() {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    if (!ctx) ctx = new AC();
+    if (ctx.state !== 'running') {
+      const resumed = ctx.resume();
+      if (resumed && typeof resumed.catch === 'function') resumed.catch(() => { /* retried on the next tap */ });
+    }
+    return ctx;
+  }
+
+  function startOnFirstTouch() {
+    const events = ['touchend', 'pointerdown', 'keydown'];
+    const start = () => {
+      context();
+      events.forEach((name) => document.removeEventListener(name, start, true));
+    };
+    events.forEach((name) => document.addEventListener(name, start, true));
+  }
+
+  return { context, startOnFirstTouch };
+})();
+
+/** iPad: play as media (full media volume, also when the device is in silent mode). */
+function preferPlaybackAudio() {
+  try {
+    if (navigator.audioSession) navigator.audioSession.type = 'playback';
+  } catch (e) { /* older Safari: keep the default session */ }
+}
+
+/* Game sounds, all synthesized with Web Audio (no sound files): a pickaxe "clink" whose pitch climbs
+ * with the combo, a different reward for each ore, fanfares for combos, mission and boss. */
+const Sfx = (() => {
+  let ctx = null;
+  let master = null;
+  let noiseBuf = null;
+  let enabled = true;
+  let volume = 1;
+
+  function audio() {
+    if (!enabled) return null;
+    ctx = AudioOut.context();
+    if (!ctx) return null;
+    if (!master) {
+      master = ctx.createGain();
+      master.connect(ctx.destination);
+    }
+    master.gain.value = volume;
+    return ctx;
+  }
+
+  function noiseBuffer(c) {
+    if (!noiseBuf) {
+      noiseBuf = c.createBuffer(1, Math.floor(c.sampleRate * 0.6), c.sampleRate);
+      const data = noiseBuf.getChannelData(0);
+      for (let i = 0; i < data.length; i += 1) data[i] = Math.random() * 2 - 1;
+    }
+    return noiseBuf;
+  }
+
+  /** One note; `to` glides the pitch (boing, bonk). */
+  function tone(c, t0, n) {
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    const at = t0 + (n.at || 0);
+    osc.type = n.type || 'square';
+    osc.frequency.setValueAtTime(n.f, at);
+    if (n.to) osc.frequency.exponentialRampToValueAtTime(n.to, at + n.dur);
+    gain.gain.setValueAtTime(n.vol || 0.12, at);
+    gain.gain.exponentialRampToValueAtTime(0.0001, at + n.dur);
+    osc.connect(gain);
+    gain.connect(master);
+    osc.start(at);
+    osc.stop(at + n.dur + 0.02);
+  }
+
+  /** A burst of filtered noise: pickaxe on stone, thuds, sparkles. */
+  function hiss(c, t0, h) {
+    const src = c.createBufferSource();
+    const filter = c.createBiquadFilter();
+    const gain = c.createGain();
+    const at = t0 + (h.at || 0);
+    src.buffer = noiseBuffer(c);
+    filter.type = h.filter || 'bandpass';
+    filter.frequency.value = h.f;
+    filter.Q.value = h.q || 1;
+    gain.gain.setValueAtTime(h.vol || 0.2, at);
+    gain.gain.exponentialRampToValueAtTime(0.0001, at + h.dur);
+    src.connect(filter);
+    filter.connect(gain);
+    gain.connect(master);
+    src.start(at);
+    src.stop(at + h.dur + 0.02);
+  }
+
+  function play(notes, hits) {
+    const c = audio();
+    if (!c) return;
+    const t0 = c.currentTime + 0.01;
+    (hits || []).forEach((h) => hiss(c, t0, h));
+    (notes || []).forEach((n) => tone(c, t0, n));
+  }
+
+  const semis = (f, n) => f * Math.pow(2, n / 12);
+  const arp = (freqs, gap, dur, type, vol, start) =>
+    freqs.map((f, i) => ({ f, at: (start || 0) + i * gap, dur, type, vol }));
+  const CLINK = { f: 3200, q: 4, dur: 0.05, vol: 0.35 };
+  const COMBO_MAX_STEPS = 12;
+
+  /** Pickaxe hits stone; the ding climbs a semitone per answer in a row (up to an octave). */
+  function mine(combo) {
+    const f = semis(880, Math.min(Math.max(combo, 1) - 1, COMBO_MAX_STEPS));
+    play([{ f, at: 0.03, dur: 0.08 }, { f: f * 1.5, at: 0.09, dur: 0.14 }], [CLINK]);
+  }
+
+  /** Reward for reaching a new ore. short = keep it brief when speech comes right after. */
+  function ore(lv, short) {
+    if (short || lv <= 1) {
+      // iron: a metallic clang
+      play([{ f: 660, dur: 0.16, vol: 0.09 }, { f: 993, dur: 0.16, vol: 0.07 }, { f: 1320, at: 0.08, dur: 0.18, vol: 0.09 }],
+        [CLINK, { f: 2400, q: 12, at: 0.02, dur: 0.18, vol: 0.18 }]);
+      return;
+    }
+    if (lv === 2) {
+      // gold: a bright run upwards with a sparkle
+      play(arp([1047, 1319, 1568, 2093], 0.06, 0.13, 'triangle', 0.22),
+        [CLINK, { f: 7000, filter: 'highpass', at: 0.12, dur: 0.25, vol: 0.06 }]);
+      return;
+    }
+    // diamond: a magic bell with a shimmer
+    play([
+      ...arp([784, 988, 1175, 1568, 1976], 0.07, 0.16, 'triangle', 0.2),
+      { f: 1568, at: 0.38, dur: 0.9, type: 'sine', vol: 0.22 },
+      { f: 1568 * 2.76, at: 0.38, dur: 0.5, type: 'sine', vol: 0.06 },
+    ], [CLINK, { f: 8000, filter: 'highpass', at: 0.3, dur: 0.7, vol: 0.05 }]);
+  }
+
+  /** Every 5 answers in a row: a short fanfare that gets higher with longer combos. */
+  function combo(n) {
+    const lift = Math.min(Math.floor(n / 5) - 1, 4) * 2;
+    const run = [523, 659, 784, 1047].map((f) => semis(f, lift));
+    play([
+      ...arp(run, 0.07, 0.1, 'square', 0.1),
+      ...[1047, 1319, 1568].map((f) => ({ f: semis(f, lift), at: 0.3, dur: 0.35, type: 'triangle', vol: 0.12 })),
+    ]);
+  }
+
+  return {
+    setEnabled(v) { enabled = Boolean(v); },
+    setVolume(v) {
+      volume = v;
+      if (master) master.gain.value = v;
+    },
+    mine,
+    ore,
+    combo,
+    // wrong: a cartoon "bonk" (falling pitch plus a soft thud), not a harsh buzzer
+    wrong() { play([{ f: 330, to: 110, dur: 0.22, vol: 0.12 }], [{ f: 300, filter: 'lowpass', dur: 0.12, vol: 0.35 }]); },
+    // the answer was typed out correctly after a mistake: "repaired"
+    fixed() { play(arp([660, 880], 0.07, 0.12, 'triangle', 0.2)); },
+    complete() {
+      play([...arp([392, 523, 659, 784], 0.09, 0.12, 'square', 0.1),
+        ...[523, 659, 784, 1047].map((f) => ({ f, at: 0.4, dur: 0.6, type: 'triangle', vol: 0.11 }))]);
+    },
+    // boss: every correct answer lands a hit
+    bossHit() { play([{ f: 140, to: 60, dur: 0.16, type: 'sine', vol: 0.35 }], [{ f: 500, filter: 'lowpass', dur: 0.1, vol: 0.3 }]); },
+    bossWin() {
+      play([...arp([523, 523, 523, 659, 784, 1047], 0.1, 0.12, 'square', 0.1),
+        ...[784, 1047, 1319, 1568].map((f) => ({ f, at: 0.65, dur: 0.8, type: 'triangle', vol: 0.1 }))]);
+    },
+    // boss survived: a comic "wah-wah"
+    bossLose() {
+      play([{ f: 392, to: 370, at: 0, dur: 0.3, vol: 0.09 }, { f: 349, to: 330, at: 0.32, dur: 0.3, vol: 0.09 },
+        { f: 311, to: 233, at: 0.64, dur: 0.6, vol: 0.09 }]);
+    },
+    // kept for older call sites
+    correct() { mine(1); },
+    levelUp(lv) { ore(lv); },
+  };
+})();
+
+// ---- store.js ----
+/* Progress lives in this browser's localStorage; files are the backup / move-to-another-device path. */
+const STORAGE_KEY = 'guozi-mine-115-1';
+const BACKUP_KEY = `${STORAGE_KEY}:backup`;
+const MAX_IMPORT_BYTES = 2 * 1024 * 1024;
+const DOWNLOAD_URL_TTL_MS = 60 * 1000; // iPad asks before downloading; keep the link alive meanwhile
+
+const Storage = (() => {
+  let ok = true;
+
+  function probe() {
+    try {
+      const k = `${STORAGE_KEY}:probe`;
+      localStorage.setItem(k, '1');
+      localStorage.removeItem(k);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function readRaw(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function load(validIds) {
+    ok = probe();
+    if (!ok) return Core.emptyStore();
+    const raw = readRaw(STORAGE_KEY);
+    if (!raw) return Core.emptyStore();
+    try {
+      return Core.sanitizeStore(JSON.parse(raw), validIds);
+    } catch (e) {
+      // Keep the unreadable copy instead of silently overwriting it, then start fresh.
+      try { localStorage.setItem(`${STORAGE_KEY}:unreadable-${Date.now()}`, raw); } catch (ignored) { /* quota */ }
+      return Core.emptyStore();
+    }
+  }
+
+  /** The rev of what is saved now (another tab may have written since we loaded). */
+  function savedRev() {
+    const raw = readRaw(STORAGE_KEY);
+    if (!raw) return null;
+    try {
+      const rev = JSON.parse(raw).rev;
+      return Number.isInteger(rev) ? rev : 0;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function save(store) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      ok = true;
+    } catch (e) {
+      ok = false;
+    }
+    return ok;
+  }
+
+  /** One undo slot for the destructive actions (import replaces, reset clears). */
+  function saveBackup(store, reason) {
+    try {
+      localStorage.setItem(BACKUP_KEY, JSON.stringify({ savedAt: Core.todayISO(), reason, store }));
+    } catch (e) { /* no room for a backup: the action still proceeds */ }
+  }
+
+  function loadBackup(validIds) {
+    const raw = readRaw(BACKUP_KEY);
+    if (!raw) return null;
+    try {
+      const data = JSON.parse(raw);
+      return { savedAt: data.savedAt, reason: data.reason, store: Core.sanitizeStore(data.store, validIds) };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function clearBackup() {
+    try { localStorage.removeItem(BACKUP_KEY); } catch (e) { /* nothing to clear */ }
+  }
+
+  return { load, save, savedRev, saveBackup, loadBackup, clearBackup, isOk: () => ok };
+})();
+
+function downloadProgress(store) {
+  const blob = new Blob([JSON.stringify(store)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = el('a', { href: url, download: `國字挖礦進度-${Core.todayISO()}.json` });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), DOWNLOAD_URL_TTL_MS);
+}
+
+/** Resolves with a validated store, or rejects with a message a parent can act on. */
+function readProgressFile(file, validIds) {
+  return new Promise((resolve, reject) => {
+    if (!file) { reject(new Error('沒有選到檔案。')); return; }
+    if (file.size > MAX_IMPORT_BYTES) { reject(new Error('檔案太大，不是國字挖礦的進度檔。')); return; }
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('讀不到這個檔案，請再試一次。'));
+    reader.onload = () => {
+      try {
+        const data = Core.sanitizeStore(JSON.parse(String(reader.result)), validIds);
+        if (!Object.keys(data.states).length && !Object.keys(data.log).length) {
+          reject(new Error('這個檔案裡沒有任何練習紀錄，所以沒有匯入。'));
+          return;
+        }
+        resolve(data);
+      } catch (e) {
+        reject(e instanceof SyntaxError ? new Error('檔案內容不是進度檔格式。') : e);
+      }
+    };
+    reader.readAsText(file);
+  });
+}
+
+// ---- lock.js ----
+/* The hosted copy carries the vocabulary encrypted (AES-GCM, key derived from a family passphrase),
+ * so the textbook sentences are not readable by whoever finds the public URL. */
+const PASS_KEY = `${STORAGE_KEY}:pass`;
+const normalizePass = (s) => String(s).normalize('NFKC').trim().toLowerCase();
+const fromB64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+
+function decryptVocab(locked, pass) {
+  const subtle = window.crypto && window.crypto.subtle;
+  if (!subtle) return Promise.reject(new Error('no-crypto'));
+  return subtle.importKey('raw', new TextEncoder().encode(normalizePass(pass)), 'PBKDF2', false, ['deriveKey'])
+    .then((base) => subtle.deriveKey(
+      { name: 'PBKDF2', salt: fromB64(locked.salt), iterations: locked.iter, hash: 'SHA-256' },
+      base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']))
+    .then((key) => subtle.decrypt({ name: 'AES-GCM', iv: fromB64(locked.iv) }, key, fromB64(locked.data)))
+    .then((buf) => JSON.parse(new TextDecoder().decode(buf)));
+}
+
+function readSavedPass() {
+  try { return localStorage.getItem(PASS_KEY); } catch (e) { return null; }
+}
+function savePass(pass) {
+  try { localStorage.setItem(PASS_KEY, normalizePass(pass)); } catch (e) { /* asked again next time */ }
+}
+function forgetPass() {
+  try { localStorage.removeItem(PASS_KEY); } catch (e) { /* nothing saved */ }
+}
+
+function lockView(onSubmit, message) {
+  const input = el('input', {
+    class: 'answer', type: 'text', lang: 'en', 'aria-label': '通關密語',
+    autocomplete: 'off', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', enterkeyhint: 'go',
+  });
+  const button = el('button', { type: 'submit', class: 'btn btn-primary btn-wide' }, '開始挖礦');
+  const form = el('form', {
+    class: 'card lock', autocomplete: 'off', novalidate: true,
+    onsubmit: (e) => {
+      e.preventDefault();
+      if (!input.value.trim()) { input.focus(); return; }
+      button.disabled = true;
+      button.textContent = '解鎖中…';
+      onSubmit(input.value);
+    },
+  },
+  sprite('blk-gold', 'lock-ore'),
+  el('h1', {}, '國字挖礦'),
+  el('p', {}, '國一第一次段考・字音 100 題'),
+  el('p', { class: 'lock-hint' }, '請輸入通關密語（問家長）。輸入一次之後，這台裝置就會記住。'),
+  input,
+  message ? el('p', { class: 'lock-msg', role: 'alert' }, message) : null,
+  button);
+  return el('main', { class: 'screen' }, form);
+}
+
+/** Resolves with {units, tracks} once the saved or typed passphrase decrypts the data. */
+function unlock(locked) {
+  return new Promise((resolve) => {
+    const root = document.getElementById('app');
+    const show = (message) => {
+      setChildren(root, lockView(attempt, message));
+      root.querySelector('input').focus();
+    };
+    function attempt(pass) {
+      decryptVocab(locked, pass)
+        .then((data) => { savePass(pass); resolve(data); })
+        .catch((err) => show(err.message === 'no-crypto'
+          ? '這個瀏覽器沒辦法解鎖，請用 Safari 打開 https 開頭的網址。'
+          : '通關密語不對，再試一次。'));
+    }
+    const saved = readSavedPass();
+    if (!saved) { show(''); return; }
+    decryptVocab(locked, saved).then(resolve).catch(() => { forgetPass(); show(''); });
+  });
+}
+
+// ---- version.js ----
+/* Which version is running, what changed after an update, and a check for a newer copy online. */
+const VERSION_KEY = `${STORAGE_KEY}:version`;
+const UPDATE_CHECK_GAP_MS = 60 * 1000;
+const APP_VERSION = (window.APP_BUILD && window.APP_BUILD.version) || '';
+// Newest first; version = build time (Taiwan) of the release that brought the change.
+const CHANGELOG = [
+  { version: '2026-10-07 16:31', notes: ['國字挖礦第一版上線：100 題字音，寫國字用手寫、寫注音用注音鍵盤。'] },
+];
+
+let newerVersion = null;
+let lastUpdateCheck = -Infinity;
+let whatsNew = null;
+
+const isWebCopy = () => /^https?:$/.test(window.location.protocol);
+
+/** "2026-10-04 15:40" -> "10/4 15:40" */
+function fmtVersion(v) {
+  const m = /^\d{4}-(\d{2})-(\d{2}) (\d{2}:\d{2})$/.exec(v || '');
+  return m ? `${Number(m[1])}/${Number(m[2])} ${m[3]}` : (v || '開發版');
+}
+
+function readSeenVersion() {
+  try { return localStorage.getItem(VERSION_KEY); } catch (e) { return null; }
+}
+
+function markVersionSeen() {
+  try { localStorage.setItem(VERSION_KEY, APP_VERSION); } catch (e) { /* shown again next time */ }
+  whatsNew = null;
+}
+
+function initWhatsNew(hasProgress) {
+  if (!APP_VERSION) return;
+  const seen = readSeenVersion();
+  const notes = Core.whatsNewNotes(CHANGELOG, seen, APP_VERSION, hasProgress);
+  if (notes) whatsNew = { notes };
+  else if (!seen || seen < APP_VERSION) markVersionSeen();
+}
+
+/** Web copy only: asks the server which version is live (never cached). Resolves true if newer. */
+function checkForUpdate(force) {
+  if (!isWebCopy() || !APP_VERSION) return Promise.resolve(false);
+  const now = performance.now();
+  if (!force && now - lastUpdateCheck < UPDATE_CHECK_GAP_MS) return Promise.resolve(Boolean(newerVersion));
+  lastUpdateCheck = now;
+  return fetch(`version.json?t=${Date.now()}`, { cache: 'no-store' })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((info) => {
+      const remote = info && typeof info.version === 'string' ? info.version : '';
+      if (remote > APP_VERSION && remote !== newerVersion) {
+        newerVersion = remote;
+        if (route !== 'session') render();
+      }
+      return Boolean(newerVersion);
+    })
+    .catch(() => Boolean(newerVersion)); // offline: keep practicing, check again later
+}
+
+/** Reload the page past any cached copy; progress lives in storage, so nothing is lost. */
+function applyUpdate() {
+  const params = new URLSearchParams(window.location.search);
+  params.set('v', newerVersion || String(Date.now()));
+  window.location.replace(`${window.location.pathname}?${params.toString()}`);
+}
+
+function updateBanner() {
+  if (!newerVersion) return null;
+  return el('div', { class: 'update-banner', role: 'status' },
+    sprite('blk-gold', 'update-ore'),
+    el('span', {}, el('b', {}, '有新版本'), `（${fmtVersion(newerVersion)}），練習進度不會受影響。`),
+    el('button', { class: 'btn btn-gold btn-sm', onclick: applyUpdate }, '立即更新'));
+}
+
+function whatsNewCard() {
+  if (!whatsNew) return null;
+  return el('section', { class: 'card whats-new', role: 'status' },
+    el('h2', {}, `已更新到新版（${fmtVersion(APP_VERSION)}）`),
+    el('ul', {}, whatsNew.notes.map((n) => el('li', {}, n))),
+    el('p', { class: 'muted' }, '練習進度都還在。'),
+    el('button', { class: 'btn btn-dark btn-sm', onclick: () => { markVersionSeen(); render(); } }, '知道了'));
+}
+
+const versionLabel = () => `目前版本 ${fmtVersion(APP_VERSION)}${isWebCopy() ? '' : '（電腦版）'}`;
+
+function versionCard() {
+  const check = () => checkForUpdate(true).then((hasNew) => {
+    if (hasNew) render();
+    else showToast(el('span', {}, '已經是最新版'), 'good');
+  });
+  return el('section', { class: 'card' },
+    el('h2', {}, '版本與更新'),
+    el('p', {}, `目前版本：${fmtVersion(APP_VERSION)}`,
+      isWebCopy() ? '。有新版本時，畫面上方會出現「立即更新」。' : '（電腦版不會自動更新）'),
+    isWebCopy() ? el('button', { class: 'btn btn-dark btn-sm', onclick: check }, '檢查更新') : null,
+    el('h3', {}, '更新紀錄'),
+    el('ul', { class: 'changelog' }, CHANGELOG.map((c) =>
+      el('li', {}, el('b', {}, fmtVersion(c.version)), el('span', {}, c.notes.join(' '))))));
+}
+
+// ---- handwrite.js ----
+/* One-character handwriting pad (田字格) and the online recognizer (Google handwriting input, zh_TW).
+ * Strokes are kept as [[x...], [y...], [t...]] in CSS pixels: the "ink" format the recognizer expects. */
+const RECOGNIZE_URL = 'https://inputtools.google.com/request?ime=handwriting&app=mobilesearch&cs=1&oe=UTF-8';
+const RECOGNIZE_TIMEOUT_MS = 6000;
+const PAD_MAX = 420;
+const PAD_MIN = 220;
+const KAI_STACK = '"BiauKai","DFKai-SB","標楷體","TW-Kai","Kaiti TC","STKaiti","KaiTi",serif';
+
+/** Resolves with up to 10 candidate characters, best first; rejects when offline or on timeout. */
+function recognizeInk(strokes, size) {
+  const body = {
+    options: 'enable_pre_space',
+    requests: [{ writing_guide: { writing_area_width: size, writing_area_height: size }, ink: strokes, language: 'zh_TW' }],
+  };
+  const ctrl = typeof AbortController === 'function' ? new AbortController() : null;
+  const timer = setTimeout(() => { if (ctrl) ctrl.abort(); }, RECOGNIZE_TIMEOUT_MS);
+  return fetch(RECOGNIZE_URL, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+    signal: ctrl ? ctrl.signal : undefined,
+  })
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+    .then((data) => {
+      const list = Array.isArray(data) && data[0] === 'SUCCESS' && data[1] && data[1][0] && data[1][0][1];
+      if (!Array.isArray(list)) throw new Error('unexpected reply');
+      return list.filter((s) => typeof s === 'string').slice(0, 10);
+    })
+    .finally(() => clearTimeout(timer));
+}
+
+const padSize = () => Math.max(PAD_MIN, Math.min(PAD_MAX, window.innerWidth - 72));
+
+/** opts.guide: a character shown faintly behind the grid (tracing after a mistake). */
+function makePad(opts) {
+  const options = opts || {};
+  const size = padSize();
+  const dpr = Math.min(window.devicePixelRatio || 1, 3);
+  const canvas = el('canvas', {
+    class: 'pad-canvas', width: Math.round(size * dpr), height: Math.round(size * dpr),
+    style: `width:${size}px;height:${size}px`, role: 'img', 'aria-label': options.label || '手寫區',
+  });
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#1d1712';
+  ctx.lineWidth = Math.max(6, size / 26);
+  let strokes = [];
+  let current = null;
+  let pointerId = null;
+  let t0 = 0;
+  const listeners = new Set();
+
+  const point = (e) => {
+    const r = canvas.getBoundingClientRect();
+    return { x: Math.round(((e.clientX - r.left) / r.width) * size), y: Math.round(((e.clientY - r.top) / r.height) * size) };
+  };
+
+  function drawStroke(s) {
+    const [xs, ys] = s;
+    ctx.beginPath();
+    ctx.moveTo(xs[0], ys[0]);
+    if (xs.length === 1) ctx.lineTo(xs[0] + 0.1, ys[0] + 0.1); // a dot
+    for (let i = 1; i < xs.length; i += 1) ctx.lineTo(xs[i], ys[i]);
+    ctx.stroke();
+  }
+
+  function redraw() {
+    ctx.clearRect(0, 0, size, size);
+    strokes.forEach(drawStroke);
+    if (current) drawStroke(current);
+  }
+
+  const changed = () => listeners.forEach((fn) => fn(strokes.length));
+
+  canvas.addEventListener('pointerdown', (e) => {
+    if (pointerId !== null) return; // one finger or pen at a time (a resting palm is ignored)
+    e.preventDefault();
+    pointerId = e.pointerId;
+    try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* not capturable: still works */ }
+    if (!strokes.length) t0 = performance.now();
+    const p = point(e);
+    current = [[p.x], [p.y], [Math.round(performance.now() - t0)]];
+    redraw();
+  });
+  canvas.addEventListener('pointermove', (e) => {
+    if (e.pointerId !== pointerId || !current) return;
+    e.preventDefault();
+    const events = typeof e.getCoalescedEvents === 'function' && e.getCoalescedEvents().length ? e.getCoalescedEvents() : [e];
+    events.forEach((ev) => {
+      const p = point(ev);
+      current[0].push(p.x);
+      current[1].push(p.y);
+      current[2].push(Math.round(performance.now() - t0));
+    });
+    redraw();
+  });
+  const end = (e) => {
+    if (e.pointerId !== pointerId) return;
+    pointerId = null;
+    if (!current) return;
+    strokes = [...strokes, current];
+    current = null;
+    redraw();
+    changed();
+  };
+  canvas.addEventListener('pointerup', end);
+  canvas.addEventListener('pointercancel', end);
+  canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+
+  const guide = options.guide
+    ? el('span', { class: 'pad-guide', 'aria-hidden': 'true', style: `font-family:${KAI_STACK};font-size:${Math.round(size * 0.82)}px` }, options.guide)
+    : null;
+  const node = el('div', { class: 'pad', style: `width:${size}px;height:${size}px` }, guide, canvas);
+
+  return {
+    node,
+    size,
+    strokes: () => strokes.map((s) => s.map((a) => a.slice())),
+    isEmpty: () => strokes.length === 0,
+    undo() { strokes = strokes.slice(0, -1); redraw(); changed(); },
+    clear() { strokes = []; redraw(); changed(); },
+    snapshot: () => canvas.toDataURL('image/png'),
+    onChange(fn) { listeners.add(fn); },
+    nudge() {
+      node.classList.remove('nope');
+      void node.offsetWidth;
+      node.classList.add('nope');
+    },
+  };
+}
+
+function padTools(pad) {
+  return el('div', { class: 'pad-tools' },
+    el('button', { type: 'button', class: 'btn btn-ghost btn-sm', onclick: () => pad.undo() }, '↶ 上一筆'),
+    el('button', { type: 'button', class: 'btn btn-ghost btn-sm', onclick: () => pad.clear() }, '全部擦掉'));
+}
+
+// ---- zhuyin.js ----
+/* On-screen 注音 keypad: rows for 聲母／介音／韻母／聲調. Each tap fills its own slot, so the order
+ * of tapping does not matter; tapping the same symbol again takes it out. */
+const ZY_ROWS = [
+  { label: '聲母', keys: [...Core.INITIALS] },
+  { label: '介音', keys: [...Core.MEDIALS] },
+  { label: '韻母', keys: [...Core.FINALS] },
+  { label: '聲調', keys: ['', 'ˊ', 'ˇ', 'ˋ', '˙'] },
+];
+const TONE_TEXT = { '': '一聲', 'ˊ': 'ˊ', 'ˇ': 'ˇ', 'ˋ': 'ˋ', '˙': '˙' };
+const TONE_NAME = { '': '一聲', 'ˊ': '二聲', 'ˇ': '三聲', 'ˋ': '四聲', '˙': '輕聲' };
+
+const slotOf = (key) => Core.slotOfKey(key) || 'tone';
+
+/** onEnter: called when the keypad's 確定 is pressed. */
+function makeZhuyinPad(onEnter, opts) {
+  const options = opts || {};
+  let slots = Core.emptySlots();
+  let toneChosen = false;
+  const display = el('div', { class: 'zy-display', 'aria-live': 'polite' });
+  const keys = [];
+
+  function refresh() {
+    const text = Core.formatZhuyin(slots);
+    setChildren(display, text
+      ? el('span', { class: 'zy-text' }, text)
+      : el('span', { class: 'zy-placeholder' }, options.placeholder || '點下面的注音'));
+    keys.forEach(({ key, btn }) => {
+      const slot = slotOf(key);
+      const on = slot === 'tone' ? toneChosen && slots.tone === key : slots[slot] === key;
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  function tap(key) {
+    if (slotOf(key) === 'tone') {
+      const off = toneChosen && slots.tone === key;
+      slots = Object.assign({}, slots, { tone: off ? '' : key });
+      toneChosen = !off;
+    } else {
+      slots = Core.tapZhuyin(slots, key);
+    }
+    refresh();
+  }
+
+  const rows = ZY_ROWS.map((row) => el('div', { class: `zy-row zy-${row.label}` },
+    el('span', { class: 'zy-label' }, row.label),
+    el('div', { class: 'zy-keys' }, row.keys.map((key) => {
+      const label = row.label === '聲調' ? TONE_TEXT[key] : key;
+      const btn = el('button', {
+        type: 'button', class: row.label === '聲調' ? 'zy-key zy-tone' : 'zy-key',
+        'aria-label': row.label === '聲調' ? TONE_NAME[key] : key, onclick: () => tap(key),
+      }, label);
+      keys.push({ key, btn });
+      return btn;
+    }))));
+
+  const node = el('div', { class: 'zy-pad' },
+    el('div', { class: 'zy-top' }, display,
+      el('button', { type: 'button', class: 'btn btn-ghost btn-sm', onclick: () => { slots = Core.emptySlots(); toneChosen = false; refresh(); } }, '清除'),
+      onEnter ? el('button', { type: 'button', class: 'btn btn-primary btn-sm zy-enter', onclick: () => onEnter(Core.formatZhuyin(slots)) }, options.enterText || '確定') : null),
+    rows);
+  refresh();
+
+  return {
+    node,
+    value: () => Core.formatZhuyin(slots),
+    nudge() {
+      display.classList.remove('nope');
+      void display.offsetWidth;
+      display.classList.add('nope');
+    },
+  };
+}
+
+// ---- session.js ----
+/* Practice sessions: queue building, moving through steps, answering, and the session bars. */
+const BOSS_SIZE = 30;
+const EXTRA_NEW = 10;
+const ERROR_SESSION_MAX = 30;
+const ACTIVE_CAP_MS = 90 * 1000;
+const MODE_LABELS = {
+  mission: '今日任務', extra: '多學新題', errors: '錯題本', practice: '自由練習', boss: '魔王關', redo: '重練答錯的題目',
+};
+const PRACTICE_UNITS = { mix: ['char', 'zhuyin'], write: ['char'], zhuyin: ['zhuyin'] };
+const COMBO_STEP = 5;      // fanfare every 5 answers in a row
+const COMBO_BADGE_MIN = 3; // show the 🔥 counter from 3 in a row
+
+let session = null;
+const updateSession = (patch) => { session = Object.assign({}, session, patch); };
+const stateOf = (id) => Core.getState(store.states, id);
+const emptyLog = () => ({ q: 0, ok: 0, ms: 0, fresh: 0, mined: 0 });
+const todayLog = () => store.log[Core.todayISO()] || emptyLog();
+
+// ---------- building a session ----------
+function queueFor(mode, opts) {
+  if (mode === 'mission') {
+    const m = Core.buildMission(ITEMS, store.states, Core.todayISO(), store.settings, todayLog().fresh);
+    return Core.buildQueue(m.reviews, m.fresh);
+  }
+  if (mode === 'extra') return Core.buildQueue([], ITEMS.filter((it) => !stateOf(it.id).seen).slice(0, EXTRA_NEW));
+  if (mode === 'errors') return Core.buildQueue(Core.errorBook(ITEMS, store.states).slice(0, ERROR_SESSION_MAX), []);
+  if (mode === 'redo') return Core.buildQueue(opts.ids.map((id) => ITEM_BY_ID.get(id)).filter(Boolean), []);
+  if (mode === 'practice') {
+    const sel = Core.selectPractice(ITEMS, store.states, PRACTICE_UNITS[opts.type] || PRACTICE_UNITS.mix, opts.count);
+    return Core.buildQueue(sel.review, sel.fresh);
+  }
+  if (mode === 'boss') {
+    return Core.selectBoss(ITEMS, store.states, BOSS_SIZE).map((it) => ({ kind: 'quiz', id: it.id, qtype: Core.typeOf(it) }));
+  }
+  return [];
+}
+
+function questionAt(pos) {
+  const step = session.queue[pos];
+  if (!step || step.kind !== 'quiz') return null;
+  return Core.makeQuestion(ITEM_BY_ID.get(step.id));
+}
+
+function startSession(mode, opts) {
+  const queue = queueFor(mode, opts || {});
+  if (!queue.length) {
+    showToast(el('span', {}, '目前沒有要練的題目'), 'info');
+    return;
+  }
+  session = {
+    mode, queue, pos: 0, q: null, fb: null, check: null, done: false, retries: {}, results: {}, view: null,
+    answered: 0, correct: 0, ups: [0, 0, 0, 0], wrongIds: [], lastActive: Date.now(), combo: 0, bestCombo: 0,
+  };
+  updateSession({ q: questionAt(0) });
+  saveSessionSnapshot();
+  go('session');
+}
+
+function leaveSession() {
+  session = null;
+  go('home');
+}
+
+// ---------- moving through the queue ----------
+function advance() {
+  if (!session || session.done) return;
+  const pos = session.pos + 1;
+  if (pos >= session.queue.length) {
+    finishSession();
+    return;
+  }
+  updateSession({ pos, fb: null, q: null, check: null, view: null });
+  updateSession({ q: questionAt(pos) });
+  saveSessionSnapshot();
+  render();
+}
+
+function finishSession() {
+  if (session.mode === 'boss') {
+    const record = { date: Core.todayISO(), score: session.correct, total: session.answered };
+    commit((s) => Object.assign({}, s, { boss: [...s.boss, record].slice(-50) }));
+  }
+  updateSession({ done: true });
+  saveSessionSnapshot();
+  const won = session.answered > 0 && session.correct / session.answered >= 0.8;
+  if (session.mode === 'boss') (won ? Sfx.bossWin : Sfx.bossLose)();
+  else Sfx.complete();
+  go('result');
+}
+
+// ---------- answering ----------
+function recordAnswer(id, before, after, correct) {
+  const today = Core.todayISO();
+  const now = Date.now();
+  const delta = {
+    q: 1, ok: correct ? 1 : 0, ms: Math.min(now - session.lastActive, ACTIVE_CAP_MS),
+    fresh: before.seen ? 0 : 1, mined: correct ? 1 : 0,
+  };
+  commit((s) => Object.assign({}, s, {
+    states: Object.assign({}, s.states, { [id]: after }),
+    log: Core.addToLog(s.log, today, delta),
+  }));
+  updateSession({ lastActive: now });
+}
+
+/** values: null = 「不會，看答案」; text for 寫注音; {verdict, given, self} for 寫國字. */
+function submitAnswer(values) {
+  if (!session || session.fb || !session.q) return;
+  const q = session.q;
+  const step = session.queue[session.pos];
+  const gaveUp = values === null;
+  const res = gaveUp ? { correct: false } : Core.checkQuestion(q, values);
+  const before = stateOf(q.id);
+  const graded = Core.grade(before, res.correct, Core.todayISO());
+  const patchState = {};
+  // A re-ask right after seeing the answer is too easy to count as "fixed": it stays in the error book.
+  if (step.retry && res.correct) patchState.run = 0;
+  // Self-checked answers are counted, so the parent page can list them for a second look.
+  if (res.correct && values && values.self) patchState.self = before.self + 1;
+  const after = Object.assign({}, graded, patchState);
+  recordAnswer(q.id, before, after, res.correct);
+  updateSession({ results: Object.assign({}, session.results, { [session.pos]: resultRecord(q, res.correct, gaveUp, values) }) });
+  const ups = session.ups.map((n, lv) => (after.lv > before.lv && lv === after.lv ? n + 1 : n));
+  const combo = res.correct ? session.combo + 1 : 0;
+  updateSession({
+    answered: session.answered + 1, correct: session.correct + (res.correct ? 1 : 0), ups,
+    combo, bestCombo: Math.max(session.bestCombo, combo), check: null,
+  });
+  if (res.correct) {
+    celebrate(q, before, after);
+    advance();
+    return;
+  }
+  handleMistake(q, step, givenText(q, values), gaveUp, before);
+}
+
+const givenText = (q, values) => {
+  if (!values) return '';
+  return q.type === 'write' ? String(values.given || '') : String(values);
+};
+
+function handleMistake(q, step, given, gaveUp, before) {
+  Sfx.wrong();
+  const wrongIds = session.wrongIds.includes(q.id) ? session.wrongIds : [...session.wrongIds, q.id];
+  updateSession({ wrongIds, fb: { given, gaveUp, lostLevel: before.seen ? before.lv : 0 } });
+  if (session.mode !== 'boss') {
+    const count = (session.retries[q.id] || 0) + 1;
+    updateSession({
+      retries: Object.assign({}, session.retries, { [q.id]: count }),
+      queue: Core.insertRetry(session.queue, session.pos, step, count),
+    });
+  }
+  saveSessionSnapshot();
+  render();
+}
+
+function celebrate(q, before, after) {
+  const up = after.lv > before.lv;
+  const combo = session.combo;
+  const milestone = combo >= COMBO_STEP && combo % COMBO_STEP === 0;
+  if (session.mode === 'boss') Sfx.bossHit();
+  if (up) Sfx.ore(after.lv, false);
+  else Sfx.mine(combo);
+  if (milestone) setTimeout(() => Sfx.combo(combo), 280);
+  const diamond = up && after.lv === Core.MAX_LEVEL;
+  let msg = '答對了！';
+  if (diamond) msg = '鑽石到手！';
+  else if (up) msg = `升級成${Core.LEVEL_NAMES[after.lv]}`;
+  const cls = ['toast-body', diamond ? 'is-diamond' : '', milestone ? 'is-combo' : ''].filter(Boolean).join(' ');
+  showToast(el('div', { class: cls },
+    oreSprite(after, 'toast-ore'),
+    el('div', { class: 'toast-text' }, el('b', { class: 'kai' }, Core.displayAnswer(q)), el('span', {}, msg),
+      milestone ? el('span', { class: 'toast-combo' }, `🔥 連續答對 ${combo} 題！`) : null)), 'good');
+}
+
+// ---------- views ----------
+function sessionView() {
+  if (!session || session.done) return homeView();
+  const step = session.queue[session.pos];
+  const it = ITEM_BY_ID.get(step.id);
+  let body;
+  if (isReviewing()) body = reviewCard();
+  else if (step.kind === 'learn') body = learnCard(it);
+  else if (session.fb) body = feedbackCard(it);
+  else body = quizCard();
+  return el('main', { class: `screen session mode-${session.mode}` },
+    sessionBar(), session.mode === 'boss' ? bossBar() : null, body);
+}
+
+function sessionBar() {
+  const total = session.queue.length;
+  const pct = Math.round((session.pos / total) * 100);
+  return el('header', { class: 'session-bar' },
+    el('button', { class: 'icon-btn', 'aria-label': '先休息，回礦坑（進度已存）', title: '先休息', onclick: leaveSession }, '✕'),
+    el('span', { class: 'session-title' }, MODE_LABELS[session.mode]),
+    el('div', { class: 'progress', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': total, 'aria-valuenow': session.pos },
+      el('span', { style: `width:${pct}%` })),
+    session.combo >= COMBO_BADGE_MIN
+      ? el('span', { class: 'combo-badge', title: '連續答對', 'aria-label': `連續答對 ${session.combo} 題` }, '🔥', el('b', {}, session.combo))
+      : null,
+    el('span', { class: 'count' }, isReviewing()
+      ? `回顧 ${session.view + 1} / ${total}`
+      : `${Math.min(session.pos + 1, total)} / ${total}`));
+}
+
+function bossBar() {
+  const total = session.queue.length;
+  const hp = total - session.correct;
+  return el('div', { class: 'boss-bar' },
+    sprite('blk-boss', 'boss-icon'),
+    el('div', { class: 'hp', 'aria-hidden': 'true' }, el('span', { style: `width:${(hp / total) * 100}%` })),
+    el('span', { class: 'hp-num' }, `魔王 HP ${hp} / ${total}`));
+}
+
+// ---- session-nav.js ----
+/* Today's mission and 「多學新題」 survive closing the app (saved after every step),
+ * and a session can step back to look at earlier cards, or skip a question for later. */
+const SESSION_KEY = `${STORAGE_KEY}:session`;
+const SAVED_MODES = Core.RESUMABLE_MODES;
+const RESUME_TEXT = {
+  mission: { title: '今日任務做到一半', go: '繼續挖礦', other: '重新排今天的任務' },
+  extra: { title: '多學新題做到一半', go: '繼續學新題', other: '這一輪先不做' },
+};
+
+function saveSessionSnapshot() {
+  if (!session || !SAVED_MODES.includes(session.mode)) return;
+  if (session.done) {
+    clearSavedSession();
+    return;
+  }
+  const snap = {
+    v: 1, day: Core.todayISO(), mode: session.mode, queue: session.queue, pos: session.pos, q: session.q, fb: session.fb,
+    results: session.results, retries: session.retries, ups: session.ups, answered: session.answered,
+    correct: session.correct, wrongIds: session.wrongIds, combo: session.combo, bestCombo: session.bestCombo,
+  };
+  try {
+    localStorage.setItem(SESSION_KEY, JSON.stringify(snap));
+  } catch (e) { /* each answer is still saved per word; only the place in the queue is lost */ }
+}
+
+function clearSavedSession() {
+  try { localStorage.removeItem(SESSION_KEY); } catch (e) { /* nothing saved */ }
+}
+
+function loadSavedSession() {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    return raw ? Core.sanitizeSavedSession(JSON.parse(raw), VALID_IDS, Core.todayISO()) : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function resumeSession() {
+  const saved = loadSavedSession();
+  if (!saved) {
+    startSession('mission');
+    return;
+  }
+  session = Object.assign({ done: false, view: null, check: null, lastActive: Date.now() }, saved);
+  if (!session.q && session.queue[session.pos].kind === 'quiz') updateSession({ q: questionAt(session.pos) });
+  go('session');
+}
+
+function restartMission() {
+  clearSavedSession();
+  startSession('mission');
+}
+
+/** Leaves a half-done 「多學新題」 round; home offers a fresh round again. */
+function dropSavedRound() {
+  clearSavedSession();
+  render();
+}
+
+// ---------- stepping back and forth ----------
+const isReviewing = () => Boolean(session) && session.view !== null && session.view !== undefined;
+
+function stepBack() {
+  if (!session || session.fb) return;
+  const from = isReviewing() ? session.view : session.pos;
+  if (from <= 0) return;
+  updateSession({ view: from - 1 });
+  render();
+}
+
+function stepForward() {
+  if (!isReviewing()) return;
+  const next = session.view + 1;
+  updateSession({ view: next >= session.pos ? null : next });
+  render();
+}
+
+function skipQuestion() {
+  if (!session || session.fb || isReviewing() || !Core.canSkipStep(session.queue, session.pos)) return;
+  updateSession({ queue: Core.skipStep(session.queue, session.pos), check: null });
+  updateSession({ q: questionAt(session.pos) });
+  saveSessionSnapshot();
+  render();
+}
+
+/** What the review screen shows for a question that was already answered. */
+function resultRecord(q, correct, gaveUp, values) {
+  return { correct, gaveUp, self: Boolean(values && values.self), type: q.type, answer: q.answer, given: givenText(q, values) };
+}
+
+function backButton() {
+  const from = isReviewing() ? session.view : session.pos;
+  if (from <= 0 || session.fb) return null;
+  return el('button', { type: 'button', class: 'btn btn-ghost btn-nav', onclick: keyGuard(stepBack) }, '← 上一步');
+}
+
+function skipButton() {
+  if (!Core.canSkipStep(session.queue, session.pos)) return null;
+  return el('button', { type: 'button', class: 'btn btn-ghost', title: '這題放到最後再做', onclick: skipQuestion }, '先跳過');
+}
+
+function reviewNav(index) {
+  const backToNow = index + 1 >= session.pos;
+  return el('div', { class: 'review-nav' },
+    backButton(),
+    el('button', { type: 'button', class: 'btn btn-primary', 'data-autofocus': '', onclick: keyGuard(stepForward) },
+      backToNow ? '回到現在這題 →' : '下一步 →'));
+}
+
+function reviewBadge(r) {
+  if (r.correct) return el('p', { class: 'review-badge good' }, r.self ? '✓ 這題答對了（自己比對）' : '✓ 這題答對了');
+  return el('p', { class: 'review-badge bad' }, r.gaveUp ? '這題按了「不會」' : '✗ 這題答錯了');
+}
+
+function reviewCard() {
+  const index = session.view;
+  const step = session.queue[index];
+  const it = ITEM_BY_ID.get(step.id);
+  if (step.kind === 'learn') return learnCard(it, reviewNav(index));
+  const r = session.results[index];
+  return el('section', { class: 'card review-card' },
+    el('span', { class: 'chip chip-review' }, `回顧第 ${index + 1} 步`),
+    r ? reviewBadge(r) : null,
+    phraseView(it, 'show', true),
+    r ? el('p', { class: 'review-answer' }, '正確答案：', el('b', { class: 'kai' }, r.answer)) : null,
+    r && !r.correct && r.given ? el('p', { class: 'fb-yours' }, r.type === 'write' ? '電腦看成：' : '你選的：', el('s', {}, r.given)) : null,
+    reviewNav(index));
+}
+
+// ---------- home: pick up today's mission or a 「多學新字」 round ----------
+function resumeMissionCard(saved) {
+  const text = RESUME_TEXT[saved.mode] || RESUME_TEXT.mission;
+  const total = saved.queue.length;
+  const pct = Math.round((saved.pos / total) * 100);
+  return el('section', { class: 'card mission resume' },
+    el('div', { class: 'mission-ores', 'aria-hidden': 'true' }, sprite('blk-iron'), sprite('blk-gold'), sprite('blk-diamond')),
+    el('div', { class: 'mission-text' },
+      el('h2', {}, text.title),
+      el('p', { class: 'mission-meta' }, `已完成 ${saved.pos} / ${total} 步，還剩 ${total - saved.pos} 步`),
+      el('div', { class: 'progress mission-progress', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': total, 'aria-valuenow': saved.pos },
+        el('span', { style: `width:${pct}%` }))),
+    el('div', { class: 'mission-cta' },
+      el('button', { class: 'btn btn-primary btn-big', 'data-autofocus': '', onclick: resumeSession }, text.go),
+      el('button', { class: 'btn btn-ghost btn-sm', onclick: saved.mode === 'extra' ? dropSavedRound : restartMission }, text.other)));
+}
+
+// ---- quiz.js ----
+/* Cards: new question, 寫國字 (pad + recognizer, then self-check if needed), 寫注音 (keypad),
+ * the wrong-answer card (trace / re-enter the answer once) and the result screen. */
+const SELF_CHECK_TITLES = {
+  close: '電腦看不太清楚，請自己對對看',
+  miss: '電腦看成別的字，請自己對對看',
+  offline: '沒連上手寫辨識，請自己對對看',
+  off: '請自己對對看',
+};
+
+/** mode: 'write' (注音 over an empty box), 'zhuyin' (character to read), 'show' (character with its 注音). */
+function phraseView(it, mode, big) {
+  const chars = [...Core.phraseOf(it)];
+  const proper = Core.properMask(it);
+  const at = [...it.before].length;
+  const cell = (ch, i) => {
+    if (i !== at) return el('span', { class: proper[i] ? 'ph-ch proper' : 'ph-ch' }, ch);
+    if (mode === 'write') {
+      return el('span', { class: 'ph-target ph-ask' }, el('span', { class: 'ph-zy' }, it.zhuyin), el('span', { class: 'ph-box', 'aria-label': '要寫的國字' }, '　'));
+    }
+    const zy = mode === 'zhuyin' ? el('span', { class: 'ph-zy ph-zy-empty' }, '？') : el('span', { class: 'ph-zy' }, it.zhuyin);
+    return el('span', { class: proper[i] ? 'ph-target proper' : 'ph-target' }, zy, el('span', { class: 'ph-char' }, ch));
+  };
+  return el('p', { class: big ? 'phrase kai phrase-big' : 'phrase kai', lang: 'zh-Hant' }, chars.map(cell));
+}
+
+const typeHint = (it) => (it.type === 'char' ? '考法：看注音，寫出國字' : '考法：看國字，寫出注音');
+
+function modelChar(ch) {
+  return el('div', { class: 'model-char kai', 'aria-label': `正確的字：${ch}` }, ch);
+}
+
+/** reviewFooter: the back/forward buttons when looking at a card from earlier in the session. */
+function learnCard(it, reviewFooter) {
+  const footer = reviewFooter || el('div', { class: 'learn-nav' },
+    backButton(),
+    el('button', { class: 'btn btn-primary', 'data-autofocus': '', onclick: keyGuard(advance) }, '記住了，下一個 →'));
+  return el('section', { class: 'card learn-card' },
+    el('span', { class: reviewFooter ? 'chip chip-review' : 'chip chip-new' }, reviewFooter ? '回顧：新題' : `新題 · 第 ${it.no} 題`),
+    phraseView(it, 'show', true),
+    el('p', { class: 'q-hint' }, typeHint(it)),
+    el('div', { class: 'learn-model' }, modelChar(it.char), el('span', { class: 'learn-zy' }, it.zhuyin)),
+    it.note ? el('p', { class: 'note muted' }, it.note) : null,
+    footer);
+}
+
+// ---------- 寫國字 ----------
+function writeCard(q, it) {
+  const pad = makePad({ label: '在這裡寫國字' });
+  const status = el('p', { class: 'pad-status', 'aria-live': 'polite' });
+  const submit = el('button', { type: 'button', class: 'btn btn-primary' }, '寫好了');
+  const giveUp = el('button', { type: 'button', class: 'btn btn-ghost', onclick: () => submitAnswer(null) }, '不會，看答案');
+  submit.addEventListener('click', () => checkWriting(pad, q, status, [submit, giveUp]));
+  return el('section', { class: 'card quiz-card write-card' },
+    el('span', { class: 'chip chip-write' }, '寫國字'),
+    el('p', { class: 'q-hint' }, '看注音，把空格裡的國字寫在格子裡'),
+    phraseView(it, 'write', true),
+    el('div', { class: 'pad-wrap' }, pad.node),
+    padTools(pad),
+    status,
+    el('div', { class: 'quiz-actions' }, backButton(), skipButton(), giveUp, submit));
+}
+
+function checkWriting(pad, q, status, buttons) {
+  if (pad.isEmpty()) { pad.nudge(); return; }
+  const pos = session.pos;
+  const image = pad.snapshot();
+  const selfCheck = (reason, guess) => {
+    if (!session || session.pos !== pos || session.fb) return; // moved on while waiting
+    updateSession({ check: { image, guess: guess || '', reason } });
+    render();
+  };
+  if (!store.settings.recognize) { selfCheck('off'); return; }
+  buttons.forEach((b) => { b.disabled = true; });
+  status.textContent = '辨識中…';
+  recognizeInk(pad.strokes(), pad.size)
+    .then((candidates) => {
+      if (!session || session.pos !== pos || session.fb) return;
+      const verdict = Core.judgeRecognition(candidates, q.answer);
+      if (verdict === 'match') submitAnswer({ verdict: 'right', given: candidates[0], self: false });
+      else selfCheck(verdict, candidates[0]);
+    })
+    .catch(() => selfCheck('offline'));
+}
+
+function selfCheckCard(q, it) {
+  const c = session.check;
+  const decide = (verdict) => submitAnswer({ verdict, given: c.guess || '（手寫）', self: true });
+  return el('section', { class: 'card selfcheck' },
+    el('span', { class: 'chip chip-write' }, '寫國字'),
+    el('h2', {}, SELF_CHECK_TITLES[c.reason] || SELF_CHECK_TITLES.off),
+    phraseView(it, 'show'),
+    el('div', { class: 'compare' },
+      el('figure', {}, el('img', { src: c.image, alt: '你寫的字', class: 'compare-img' }), el('figcaption', {}, '你寫的')),
+      el('figure', {}, modelChar(q.answer), el('figcaption', {}, '正確答案'))),
+    c.guess ? el('p', { class: 'muted' }, `電腦看成：「${c.guess}」`) : null,
+    el('p', { class: 'q-hint' }, '要一筆一畫都一樣才算對，多一點、少一橫都不行喔。'),
+    el('div', { class: 'quiz-actions' },
+      el('button', { type: 'button', class: 'btn btn-red', onclick: keyGuard(() => decide('wrong')) }, '✗ 不一樣，我寫錯了'),
+      el('button', { type: 'button', class: 'btn btn-primary', onclick: keyGuard(() => decide('right')) }, '✓ 一樣，我寫對了')));
+}
+
+// ---------- 寫注音 ----------
+function zhuyinCard(q, it) {
+  const pad = makeZhuyinPad((value) => {
+    if (!value) { pad.nudge(); return; }
+    submitAnswer(value);
+  });
+  return el('section', { class: 'card quiz-card zhuyin-card' },
+    el('span', { class: 'chip chip-zhuyin' }, '寫注音'),
+    el('p', { class: 'q-hint' }, '看國字，用下面的注音拼出框起來的字怎麼念'),
+    phraseView(it, 'zhuyin', true),
+    pad.node,
+    el('div', { class: 'quiz-actions' }, backButton(), skipButton(),
+      el('button', { type: 'button', class: 'btn btn-ghost', onclick: () => submitAnswer(null) }, '不會，看答案')));
+}
+
+function quizCard() {
+  const q = session.q;
+  const it = ITEM_BY_ID.get(q.id);
+  if (q.type === 'write') return session.check ? selfCheckCard(q, it) : writeCard(q, it);
+  return zhuyinCard(q, it);
+}
+
+// ---------- wrong answer ----------
+function feedbackHead(q, fb) {
+  let title = '答錯了，明天會再考這一題';
+  if (fb.gaveUp) title = '沒關係，記住正確答案';
+  else if (fb.lostLevel > 0) title = `答錯了，${Core.LEVEL_NAMES[fb.lostLevel]}變回石頭`;
+  return el('div', { class: 'fb-head', role: 'alert' },
+    el('span', { class: 'fb-icon', 'aria-hidden': 'true' }, '✗'),
+    el('div', {},
+      el('b', {}, title),
+      el('div', { class: 'fb-answer' }, '正確答案：', el('b', { class: 'kai' }, q.answer))));
+}
+
+function yoursLine(q, fb) {
+  if (fb.gaveUp || !fb.given) return null;
+  return el('p', { class: 'fb-yours' }, q.type === 'write' ? '電腦看成：' : '你選的：', el('s', {}, fb.given));
+}
+
+function traceForm(q) {
+  const pad = makePad({ guide: q.answer, label: '照著淡淡的字寫一次' });
+  const done = el('button', { type: 'button', class: 'btn btn-primary' }, '寫好了 →');
+  done.addEventListener('click', keyGuard(() => {
+    if (pad.isEmpty()) { pad.nudge(); return; }
+    Sfx.fixed();
+    advance();
+  }));
+  return el('div', { class: 'retype' },
+    el('p', { class: 'q-hint' }, '照著淡淡的字描一次，記住字形：'),
+    el('div', { class: 'pad-wrap' }, pad.node),
+    padTools(pad),
+    el('div', { class: 'quiz-actions' }, done));
+}
+
+function retypeZhuyin(q) {
+  const pad = makeZhuyinPad((value) => {
+    if (Core.zhuyinEqual(value, q.answer)) {
+      Sfx.fixed();
+      advance();
+    } else {
+      pad.nudge();
+    }
+  }, { placeholder: `照著拼：${q.answer}`, enterText: '拼好了 →' });
+  return el('div', { class: 'retype' }, el('p', { class: 'q-hint' }, '照著正確的注音拼一次：'), pad.node);
+}
+
+function feedbackCard(it) {
+  const q = session.q;
+  const fb = session.fb;
+  const head = [feedbackHead(q, fb), yoursLine(q, fb), phraseView(it, 'show', true),
+    it.type === 'char' ? el('div', { class: 'learn-model' }, modelChar(it.char)) : null];
+  if (session.mode === 'boss') {
+    return el('section', { class: 'card fb-card' }, head,
+      el('button', { class: 'btn btn-primary btn-wide', 'data-autofocus': '', onclick: keyGuard(advance) }, '下一題 →'));
+  }
+  return el('section', { class: 'card fb-card' }, head, q.type === 'write' ? traceForm(q) : retypeZhuyin(q));
+}
+
+// ---------- result ----------
+function bossVerdict(pct) {
+  if (pct >= 90) return '完美擊敗魔王！';
+  if (pct >= 80) return '擊敗魔王！';
+  if (pct >= 60) return '魔王只剩一點血，再挑戰一次！';
+  return '魔王太強了，先練錯題本再來';
+}
+
+function itemChips(list) {
+  return el('div', { class: 'chips' }, list.map((it) =>
+    el('button', { class: 'word-chip kai', onclick: () => openItem(it.id) }, oreSprite(stateOf(it.id)), Core.phraseOf(it))));
+}
+
+function resultView() {
+  const s = session;
+  if (!s) return homeView();
+  const pct = s.answered ? Math.round((s.correct / s.answered) * 100) : 0;
+  const isBoss = s.mode === 'boss';
+  const ups = [1, 2, 3].filter((lv) => s.ups[lv] > 0);
+  const wrongItems = s.wrongIds.map((id) => ITEM_BY_ID.get(id)).filter(Boolean);
+  const backHome = () => { session = null; go('home'); };
+  return el('main', { class: 'screen' }, el('section', { class: 'card result' },
+    isBoss ? sprite('blk-boss', 'result-boss') : null,
+    el('h1', {}, isBoss ? bossVerdict(pct) : '任務完成！'),
+    el('p', { class: 'result-score' }, el('b', {}, isBoss ? `${pct} 分` : `${s.correct} / ${s.answered}`),
+      isBoss ? `（答對 ${s.correct} / ${s.answered} 題）` : ` 答對（${pct}%）`),
+    ups.length ? el('div', { class: 'result-block' }, el('h2', {}, '這回挖到的礦'),
+      el('ul', { class: 'ups' }, ups.map((lv) => el('li', {}, sprite(LEVEL_SPRITES[lv]), `${Core.LEVEL_NAMES[lv]} ×${s.ups[lv]}`)))) : null,
+    el('p', {}, `連續練習 ${Core.streakDays(store.log, Core.todayISO())} 天 🔥`),
+    s.bestCombo >= COMBO_BADGE_MIN ? el('p', { class: 'best-combo' }, `這回最多連續答對 ${s.bestCombo} 題`) : null,
+    wrongItems.length
+      ? el('div', { class: 'result-block' }, el('h2', {}, '這回答錯的題目'), itemChips(wrongItems))
+      : el('p', { class: 'all-right' }, '全部答對，太強了！'),
+    el('div', { class: 'result-actions' },
+      wrongItems.length ? el('button', { class: 'btn btn-gold', onclick: keyGuard(() => startSession('redo', { ids: s.wrongIds })) }, '再練一次答錯的題目') : null,
+      el('button', { class: 'btn btn-primary', 'data-autofocus': '', onclick: keyGuard(backHome) }, '回礦坑'))));
+}
+
+// ---- screens.js ----
+/* Home (the mine), error book, free practice, boss intro, question bank and question details. */
+const MIN_BOSS_WORDS = 10;
+const UNIT_LABELS = { char: '寫國字（看注音）', zhuyin: '寫注音（看國字）' };
+const UNIT_SHORT = { char: '寫國字', zhuyin: '寫注音' };
+
+function countdownText(daysLeft) {
+  const day = fmtDate(store.settings.examDate);
+  if (daysLeft > 0) return el('span', {}, `國文段考 ${day}　還有 `, el('b', {}, daysLeft), ' 天');
+  if (daysLeft === 0) return el('span', {}, '今天考國文，加油！');
+  return el('span', {}, '段考結束了，辛苦了！');
+}
+
+function homeTop(daysLeft) {
+  return el('header', { class: 'home-top' },
+    el('div', { class: 'brand' }, sprite('blk-gold', 'brand-ore'),
+      el('div', {}, el('h1', {}, '國字挖礦'), el('p', {}, '國一第一次段考・字音 100 題'))),
+    el('div', { class: 'countdown' }, countdownText(daysLeft)));
+}
+
+function introCard() {
+  const dismiss = () => {
+    commit((s) => Object.assign({}, s, { settings: Object.assign({}, s.settings, { introSeen: true }) }));
+    render();
+  };
+  return el('section', { class: 'card intro' },
+    el('h2', {}, '怎麼玩'),
+    el('ol', {},
+      el('li', {}, '每天完成「今日任務」，大約 15 分鐘。'),
+      el('li', {}, '寫國字的題目，用手指或觸控筆寫在格子裡；寫注音的題目，點下面的注音鍵。'),
+      el('li', {}, '答對就能挖礦，同一題隔天、再隔兩天都答對，會從 ', sprite('blk-stone'), '石頭 → ', sprite('blk-iron'), '鐵 → ', sprite('blk-gold'), '金 → ', sprite('blk-diamond'), '鑽石。'),
+      el('li', {}, '答錯的題目會變回石頭，明天再出現。要把 100 題都挖成鑽石！')),
+    el('button', { class: 'btn btn-dark btn-sm', onclick: dismiss }, '知道了'));
+}
+
+function storageWarning() {
+  return el('section', { class: 'card warn', role: 'alert' },
+    el('b', {}, '這個瀏覽器沒辦法保存進度。'),
+    ' 可能是開了無痕模式。請改用一般模式開啟，或練完後到「家長」頁匯出進度。');
+}
+
+function missionDone() {
+  const hasUnseen = ITEMS.some((it) => !stateOf(it.id).seen);
+  const errors = Core.errorBook(ITEMS, store.states).length;
+  return el('section', { class: 'card mission done' },
+    el('div', { class: 'mission-ores' }, sprite('blk-diamond')),
+    el('div', { class: 'mission-text' }, el('h2', {}, '今日任務完成！'), el('p', { class: 'mission-meta' }, '明天再來挖。還想練的話：')),
+    el('div', { class: 'mission-actions' },
+      hasUnseen ? el('button', { class: 'btn btn-gold', onclick: () => startSession('extra') }, `多學 ${EXTRA_NEW} 題新題`) : null,
+      errors ? el('button', { class: 'btn btn-primary', onclick: () => startSession('errors') }, `練錯題本（${errors}）`) : null,
+      el('button', { class: 'btn btn-dark', onclick: () => go('practice') }, '自由練習')));
+}
+
+function missionCard(m) {
+  const saved = loadSavedSession();
+  if (saved) return resumeMissionCard(saved);
+  const total = m.reviews.length + m.fresh.length;
+  if (!total) return missionDone();
+  const minutes = Math.max(1, Math.round((m.reviews.length * 25 + m.fresh.length * 50) / 60));
+  return el('section', { class: 'card mission' },
+    el('div', { class: 'mission-ores', 'aria-hidden': 'true' }, sprite('blk-iron'), sprite('blk-gold'), sprite('blk-diamond')),
+    el('div', { class: 'mission-text' },
+      el('h2', {}, m.finalPhase ? '考前衝刺任務' : '今日任務'),
+      el('p', { class: 'mission-meta' }, `複習 ${m.reviews.length} 題 · 新題 ${m.fresh.length} 題 · 約 ${minutes} 分鐘`)),
+    el('button', { class: 'btn btn-primary btn-big', 'data-autofocus': '', onclick: () => startSession('mission') }, '開始挖礦'));
+}
+
+function statTile(icon, value, label) {
+  return el('div', { class: 'stat' }, icon, el('div', {}, el('b', {}, value), el('span', {}, label)));
+}
+
+function statsRow() {
+  const today = Core.todayISO();
+  return el('section', { class: 'stats' },
+    statTile(sprite('blk-diamond'), `${Core.countDiamonds(ITEMS, store.states)}`, `/ ${ITEMS.length} 鑽石`),
+    statTile(el('span', { class: 'stat-emoji', 'aria-hidden': 'true' }, '🔥'), `${Core.streakDays(store.log, today)}`, '天連續練習'),
+    statTile(sprite('blk-stone'), `${todayLog().mined}`, '今天挖到的礦'));
+}
+
+function legend() {
+  const item = (id, text) => el('span', {}, sprite(id), text);
+  return el('div', { class: 'legend' },
+    item('blk-dirt', '還沒學'), item('blk-stone', '石頭'), item('blk-iron', '鐵'), item('blk-gold', '金'), item('blk-diamond', '鑽石'));
+}
+
+function mineSection() {
+  const progress = Core.unitProgress(ITEMS, store.states);
+  return el('section', { class: 'mine' },
+    el('div', { class: 'section-head' }, el('h2', {}, '我的礦坑'), legend()),
+    UNIT_IDS.map((u) => el('div', { class: 'mine-unit' },
+      el('div', { class: 'mine-label' }, el('b', {}, UNIT_LABELS[u]), el('span', {}, `${progress[u].levels[3]} / ${progress[u].total} 鑽石`)),
+      el('div', { class: 'mine-grid' }, ITEMS.filter((it) => it.unit === u).map((it) => {
+        const st = stateOf(it.id);
+        const label = `第 ${it.no} 題 ${Core.phraseOf(it)}：${levelName(st)}`;
+        return el('button', { class: 'block', title: label, 'aria-label': label, onclick: () => openItem(it.id) }, oreSprite(st));
+      })))));
+}
+
+function menuGrid() {
+  const errors = Core.errorBook(ITEMS, store.states).length;
+  const btn = (icon, title, sub, onclick) => el('button', { class: 'menu-btn', onclick }, icon, el('b', {}, title), el('span', {}, sub));
+  return el('nav', { class: 'menu', 'aria-label': '其他練習' },
+    btn(sprite('blk-stone'), '錯題本', errors ? `${errors} 題要救` : '目前是空的', () => go('errors')),
+    btn(sprite('blk-iron'), '自由練習', '選題型和題數', () => go('practice')),
+    btn(sprite('blk-boss'), '魔王關', `${BOSS_SIZE} 題綜合測驗`, () => go('boss')),
+    btn(sprite('blk-gold'), '題庫', '100 題和答案', () => go('bank')),
+    btn(sprite('blk-dirt'), '紙本測驗', '印出來手寫', () => { paperTest = null; go('paper'); }),
+    btn(sprite('blk-diamond'), '家長', '進度、設定、備份', () => go('parent')));
+}
+
+function homeView() {
+  const m = Core.buildMission(ITEMS, store.states, Core.todayISO(), store.settings, todayLog().fresh);
+  return el('main', { class: 'screen home' },
+    homeTop(m.daysLeft),
+    Storage.isOk() ? null : storageWarning(),
+    whatsNewCard(),
+    store.settings.introSeen ? null : introCard(),
+    missionCard(m),
+    statsRow(),
+    mineSection(),
+    menuGrid(),
+    el('footer', { class: 'foot' },
+      el('p', {}, '每答一題都會自動存檔。進度存在這台裝置裡，清除瀏覽紀錄前請先到「家長」頁匯出備份。'),
+      el('p', { class: 'version' }, versionLabel())));
+}
+
+// ---------- question lists & details ----------
+function itemList(list) {
+  return el('ul', { class: 'word-list' }, list.map((it) => {
+    const st = stateOf(it.id);
+    return el('li', {}, el('button', { class: 'word-row-btn', onclick: () => openItem(it.id) },
+      oreSprite(st),
+      el('span', { class: 'wl-no' }, it.no),
+      el('b', { class: 'kai' }, Core.phraseOf(it)),
+      el('span', { class: 'wl-meaning' }, `${it.char} ${it.zhuyin}`),
+      st.ng ? el('span', { class: 'wl-ng' }, `錯 ${st.ng} 次`) : null));
+  }));
+}
+
+function statusText(st) {
+  if (!st.seen) return '還沒學';
+  const due = st.due ? ` · 下次複習 ${fmtDate(st.due)}` : '';
+  return `${Core.LEVEL_NAMES[st.lv]} · 答對 ${st.ok} 次、答錯 ${st.ng} 次${due}`;
+}
+
+function openItem(id) {
+  const it = ITEM_BY_ID.get(id);
+  const st = stateOf(id);
+  openModal(el('div', { class: 'word-detail' },
+    el('div', { class: 'detail-head' }, oreSprite(st, 'detail-ore'), el('h2', {}, `第 ${it.no} 題`)),
+    phraseView(it, 'show', true),
+    el('p', {}, typeHint(it), '　答案：', el('b', { class: 'kai' }, it.answer)),
+    el('div', { class: 'learn-model' }, modelChar(it.char), el('span', { class: 'learn-zy' }, it.zhuyin)),
+    el('p', { class: 'detail-status' }, statusText(st)),
+    it.note ? el('p', { class: 'note muted' }, it.note) : null));
+}
+
+// ---------- error book ----------
+function errorsView() {
+  const list = Core.errorBook(ITEMS, store.states);
+  const body = list.length
+    ? [
+      el('p', {}, `這 ${list.length} 題最近答錯了。在這裡練習答對，就會離開錯題本；隔天在任務中再答對，會升級成鐵礦。`),
+      el('button', { class: 'btn btn-primary', 'data-autofocus': '', onclick: () => startSession('errors') }, `開始練錯題（${Math.min(list.length, ERROR_SESSION_MAX)} 題）`),
+      itemList(list),
+    ]
+    : el('p', { class: 'all-right' }, '錯題本是空的，太棒了！');
+  return el('main', { class: 'screen' }, backBar('錯題本'), el('section', { class: 'card' }, body));
+}
+
+// ---------- free practice ----------
+let practiceOpts = { type: 'mix', count: 20 };
+
+function toggleGroup(label, options, isOn, onPick) {
+  return el('fieldset', { class: 'toggle-group' }, el('legend', {}, label),
+    el('div', { class: 'toggles' }, options.map(([value, text]) =>
+      el('button', { type: 'button', class: 'toggle', 'aria-pressed': isOn(value) ? 'true' : 'false', onclick: () => onPick(value) }, text))));
+}
+
+function practiceView() {
+  const setOpts = (patch) => { practiceOpts = Object.assign({}, practiceOpts, patch); render(); };
+  return el('main', { class: 'screen' }, backBar('自由練習'), el('section', { class: 'card practice' },
+    el('p', {}, '先出還不熟的題目，再出新題和鑽石。答錯一樣會變回石頭。'),
+    toggleGroup('題型', [['mix', '混合'], ['write', '寫國字'], ['zhuyin', '寫注音']], (t) => practiceOpts.type === t, (t) => setOpts({ type: t })),
+    toggleGroup('題數', [[10, '10 題'], [20, '20 題'], [30, '30 題']], (n) => practiceOpts.count === n, (n) => setOpts({ count: n })),
+    el('button', { class: 'btn btn-primary btn-big', onclick: () => startSession('practice', practiceOpts) }, '開始練習')));
+}
+
+// ---------- boss ----------
+function bossView() {
+  const seen = ITEMS.filter((it) => stateOf(it.id).seen).length;
+  const history = store.boss.slice(-6).reverse();
+  const ready = seen >= MIN_BOSS_WORDS;
+  return el('main', { class: 'screen' }, backBar('魔王關'), el('section', { class: 'card boss-intro' },
+    sprite('blk-boss', 'boss-big'),
+    el('h2', {}, '地底魔王：綜合測驗'),
+    el('p', {}, `從學過的題目隨機出 ${Math.min(BOSS_SIZE, seen)} 題，寫國字和寫注音都有。每答對一題，魔王少一點血；80 分以上就算打倒魔王。建議週末挑戰一次。`),
+    ready
+      ? el('button', { class: 'btn btn-red btn-big', 'data-autofocus': '', onclick: () => startSession('boss') }, '開始挑戰')
+      : el('p', { class: 'muted' }, `學過 ${MIN_BOSS_WORDS} 題以上才能挑戰（目前 ${seen} 題）。先去完成今日任務吧！`),
+    history.length ? el('div', { class: 'boss-history' }, el('h3', {}, '最近的挑戰'),
+      el('ul', {}, history.map((b) => el('li', {}, `${fmtDateW(b.date)}　${Math.round((b.score / b.total) * 100)} 分（${b.score}/${b.total}）`)))) : null));
+}
+
+// ---------- question bank ----------
+let bankUnit = 'char';
+
+function bankView() {
+  const list = ITEMS.filter((it) => it.unit === bankUnit);
+  return el('main', { class: 'screen' }, backBar('題庫'), el('section', { class: 'card' },
+    el('div', { class: 'tabs', role: 'tablist' }, UNIT_IDS.map((u) =>
+      el('button', { class: 'tab', role: 'tab', 'aria-selected': u === bankUnit ? 'true' : 'false', onclick: () => { bankUnit = u; render(); } },
+        `${UNIT_SHORT[u]}（${ITEMS.filter((it) => it.unit === u).length}）`))),
+    el('p', { class: 'muted' }, '點一題可以看大字和注音。'),
+    itemList(list)));
+}
+
+// ---- parent.js ----
+/* Parent page (progress, answers to confirm, settings, backup) and the printable paper test. */
+const LOG_DAYS_SHOWN = 14;
+const NEW_PER_DAY_CHOICES = [5, 10, 15, 20, 25, 30];
+const LEVEL_KEYS = ['stone', 'iron', 'gold', 'diamond'];
+let pendingImport = null;
+let resetArmed = false;
+
+const setSettings = (patch) => commit((s) => Object.assign({}, s, { settings: Object.assign({}, s.settings, patch) }));
+
+/** Keep one copy of the current progress before a destructive action, so it can be undone. */
+function replaceProgress(next, reason) {
+  Storage.saveBackup(store, reason);
+  commit(() => next);
+  applyAudioSettings();
+}
+
+function unitBars() {
+  const progress = Core.unitProgress(ITEMS, store.states);
+  return el('div', { class: 'unit-bars' }, UNIT_IDS.map((u) => {
+    const p = progress[u];
+    const segs = [['unseen', p.unseen], ...LEVEL_KEYS.map((k, lv) => [k, p.levels[lv]])];
+    return el('div', { class: 'unit-bar' },
+      el('b', {}, UNIT_SHORT[u]),
+      el('div', { class: 'bar', role: 'img', 'aria-label': `${UNIT_SHORT[u]}：鑽石 ${p.levels[3]}、金 ${p.levels[2]}、鐵 ${p.levels[1]}、石頭 ${p.levels[0]}、還沒學 ${p.unseen}` },
+        segs.filter(([, n]) => n > 0).map(([k, n]) => el('span', { class: `seg seg-${k}`, style: `flex:${n}`, title: `${n}` }, n))),
+      el('span', { class: 'bar-total' }, `${p.levels[3]}/${p.total}`));
+  }));
+}
+
+function overviewCard() {
+  const days = Object.keys(store.log).filter((d) => store.log[d].q > 0);
+  const minutes = Math.round(days.reduce((s, d) => s + store.log[d].ms, 0) / 60000);
+  const seen = ITEMS.filter((it) => stateOf(it.id).seen).length;
+  return el('section', { class: 'card' },
+    el('h2', {}, '進度總覽'),
+    el('p', {}, `學過 ${seen} / ${ITEMS.length} 題，鑽石 ${Core.countDiamonds(ITEMS, store.states)} 個。練了 ${days.length} 天，共約 ${minutes} 分鐘。`),
+    unitBars(),
+    el('p', { class: 'muted' }, '顏色：咖啡＝還沒學、灰＝石頭（答錯或剛學）、淺橘＝鐵、黃＝金、青＝鑽石（隔天、再隔兩天都答對）。'));
+}
+
+function logCard() {
+  const days = Object.keys(store.log).filter((d) => store.log[d].q > 0).sort().reverse().slice(0, LOG_DAYS_SHOWN);
+  const rows = days.map((d) => {
+    const e = store.log[d];
+    return el('tr', {}, el('td', {}, fmtDateW(d)), el('td', {}, e.q), el('td', {}, `${Math.round((e.ok / e.q) * 100)}%`),
+      el('td', {}, Math.max(1, Math.round(e.ms / 60000))), el('td', {}, e.fresh));
+  });
+  return el('section', { class: 'card' }, el('h2', {}, '每天練習紀錄'),
+    days.length
+      ? el('table', { class: 'table' }, el('thead', {}, el('tr', {}, ['日期', '題數', '答對率', '分鐘', '新題'].map((h) => el('th', {}, h)))), el('tbody', {}, rows))
+      : el('p', { class: 'muted' }, '還沒有練習紀錄。'));
+}
+
+function itemRows(rows, extra) {
+  return el('ol', { class: 'mistakes' }, rows.map(({ it, st }) => el('li', {},
+    el('button', { class: 'word-row-btn', onclick: () => openItem(it.id) }, oreSprite(st),
+      el('span', { class: 'wl-no' }, it.no), el('b', { class: 'kai' }, Core.phraseOf(it)),
+      el('span', { class: 'wl-meaning' }, `${it.char} ${it.zhuyin}`), el('span', { class: 'wl-ng' }, extra(st))))));
+}
+
+function mistakesCard() {
+  const top = Core.topMistakes(ITEMS, store.states, 15);
+  return el('section', { class: 'card' }, el('h2', {}, '最常錯的題目'),
+    top.length ? itemRows(top, (st) => `錯 ${st.ng} 次`) : el('p', { class: 'muted' }, '目前沒有答錯的題目。'));
+}
+
+/** Handwriting the recognizer could not confirm, accepted by the child's own comparison. */
+function selfCheckedCard() {
+  const rows = ITEMS.map((it) => ({ it, st: stateOf(it.id) })).filter((r) => r.st.self > 0);
+  if (!rows.length) return null;
+  return el('section', { class: 'card' }, el('h2', {}, '自己比對答對的題目'),
+    el('p', { class: 'muted' }, '這些題目電腦沒認出來，是孩子自己比對後按「我寫對了」。有空可以抽幾題，請孩子寫給你看。'),
+    itemRows(rows, (st) => `自己比對 ${st.self} 次`));
+}
+
+function answersToConfirmCard() {
+  const list = ITEMS.filter((it) => it.review);
+  if (!list.length) return null;
+  return el('section', { class: 'card' }, el('h2', {}, '答案待確認'),
+    el('p', { class: 'muted' }, '答案都用教育部《重編國語辭典修訂本》核對過；下面這幾題辭典和課本的讀音可能不同，請對照課本或習作。'),
+    el('ul', { class: 'confirm-list' }, list.map((it) => el('li', {},
+      el('b', {}, `第 ${it.no} 題　`), el('span', { class: 'kai' }, Core.phraseOf(it)), `　目前答案：${it.answer}`,
+      el('p', { class: 'muted' }, it.note)))));
+}
+
+function bossCard() {
+  if (!store.boss.length) return null;
+  return el('section', { class: 'card' }, el('h2', {}, '魔王關成績'),
+    el('ul', { class: 'boss-history' }, store.boss.slice(-10).reverse().map((b) =>
+      el('li', {}, `${fmtDateW(b.date)}　${Math.round((b.score / b.total) * 100)} 分（${b.score}/${b.total}）`))));
+}
+
+// ---------- settings ----------
+function field(label, control, hint) {
+  return el('label', { class: 'field' }, el('span', { class: 'field-label' }, label), control, hint ? el('span', { class: 'field-hint' }, hint) : null);
+}
+
+function newPerDaySelect() {
+  const m = Core.buildMission(ITEMS, store.states, Core.todayISO(), Object.assign({}, store.settings, { newPerDay: 'auto' }), todayLog().fresh);
+  const options = [['auto', `自動（現在建議每天 ${m.perDay} 題）`], ...NEW_PER_DAY_CHOICES.map((n) => [String(n), `每天 ${n} 題`])];
+  return el('select', { onchange: (e) => { setSettings({ newPerDay: e.target.value === 'auto' ? 'auto' : Number(e.target.value) }); render(); } },
+    options.map(([v, t]) => el('option', { value: v, selected: String(store.settings.newPerDay) === v }, t)));
+}
+
+function volumeControl() {
+  const pct = (v) => `${Math.round(v * 100)}%`;
+  const label = el('span', {}, pct(store.settings.volume));
+  return el('div', { class: 'voice' },
+    field('音效音量', el('div', { class: 'rate' },
+      el('input', { type: 'range', min: '0.1', max: '1', step: '0.05', value: String(store.settings.volume), 'aria-label': '音量',
+        oninput: (e) => { label.textContent = pct(Number(e.target.value)); },
+        onchange: (e) => { setSettings({ volume: Number(e.target.value) }); applyAudioSettings(); } }),
+      label)),
+    el('button', { type: 'button', class: 'btn btn-dark btn-sm', onclick: () => Sfx.ore(2) }, '🔊 試聽音量'));
+}
+
+function settingsCard() {
+  return el('section', { class: 'card settings' }, el('h2', {}, '設定'),
+    field('國文段考日期', el('input', { type: 'date', value: store.settings.examDate,
+      onchange: (e) => { if (/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) { setSettings({ examDate: e.target.value }); render(); } } }),
+    '倒數和考前衝刺（最後 3 天）會用這個日期。'),
+    field('每天新題', newPerDaySelect(), '自動會在考前 3 天前學完全部 100 題，最後幾天只複習。'),
+    el('label', { class: 'check' }, el('input', { type: 'checkbox', checked: store.settings.recognize,
+      onchange: (e) => { setSettings({ recognize: e.target.checked }); render(); } }), '寫國字時自動辨識手寫'),
+    el('p', { class: 'field-hint' }, '開著時，手寫的筆畫會送到 Google 手寫辨識（只有筆畫，沒有姓名或其他資料），認出來和答案一樣就自動算對；認不出來或沒網路時，改成讓孩子自己比對。關掉就全部自己比對。'),
+    volumeControl(),
+    el('label', { class: 'check' }, el('input', { type: 'checkbox', checked: store.settings.sound,
+      onchange: (e) => { setSettings({ sound: e.target.checked }); Sfx.setEnabled(e.target.checked); } }), '遊戲音效（挖礦、升級、連續答對）'));
+}
+
+// ---------- backup ----------
+function importPanel() {
+  if (!pendingImport) return null;
+  const n = Object.keys(pendingImport.states).length;
+  const lastDay = Object.keys(pendingImport.log).sort().pop();
+  const apply = () => {
+    replaceProgress(pendingImport, '匯入');
+    pendingImport = null;
+    showToast(el('span', {}, '已匯入進度'), 'good');
+    render();
+  };
+  return el('div', { class: 'confirm', role: 'alert' },
+    el('p', {}, `這個檔案有 ${n} 題的紀錄${lastDay ? `，最後練習是 ${fmtDateW(lastDay)}` : ''}。要用它取代這台裝置上的進度嗎？`),
+    el('button', { class: 'btn btn-red btn-sm', onclick: apply }, '取代目前進度'),
+    el('button', { class: 'btn btn-dark btn-sm', onclick: () => { pendingImport = null; render(); } }, '取消'));
+}
+
+function onImportFile(e) {
+  readProgressFile(e.target.files[0], VALID_IDS)
+    .then((data) => { pendingImport = data; render(); })
+    .catch((err) => { showToast(el('span', {}, err.message), 'bad'); });
+}
+
+function resetButton() {
+  const reset = () => {
+    if (!resetArmed) {
+      resetArmed = true;
+      render();
+      setTimeout(() => { if (resetArmed) { resetArmed = false; render(); } }, 5000);
+      return;
+    }
+    resetArmed = false;
+    replaceProgress(Object.assign(Core.emptyStore(), { settings: store.settings }), '清除');
+    showToast(el('span', {}, '進度已清除'), 'info');
+    render();
+  };
+  return el('button', { class: resetArmed ? 'btn btn-red btn-sm' : 'btn btn-ghost btn-sm', onclick: reset },
+    resetArmed ? '再按一次：確定清除全部進度' : '清除全部進度');
+}
+
+function undoPanel() {
+  const backup = Storage.loadBackup(VALID_IDS);
+  if (!backup) return null;
+  const undo = () => {
+    replaceProgress(backup.store, '復原');
+    Storage.clearBackup();
+    showToast(el('span', {}, '已復原'), 'good');
+    render();
+  };
+  const seen = Object.keys(backup.store.states).length;
+  return el('div', { class: 'confirm' },
+    el('p', {}, `${fmtDateW(backup.savedAt)}「${backup.reason}」之前的進度還留著（${seen} 題的紀錄）。`),
+    el('button', { class: 'btn btn-dark btn-sm', onclick: undo }, `復原到「${backup.reason}」之前`),
+    el('button', { class: 'btn btn-ghost btn-sm', onclick: () => { Storage.clearBackup(); render(); } }, '不用了'));
+}
+
+function backupCard() {
+  const fileInput = el('input', { type: 'file', accept: '.json,application/json', class: 'visually-hidden', onchange: onImportFile });
+  return el('section', { class: 'card' }, el('h2', {}, '進度備份'),
+    el('p', {}, '每答一題就會自動存檔，網頁更新也不會影響進度。進度只存在這台裝置裡：清除瀏覽紀錄、刪掉主畫面圖示或換裝置前，先匯出一個檔案，之後用「匯入」放回來。'),
+    el('div', { class: 'row' },
+      el('button', { class: 'btn btn-primary btn-sm', onclick: () => downloadProgress(store) }, '匯出進度'),
+      el('button', { class: 'btn btn-dark btn-sm', onclick: () => fileInput.click() }, '匯入進度'),
+      fileInput, resetButton()),
+    importPanel(),
+    undoPanel());
+}
+
+function parentView() {
+  return el('main', { class: 'screen parent' }, backBar('家長'),
+    overviewCard(), answersToConfirmCard(), logCard(), mistakesCard(), selfCheckedCard(), bossCard(), settingsCard(), backupCard(), versionCard());
+}
+
+// ---------- paper test ----------
+let paperTest = null;
+let paperAll = false;
+
+/** 「注音或國字」＋前後文：＿＿ — the worksheet's own layout, with 專名號 (proper-noun underline) kept. */
+function paperQuestion(r) {
+  const it = ITEM_BY_ID.get(`q${r.no}`);
+  const proper = Core.properMask(it);
+  const at = [...it.before].length;
+  const parts = [...Core.phraseOf(it)].map((ch, i) => {
+    const text = i === at ? `「${it.prompt}」` : ch;
+    return el('span', { class: [proper[i] ? 'proper' : '', i === at ? 'paper-prompt' : ''].filter(Boolean).join(' ') || null }, text);
+  });
+  return el('li', { value: r.no },
+    el('span', { class: 'kai' }, parts, '：'),
+    el('span', { class: 'paper-line' }, '＿＿＿＿'));
+}
+
+function paperSheet(rows) {
+  return el('div', { class: 'sheet' },
+    el('h1', {}, '國一第一次段考 字音練習卷'),
+    el('p', { class: 'sheet-meta' }, `姓名：＿＿＿＿＿＿　日期：＿＿＿＿＿＿　答對：＿＿＿ / ${rows.length}`),
+    el('h2', {}, '寫出括號內的國字或注音'),
+    el('ol', { class: 'sheet-list paper-grid' }, rows.map(paperQuestion)));
+}
+
+function answerKey(rows) {
+  return el('div', { class: 'sheet answer-key' },
+    el('h1', {}, '解答'),
+    el('ol', { class: 'key-list kai' }, rows.map((r) => el('li', { value: r.no }, r.answer))));
+}
+
+function paperView() {
+  if (!paperTest) paperTest = Core.buildPaperTest(ITEMS, store.states, Math.random, 30, paperAll);
+  const setAll = (all) => { paperAll = all; paperTest = null; render(); };
+  return el('main', { class: 'screen paper-screen' },
+    el('div', { class: 'no-print' }, backBar('紙本測驗'),
+      el('div', { class: 'row paper-tools' },
+        toggleGroup('題目', [[false, '30 題（先出不熟的）'], [true, '整份 100 題']], (v) => paperAll === v, setAll),
+        paperAll ? null : el('button', { class: 'btn btn-dark btn-sm', onclick: () => { paperTest = null; render(); } }, '換一份'),
+        el('button', { class: 'btn btn-primary btn-sm', onclick: () => window.print() }, '列印')),
+      el('p', { class: 'paper-note' }, '最後一頁是解答，印好後先收起來。')),
+    el('article', { id: 'paper', class: 'paper' }, paperSheet(paperTest), answerKey(paperTest)));
+}
+
+// ---- main.js ----
+/* Boot, routing, rendering, and keeping tabs and days in sync. */
+const UNIT_IDS = ['char', 'zhuyin'];
+const KEY_GUARD_MS = 450;
+const VIEWS = {
+  home: homeView, session: sessionView, result: resultView, errors: errorsView, practice: practiceView,
+  boss: bossView, bank: bankView, parent: parentView, paper: paperView,
+};
+
+// Filled in by startApp() once the questions are available (the web copy first needs unlocking).
+let ITEMS = [];
+let ITEM_BY_ID = new Map();
+let VALID_IDS = new Set();
+let store = null;
+let route = 'home';
+let lastRenderAt = 0;
+let renderedDay = Core.todayISO();
+
+/** change(store) returns the next store. Re-reads first when another tab saved in the meantime. */
+function commit(change) {
+  const saved = Storage.savedRev();
+  if (saved !== null && saved !== store.rev) store = Storage.load(VALID_IDS);
+  store = Object.assign({}, change(store), { rev: store.rev + 1 });
+  Storage.save(store);
+}
+
+function render() {
+  const root = document.getElementById('app');
+  setChildren(root, route === 'session' ? null : updateBanner(), (VIEWS[route] || homeView)());
+  lastRenderAt = performance.now();
+  renderedDay = Core.todayISO();
+  const target = root.querySelector('[data-autofocus]');
+  if (target && route !== 'home') target.focus();
+}
+
+function go(name) {
+  route = name;
+  render();
+  window.scrollTo(0, 0);
+}
+
+/** Ignores a keyboard "click" that lands right after a screen change (a double Enter). */
+function keyGuard(fn) {
+  return (e) => {
+    if (e && e.detail === 0 && performance.now() - lastRenderAt < KEY_GUARD_MS) return;
+    fn(e);
+  };
+}
+
+/** Another tab saved, or a new day started while this tab stayed open: show the latest. */
+function syncFromStorage() {
+  const saved = Storage.savedRev();
+  const changed = saved !== null && saved !== store.rev;
+  if (changed) store = Storage.load(VALID_IDS);
+  const newDay = renderedDay !== Core.todayISO();
+  if ((changed || newDay) && route !== 'session') render();
+}
+
+function applyAudioSettings() {
+  Sfx.setEnabled(store.settings.sound);
+  Sfx.setVolume(store.settings.volume);
+}
+
+/** Asks the browser not to evict saved progress when space runs low (silently granted or not). */
+function requestPersistentStorage() {
+  try {
+    if (window.location.protocol === 'https:' && navigator.storage && navigator.storage.persist) {
+      navigator.storage.persist().catch(() => { /* keep best-effort storage */ });
+    }
+  } catch (e) { /* unsupported */ }
+}
+
+function startApp(data) {
+  ITEMS = Core.buildItems(data.doc);
+  ITEM_BY_ID = new Map(ITEMS.map((it) => [it.id, it]));
+  VALID_IDS = new Set(ITEMS.map((it) => it.id));
+  store = Storage.load(VALID_IDS);
+  initWhatsNew(Object.keys(store.states).length > 0);
+  applyAudioSettings();
+  preferPlaybackAudio();
+  requestPersistentStorage();
+  window.addEventListener('storage', (e) => { if (e.key === STORAGE_KEY) syncFromStorage(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    syncFromStorage();
+    checkForUpdate();
+  });
+  window.addEventListener('focus', syncFromStorage);
+  if (/[?&]e2e\b/.test(window.location.search)) {
+    window.__guoziMine = {
+      answer: () => (session && session.q ? session.q.answer : null),
+      step: () => (session ? session.queue[session.pos] : null),
+      store: () => store,
+      sync: syncFromStorage,
+      checkUpdate: () => checkForUpdate(true),
+    };
+  }
+  render();
+  checkForUpdate();
+}
+
+function boot() {
+  installSprites();
+  AudioOut.startOnFirstTouch();
+  if (window.VOCAB_LOCKED) unlock(window.VOCAB_LOCKED).then(startApp);
+  else startApp({ doc: window.GUOZI_DATA });
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+else boot();
+
+})();
+</script>
+</body>
+</html>
