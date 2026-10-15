@@ -1,0 +1,2203 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#17120e">
+<title>歷史挖礦</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="歷史挖礦">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="apple-touch-icon.png">
+<style>
+:root {
+  --bg: #17120e;
+  --rock: #2c241d;
+  --rock-2: #3a3027;
+  --rock-line: #0d0a07;
+  --paper: #f8f3e8;
+  --paper-2: #ebe1cd;
+  --paper-line: #d6c8ad;
+  --ink: #221c16;
+  --ink-2: #54493d;
+  --ink-3: #85786a;
+  --emerald: #2f9e55;
+  --emerald-lo: #1d6b38;
+  --red: #c8392b;
+  --red-soft: #fbe6e2;
+  --gold: #f2c230;
+  --gold-ink: #6b4d00;
+  --diamond: #5fe0d6;
+  --hl: #0f7a57;
+  --focus: #ffd447;
+  --seg-unseen: #8b5a2b;
+  --seg-stone: #8b8b8b;
+  --seg-iron: #e2b48c;
+  --seg-gold: #f2c230;
+  --seg-diamond: #4fd6cc;
+  --font-ui: system-ui, -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", "Segoe UI", sans-serif;
+  --font-en: "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-type: ui-monospace, "SF Mono", Menlo, Consolas, "Roboto Mono", monospace;
+  --font-kk: "Lucida Sans Unicode", "Segoe UI", "Arial Unicode MS", "Noto Sans", sans-serif;
+  --bevel: inset -3px -4px 0 rgba(0, 0, 0, 0.28), inset 3px 3px 0 rgba(255, 255, 255, 0.2);
+  --lift: 0 6px 0 var(--rock-line);
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--paper);
+  font: 16px/1.6 var(--font-ui);
+  background-color: var(--bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' shape-rendering='crispEdges'%3E%3Crect width='48' height='48' fill='%2317120e'/%3E%3Crect x='6' y='8' width='6' height='6' fill='%23201912'/%3E%3Crect x='30' y='3' width='6' height='6' fill='%231c1510'/%3E%3Crect x='18' y='27' width='6' height='6' fill='%23231b14'/%3E%3Crect x='39' y='33' width='6' height='6' fill='%231b140f'/%3E%3Crect x='3' y='39' width='6' height='6' fill='%23211912'/%3E%3C/svg%3E");
+}
+button, input, select { font: inherit; }
+h1, h2, h3 { line-height: 1.25; margin: 0 0 8px; }
+p { margin: 0 0 10px; }
+[lang="en"] { font-family: var(--font-en); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.muted { color: var(--ink-3); font-size: 14px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+.screen { max-width: 860px; margin: 0 auto; padding: 16px 16px 56px; }
+
+/* ---------- pixel bits ---------- */
+.px { width: 24px; height: 24px; display: inline-block; vertical-align: middle; flex: none; }
+.card {
+  background: var(--paper);
+  color: var(--ink);
+  border: 3px solid var(--rock-line);
+  box-shadow: inset -4px -4px 0 var(--paper-2), inset 4px 4px 0 #fffdf7, var(--lift);
+  padding: 20px;
+  margin: 18px 0 24px;
+}
+.chip {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 2px 10px;
+  border: 2px solid var(--rock-line);
+  background: var(--rock-2);
+  color: #fff;
+  margin-bottom: 12px;
+}
+.chip-new { background: var(--gold); color: var(--gold-ink); }
+.chip-cloze { background: var(--hl); }
+.chip-listen { background: #2f6fb0; }
+.chip-forms { background: #7a4bb0; }
+
+/* ---------- buttons ---------- */
+.btn {
+  appearance: none;
+  border: 3px solid var(--rock-line);
+  border-radius: 0;
+  min-height: 48px;
+  padding: 10px 18px;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.2;
+  color: #fff;
+  background: var(--rock-2);
+  box-shadow: var(--bevel);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition: transform 0.06s, filter 0.12s;
+}
+.btn:hover { filter: brightness(1.1); }
+.btn:active { transform: translateY(2px); box-shadow: inset -3px -1px 0 rgba(0, 0, 0, 0.28), inset 3px 3px 0 rgba(255, 255, 255, 0.2); }
+.btn:focus-visible, .icon-btn:focus-visible, .block:focus-visible, .menu-btn:focus-visible, .toggle:focus-visible,
+.tab:focus-visible, .word-row-btn:focus-visible, .word-chip:focus-visible, .speak:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+.btn-primary { background: var(--emerald); }
+.btn-gold { background: var(--gold); color: var(--gold-ink); text-shadow: none; }
+.btn-red { background: var(--red); }
+.btn-dark { background: var(--rock); }
+.btn-ghost { background: transparent; color: var(--ink-2); border-color: var(--paper-line); box-shadow: none; text-shadow: none; }
+.btn-big { font-size: 22px; min-height: 62px; padding: 14px 30px; }
+.btn-sm { min-height: 40px; font-size: 15px; padding: 6px 14px; }
+.btn-wide { width: 100%; margin-top: 12px; }
+.icon-btn {
+  appearance: none; border: 3px solid var(--rock-line); background: var(--rock-2); color: #fff;
+  width: 44px; height: 44px; font-size: 20px; cursor: pointer; box-shadow: var(--bevel); flex: none;
+}
+.speak {
+  appearance: none; border: 2px solid var(--paper-line); background: #fff; cursor: pointer;
+  width: 44px; height: 44px; font-size: 20px; line-height: 1; vertical-align: middle;
+}
+.speak:hover { background: #fff8e1; }
+.speak-sm { width: 34px; height: 34px; font-size: 15px; }
+
+/* ---------- home ---------- */
+.home-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-top: 8px; }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand h1 { font-size: 34px; letter-spacing: 0.06em; margin: 0; text-shadow: 3px 3px 0 var(--rock-line); }
+.brand p { margin: 0; color: #c9b99f; font-size: 14px; letter-spacing: 0.04em; }
+.brand-ore { width: 52px; height: 52px; filter: drop-shadow(3px 3px 0 var(--rock-line)); }
+.countdown { background: var(--rock); border: 3px solid var(--rock-line); padding: 8px 14px; color: #f3e6c8; box-shadow: var(--bevel); }
+.countdown b { color: var(--gold); font-size: 26px; padding: 0 2px; }
+
+.intro ol { margin: 0 0 12px; padding-left: 22px; }
+.intro li { margin-bottom: 6px; }
+.intro .px { width: 20px; height: 20px; margin: 0 2px; }
+.warn { background: var(--red-soft); }
+
+.mission { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px; }
+.mission h2 { font-size: 26px; margin: 0 0 4px; }
+.mission-meta { color: var(--ink-2); margin: 0; }
+.mission-ores { display: flex; }
+.mission-ores .px { width: 44px; height: 44px; margin-right: -6px; filter: drop-shadow(2px 3px 0 rgba(0, 0, 0, 0.35)); }
+.mission.done { grid-template-columns: auto 1fr; }
+.mission-actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; }
+
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 0 24px; }
+.stat { display: flex; align-items: center; gap: 10px; background: var(--rock); border: 3px solid var(--rock-line); padding: 10px 12px; box-shadow: var(--bevel); }
+.stat .px { width: 34px; height: 34px; }
+.stat b { display: block; font-size: 26px; line-height: 1; color: #fff; }
+.stat span { font-size: 13px; color: #cbbca3; }
+.stat-emoji { font-size: 28px; width: 34px; text-align: center; }
+
+.mine { background: #120e0b; border: 3px solid var(--rock-line); padding: 16px; box-shadow: inset 0 0 0 3px #241c15; margin-bottom: 24px; }
+.section-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+.section-head h2 { font-size: 20px; margin: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 13px; color: #cbbca3; }
+.legend .px { width: 16px; height: 16px; margin-right: 4px; }
+.mine-unit { margin-top: 12px; }
+.mine-label { display: flex; gap: 10px; align-items: baseline; margin-bottom: 6px; color: #cbbca3; font-size: 14px; }
+.mine-label b { color: #fff; font-size: 16px; }
+.mine-grid { display: flex; flex-wrap: wrap; gap: 3px; }
+.block { appearance: none; border: 0; padding: 0; background: none; width: 30px; height: 30px; cursor: pointer; transition: transform 0.08s; }
+.block .px { width: 100%; height: 100%; }
+.block:hover { transform: translateY(-3px); }
+
+.menu { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.menu-btn {
+  appearance: none; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 12px;
+  align-items: center; text-align: left; padding: 14px; cursor: pointer; color: #fff;
+  background: var(--rock); border: 3px solid var(--rock-line); box-shadow: var(--bevel); transition: transform 0.06s, filter 0.12s;
+}
+.menu-btn:hover { filter: brightness(1.15); }
+.menu-btn:active { transform: translateY(2px); }
+.menu-btn .px { grid-row: span 2; width: 38px; height: 38px; }
+.menu-btn b { font-size: 18px; }
+.menu-btn span { font-size: 13px; color: #cbbca3; }
+.foot { margin-top: 28px; text-align: center; color: #9a8b76; font-size: 13px; }
+
+/* ---------- back bar & lists ---------- */
+.back-bar { display: flex; align-items: center; gap: 14px; padding-top: 6px; }
+.back-bar h1 { margin: 0; font-size: 24px; text-shadow: 2px 2px 0 var(--rock-line); }
+.word-list, .mistakes { list-style: none; margin: 12px 0 0; padding: 0; }
+.mistakes { counter-reset: m; }
+.word-row-btn {
+  appearance: none; width: 100%; display: flex; align-items: center; gap: 10px; text-align: left;
+  background: none; border: 0; border-bottom: 2px dashed var(--paper-line); padding: 10px 4px; cursor: pointer; color: var(--ink);
+}
+.word-row-btn:hover { background: #fff8e8; }
+.word-row-btn b { font-size: 18px; min-width: 7.5em; }
+.wl-meaning { color: var(--ink-2); flex: 1; font-size: 15px; }
+.wl-ng { color: var(--red); font-size: 13px; font-weight: 700; white-space: nowrap; }
+
+.tabs { display: flex; gap: 6px; margin-bottom: 12px; }
+.tab, .toggle {
+  appearance: none; border: 3px solid var(--rock-line); background: var(--paper-2); color: var(--ink);
+  padding: 8px 16px; font-weight: 700; cursor: pointer; min-height: 44px;
+}
+.tab[aria-selected="true"], .toggle[aria-pressed="true"] { background: var(--emerald); color: #fff; box-shadow: var(--bevel); }
+.toggle-group { border: 0; padding: 0; margin: 0 0 18px; }
+.toggle-group legend { font-weight: 700; margin-bottom: 8px; }
+.toggles { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.tracks { margin-top: 18px; }
+.tracks h3 { font-size: 16px; }
+.track { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 8px; }
+.track-name { font-family: var(--font-type); font-size: 14px; color: var(--ink-2); min-width: 7.5em; }
+.track audio { height: 36px; max-width: 100%; }
+
+/* ---------- session ---------- */
+.session-bar { display: flex; align-items: center; gap: 12px; }
+.session-title { font-weight: 700; color: #f3e6c8; white-space: nowrap; }
+.progress { flex: 1; height: 18px; background: #0f0c09; border: 3px solid var(--rock-line); box-shadow: inset 0 0 0 2px #2a2119; }
+.progress span { display: block; height: 100%; background: repeating-linear-gradient(90deg, #52c97a 0 12px, var(--emerald) 12px 15px); transition: width 0.25s; }
+.count { font-family: var(--font-type); color: #f3e6c8; white-space: nowrap; }
+.combo-badge {
+  display: inline-flex; align-items: center; gap: 2px; padding: 2px 8px; white-space: nowrap;
+  background: #3a1d0c; border: 3px solid var(--rock-line); color: #ffcf6b; animation: pop 0.3s ease-out;
+}
+.combo-badge b { font-family: var(--font-type); font-size: 18px; }
+.best-combo { font-weight: 700; color: #b5651d; }
+.boss-bar { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+.boss-icon { width: 34px; height: 34px; }
+.hp { flex: 1; height: 16px; background: #2a0d08; border: 3px solid var(--rock-line); }
+.hp span { display: block; height: 100%; background: repeating-linear-gradient(90deg, #e2553f 0 10px, #b8432a 10px 12px); transition: width 0.3s; }
+.hp-num { font-weight: 700; color: #ffb8a8; white-space: nowrap; }
+
+.word-row { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.word { font-family: var(--font-en); font-size: 44px; font-weight: 800; margin: 0; letter-spacing: 0.01em; color: var(--ink); }
+.kk { font-family: var(--font-kk); color: var(--ink-2); font-size: 18px; }
+.meaning { font-size: 20px; font-weight: 700; margin: 6px 0 12px; }
+.notes { list-style: none; padding: 12px 0; margin: 0 0 12px; border-top: 2px dashed var(--paper-line); border-bottom: 2px dashed var(--paper-line); }
+.notes li { display: flex; gap: 10px; margin-bottom: 6px; font-size: 15px; }
+.note-label { flex: none; height: fit-content; min-width: 1.8em; text-align: center; background: #3b3b3b; color: #fff; font-size: 13px; font-weight: 700; padding: 1px 5px; }
+.note-items { display: flex; flex-direction: column; }
+.note-item.alt { color: var(--ink-3); padding-left: 1.6em; }
+.examples .example { margin-bottom: 12px; }
+.example .en { font-size: 18px; margin: 0; }
+.example .zh { color: var(--ink-2); margin: 2px 0 0; font-size: 15px; }
+.hl { color: var(--hl); font-weight: 800; }
+
+.quiz-card, .fb-card, .learn-card { margin-top: 18px; }
+.q-hint { color: var(--ink-3); font-size: 14px; margin-bottom: 8px; }
+.q-meaning { font-size: 28px; font-weight: 800; margin: 0 0 4px; }
+.q-kk { margin-bottom: 10px; }
+.letters { display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0 14px; }
+.letter {
+  width: 30px; height: 38px; display: inline-flex; align-items: center; justify-content: center;
+  font: 700 22px var(--font-type); background: #fff; border: 2px solid var(--paper-line); border-bottom: 4px solid var(--ink-2);
+}
+.letter.given { background: #e3f5ea; color: var(--emerald-lo); border-bottom-color: var(--emerald); }
+.letter.sym, .letter.more { background: none; border-color: transparent; }
+.letter.typed { color: var(--ink); background: #fffbea; }
+.letter.given.typed { color: var(--emerald-lo); background: #e3f5ea; }
+.letters.too-long .letter { border-bottom-color: var(--red); }
+input.answer {
+  width: 100%; font: 600 28px var(--font-type); padding: 10px 14px; color: var(--ink);
+  background: #fff; border: 3px solid var(--rock-line); border-radius: 0; box-shadow: inset 3px 3px 0 rgba(0, 0, 0, 0.08);
+}
+input.answer:focus { outline: 3px solid var(--focus); outline-offset: 2px; }
+input.answer::placeholder { color: #b5a891; }
+.quiz-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.listen-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 4px 0 10px; }
+.btn-speak { background: #2f6fb0; font-size: 20px; }
+
+.cloze-sentence { font-family: var(--font-en); font-size: 23px; line-height: 2.3; margin: 0 0 6px; }
+.blank { display: inline-flex; align-items: baseline; white-space: nowrap; }
+.blank-first { font: 800 23px var(--font-type); color: var(--hl); }
+input.answer.blank-input {
+  width: auto; min-width: 3ch; font-size: 21px; padding: 0 2px; border: 0; border-bottom: 3px solid var(--ink);
+  background: #fff6db; box-shadow: none; color: var(--ink);
+}
+.cloze-zh { font-size: 17px; color: var(--ink-2); }
+
+.forms-base { font-size: 20px; }
+.forms-base b { font-size: 32px; margin-right: 12px; font-family: var(--font-en); }
+.forms-meaning { color: var(--ink-2); }
+.forms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.forms-grid label span { display: block; font-weight: 700; margin-bottom: 4px; }
+
+.fb-head { display: flex; gap: 14px; align-items: flex-start; background: var(--red-soft); border-left: 8px solid var(--red); padding: 12px 14px; margin-bottom: 12px; }
+.fb-icon { font-size: 30px; line-height: 1; color: var(--red); font-weight: 900; }
+.fb-answer { font-size: 22px; margin-top: 2px; }
+.fb-answer b { color: var(--emerald-lo); font-size: 26px; }
+.fb-yours s { color: var(--red); font-family: var(--font-type); }
+.fb-info { padding: 6px 0 12px; border-bottom: 2px dashed var(--paper-line); margin-bottom: 14px; }
+.fb-info .word { font-size: 30px; }
+.retype-fields { display: grid; gap: 10px; margin-bottom: 12px; }
+input.answer.nope { border-color: var(--red); animation: shake 0.3s; }
+@keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+/* ---------- result, boss ---------- */
+.result { text-align: center; }
+.result h1 { font-size: 32px; }
+.result-score { font-size: 20px; }
+.result-score b { font-size: 40px; color: var(--emerald-lo); }
+.result-block { margin: 16px 0; }
+.result-block h2 { font-size: 17px; color: var(--ink-2); }
+.ups { list-style: none; padding: 0; display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; font-size: 18px; font-weight: 700; }
+.ups .px { width: 36px; height: 36px; margin-right: 6px; }
+.chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.word-chip { appearance: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border: 2px solid var(--paper-line); background: #fff; font-size: 17px; cursor: pointer; }
+.word-chip .px { width: 20px; height: 20px; }
+.result-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+.result-boss, .boss-big { width: 72px; height: 72px; }
+.boss-intro { text-align: center; }
+.boss-intro p { text-align: left; }
+.boss-history ul, .boss-history { list-style: none; padding: 0; text-align: left; }
+.all-right { font-size: 18px; font-weight: 700; color: var(--emerald-lo); }
+
+/* ---------- toast & modal ---------- */
+/* Hidden = faded out and visibility:hidden, not just moved up: from top:66px a percentage
+ * shift left the lower part of the toast stuck at the top edge of the screen. */
+#toast {
+  position: fixed; left: 50%; top: 66px; z-index: 60; pointer-events: none;
+  transform: translate(-50%, -24px); opacity: 0; visibility: hidden;
+  transition: transform 0.28s cubic-bezier(0.2, 1.4, 0.4, 1), opacity 0.2s ease, visibility 0s linear 0.28s;
+}
+#toast.show {
+  transform: translate(-50%, 0); opacity: 1; visibility: visible;
+  transition: transform 0.28s cubic-bezier(0.2, 1.4, 0.4, 1), opacity 0.2s ease, visibility 0s;
+}
+.toast { display: flex; align-items: center; gap: 12px; background: var(--paper); color: var(--ink); border: 3px solid var(--rock-line); box-shadow: 0 5px 0 var(--rock-line); padding: 8px 16px 8px 10px; min-width: 200px; }
+.toast.good { border-color: var(--emerald-lo); }
+.toast.bad { background: var(--red-soft); }
+.toast-body { display: flex; align-items: center; gap: 12px; }
+.toast-text { display: flex; flex-direction: column; line-height: 1.3; }
+.toast-text b { font-size: 20px; }
+.toast-ore { width: 40px; height: 40px; animation: pop 0.45s ease-out; }
+.toast-combo { font-weight: 800; color: #c25a00; }
+.is-combo .toast-text { animation: pop 0.4s ease-out; }
+.is-diamond .toast-ore { animation: pop 0.45s ease-out, shine 0.9s 0.45s ease-in-out 2; }
+@keyframes pop { 0% { transform: scale(0.3) rotate(-15deg); } 60% { transform: scale(1.25) rotate(5deg); } 100% { transform: scale(1) rotate(0); } }
+@keyframes shine { 50% { filter: drop-shadow(0 0 8px var(--diamond)) brightness(1.3); } }
+
+.overlay { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 50; background: rgba(8, 6, 4, 0.72); display: flex; align-items: flex-start; justify-content: center; padding: 24px 16px; overflow-y: auto; }
+.modal { position: relative; width: min(720px, 100%); margin: 0; }
+.modal-close { position: absolute; top: 10px; right: 10px; }
+.detail-head { display: flex; align-items: center; gap: 14px; padding-right: 50px; }
+.detail-ore { width: 48px; height: 48px; }
+.detail-status { color: var(--ink-3); font-size: 14px; }
+
+/* ---------- version & update ---------- */
+.update-banner {
+  position: sticky; top: 0; z-index: 40; display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 10px; padding: 8px 16px; background: #2b2206; color: #fff1bf; border-bottom: 3px solid var(--rock-line);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.35);
+}
+.update-banner b { color: var(--gold); }
+.update-ore { width: 24px; height: 24px; }
+.whats-new { background: #fff8dc; }
+.whats-new h2 { font-size: 20px; }
+.whats-new ul { margin: 0 0 8px; padding-left: 22px; }
+.foot p { margin: 0 0 4px; }
+.foot .version { font-family: var(--font-type); font-size: 12px; color: #7d6f5d; }
+.changelog { list-style: none; padding: 0; margin: 0; font-size: 14px; }
+.changelog li { display: grid; grid-template-columns: 7.5em 1fr; gap: 8px; padding: 6px 0; border-bottom: 1px dashed var(--paper-line); }
+.changelog b { font-family: var(--font-type); font-weight: 600; color: var(--ink-2); }
+
+/* ---------- stepping back / resuming ---------- */
+.learn-nav, .review-nav { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.learn-nav .btn-primary, .review-nav .btn-primary { flex: 1 1 220px; }
+.quiz-actions .btn-nav { margin-right: auto; }
+.chip-review { background: #5b6b7a; }
+.review-badge { font-weight: 800; font-size: 18px; margin: 0 0 8px; }
+.review-badge.good { color: var(--emerald-lo); }
+.review-badge.bad { color: var(--red); }
+.review-answer { font-size: 20px; }
+.review-answer b { color: var(--emerald-lo); font-size: 24px; }
+.mission.resume { grid-template-columns: auto 1fr auto; }
+.mission-progress { margin-top: 8px; max-width: 360px; height: 16px; }
+.mission-cta { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+
+/* ---------- lock ---------- */
+.lock { max-width: 440px; margin: 10vh auto 0; text-align: center; }
+.lock h1 { font-size: 30px; letter-spacing: 0.06em; margin-top: 8px; }
+.lock-ore { width: 72px; height: 72px; }
+.lock-hint { color: var(--ink-2); }
+.lock input.answer { text-align: center; margin: 6px 0 4px; }
+.lock-msg { color: var(--red); font-weight: 700; margin: 8px 0 0; }
+
+/* ---------- parent ---------- */
+.unit-bars { display: grid; gap: 10px; margin: 12px 0; }
+.unit-bar { display: grid; grid-template-columns: 3em 1fr 4em; align-items: center; gap: 10px; }
+.bar { display: flex; height: 28px; border: 3px solid var(--rock-line); background: var(--paper-2); }
+.seg { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; text-shadow: 0 1px 0 rgba(0, 0, 0, 0.5); min-width: 0; overflow: hidden; }
+.seg-unseen { background: var(--seg-unseen); }
+.seg-stone { background: var(--seg-stone); }
+.seg-iron { background: var(--seg-iron); color: var(--ink); text-shadow: none; }
+.seg-gold { background: var(--seg-gold); color: var(--ink); text-shadow: none; }
+.seg-diamond { background: var(--seg-diamond); color: var(--ink); text-shadow: none; }
+.bar-total { font-family: var(--font-type); font-size: 14px; }
+.table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.table th, .table td { border-bottom: 2px solid var(--paper-line); padding: 6px 8px; text-align: right; }
+.table th:first-child, .table td:first-child { text-align: left; }
+.field { display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; }
+.field-label { font-weight: 700; }
+.field-hint { font-size: 13px; color: var(--ink-3); }
+.field input[type="date"], .field select { max-width: 360px; min-height: 44px; padding: 6px 10px; border: 3px solid var(--rock-line); background: #fff; color: var(--ink); }
+.checks { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+.check { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; }
+.check input { width: 20px; height: 20px; }
+.rate { display: flex; align-items: center; gap: 12px; }
+.confirm { margin-top: 14px; padding: 12px; background: #fff3cd; border: 3px solid var(--gold); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.confirm p { margin: 0; flex-basis: 100%; }
+
+/* ---------- paper test ---------- */
+.paper-tools p { flex: 1; color: #e7dcc6; margin: 0; }
+.paper { background: #fff; color: #000; padding: 28px 32px; margin-top: 16px; border: 3px solid var(--rock-line); }
+.sheet h1 { font-size: 22px; text-align: center; }
+.sheet h2 { font-size: 16px; margin-top: 18px; }
+.sheet-meta { text-align: center; font-size: 15px; }
+.sheet-list { padding-left: 24px; margin: 6px 0; }
+.sheet-list li { margin-bottom: 10px; break-inside: avoid; }
+.sheet-list li > span { display: inline-block; min-width: 50%; }
+.sheet-list .ans { font-family: var(--font-en); letter-spacing: 0.05em; }
+.sheet-list.cloze p { margin: 0; font-family: var(--font-en); }
+.sheet-list.cloze .zh { font-family: var(--font-ui); color: #444; font-size: 14px; }
+.answer-key { margin-top: 36px; padding-top: 18px; border-top: 3px dashed #999; }
+.key-list { columns: 2; padding-left: 24px; }
+
+/* ---------- mock exam (模擬考卷) ---------- */
+.menu-wide { grid-column: 1 / -1; background: #3b2a12; }
+.menu-wide b { color: var(--gold); }
+.chip-exam { background: #8a5a12; }
+.exam-intro { text-align: center; }
+.exam-intro p, .exam-intro .boss-history { text-align: left; }
+.exam-start { justify-content: center; margin: 16px 0 8px; }
+.exam-resume { justify-content: center; text-align: left; }
+.exam-picture { display: block; width: min(100%, 420px); height: auto; margin: 0 0 14px; background: #fff; border: 3px solid var(--paper-line); }
+.exam-stem { font-family: var(--font-en); font-size: 22px; line-height: 1.75; margin: 0 0 14px; }
+.exam-blank { display: inline-block; width: 4.5em; height: 1.1em; border-bottom: 3px solid var(--ink); margin: 0 4px; vertical-align: -0.25em; }
+.exam-fill { color: var(--hl); border-bottom: 3px solid var(--hl); padding: 0 2px; }
+.exam-passage { font-family: var(--font-en); font-style: italic; font-size: 18px; line-height: 1.6; margin: 0 0 12px; padding: 12px 14px; background: #fff; border: 3px solid var(--ink); }
+.exam-question { font-family: var(--font-en); font-size: 20px; font-weight: 700; margin: 0 0 12px; }
+.exam-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.exam-opt {
+  appearance: none; display: flex; align-items: center; gap: 12px; min-height: 58px; padding: 8px 14px; text-align: left;
+  font-size: 20px; font-weight: 600; color: var(--ink); background: #fff; border: 3px solid var(--rock-line);
+  box-shadow: inset -3px -3px 0 var(--paper-2); cursor: pointer; transition: transform 0.06s;
+}
+@media (hover: hover) { button.exam-opt:not([aria-pressed="true"]):hover { background: #fff8e1; } } /* no sticky hover on iPad */
+button.exam-opt:active { transform: translateY(2px); }
+.exam-opt:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.exam-letter {
+  flex: none; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center;
+  font: 800 18px var(--font-type); color: #fff; background: var(--rock-2);
+}
+.exam-opt-text { flex: 1; }
+.exam-opt[aria-pressed="true"] { background: #e3f5ea; border-color: var(--emerald-lo); box-shadow: inset 0 0 0 3px var(--emerald); }
+.exam-opt[aria-pressed="true"] .exam-letter, .exam-opt.is-right .exam-letter { background: var(--emerald); }
+.exam-review .exam-opt { cursor: default; box-shadow: none; }
+.exam-opt.is-right { background: #e3f5ea; border-color: var(--emerald-lo); }
+.exam-opt.is-wrong { background: var(--red-soft); border-color: var(--red); }
+.exam-opt.is-wrong .exam-letter { background: var(--red); }
+.exam-opt.is-wrong .exam-opt-text { text-decoration: line-through; }
+.exam-tag { flex: none; font-size: 13px; font-weight: 700; color: var(--ink-2); }
+.exam-hint { margin-right: auto; align-self: center; color: var(--ink-3); font-size: 14px; }
+.exam-why { display: grid; grid-template-columns: auto 1fr; gap: 6px 12px; margin: 16px 0 4px; padding: 12px 14px; background: #fff8dc; border-left: 6px solid var(--gold); }
+.exam-why dt { font-weight: 800; color: var(--gold-ink); }
+.exam-why dd { margin: 0; }
+.exam-detail h2 { padding-right: 50px; }
+.exam-passage p { margin: 0 0 0.7em; }
+.exam-passage p:last-child { margin-bottom: 0; }
+.exam-gaps { font-style: normal; }
+.exam-gap {
+  display: inline-block; min-width: 2.6em; margin: 0 3px; padding: 0 4px; line-height: 1.3;
+  font: 700 14px var(--font-type); color: var(--ink-3); border-bottom: 2px solid var(--ink-3); vertical-align: 0.1em;
+}
+.exam-gap.is-current { min-width: 4.2em; font-size: 16px; color: var(--ink); background: #fff1a8; border-bottom: 3px solid var(--ink); box-shadow: 0 0 0 2px var(--gold); }
+.exam-ask { font-weight: 800; color: var(--ink-2); margin: 4px 0 10px; }
+.exam-options.is-bank .exam-opt { min-height: 50px; font-size: 18px; }
+.chip-missed { background: var(--red); margin-left: 6px; }
+.exam-zh { margin: 12px 0 4px; padding: 10px 14px; background: #fff; border: 2px dashed var(--paper-line); }
+.exam-zh summary { cursor: pointer; font-weight: 800; color: var(--ink-2); }
+.exam-zh p { margin: 8px 0 0; line-height: 1.7; }
+.exam-zh-prompt { font-size: 24px; font-weight: 800; line-height: 1.6; margin: 0 0 14px; }
+.exam-write {
+  display: block; width: 100%; box-sizing: border-box; min-height: 110px; padding: 12px 14px; resize: vertical;
+  font: 20px/1.5 var(--font-en); color: var(--ink); background: #fff; border: 3px solid var(--rock-line);
+}
+.exam-write:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.exam-mine, .exam-model { margin: 0 0 12px; padding: 10px 14px; background: #fff; border-left: 6px solid var(--rock-2); }
+.exam-model { border-left-color: var(--emerald); background: #e3f5ea; }
+.exam-mine h3, .exam-model h3 { margin: 0 0 4px; font-size: 15px; color: var(--ink-2); }
+.exam-mine p, .exam-model p { margin: 4px 0; font-family: var(--font-en); font-size: 20px; }
+.exam-grade { margin-top: 16px; }
+.menu-sim { background: #12293b; }
+.menu-sim b { color: #8fd0ff; }
+.sim-part { margin-top: 16px; }
+.sim-part h2 { margin: 0 0 4px; font-size: 21px; }
+.sim-meta { margin: 0 0 6px; font-weight: 700; color: var(--ink-2); }
+.sim-part .exam-start { justify-content: flex-start; }
+.sim-errata { margin-top: 14px; padding: 10px 14px; background: #fff8dc; border-left: 6px solid var(--gold); }
+.sim-errata summary { cursor: pointer; font-weight: 800; color: var(--gold-ink); }
+.sim-errata ul { margin: 8px 0 0; padding-left: 20px; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 640px) {
+  .brand h1 { font-size: 28px; }
+  .mission, .mission.resume { grid-template-columns: 1fr; text-align: center; }
+  .mission-progress { margin-left: auto; margin-right: auto; }
+  .mission-ores { justify-content: center; }
+  .stats { gap: 8px; }
+  .stat { flex-direction: column; text-align: center; gap: 4px; padding: 8px 4px; }
+  .menu { grid-template-columns: repeat(2, 1fr); }
+  .word { font-size: 36px; }
+  .q-meaning { font-size: 24px; }
+  .cloze-sentence { font-size: 20px; }
+  .forms-grid { grid-template-columns: 1fr; }
+  .wl-meaning { display: none; }
+  .block { width: 26px; height: 26px; }
+  .paper { padding: 18px 14px; }
+  .exam-options { grid-template-columns: 1fr; }
+  .exam-stem { font-size: 19px; }
+  .exam-hint { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+@media print {
+  body { background: #fff; color: #000; }
+  body > svg, #toast, #modal-root, .no-print { display: none !important; }
+  .screen { max-width: none; padding: 0; }
+  .paper { border: 0; padding: 0; margin: 0; }
+  .answer-key { break-before: page; page-break-before: always; border-top: 0; margin-top: 0; }
+}
+
+/* ---------- 歷史挖礦: Chinese questions, the parts on the home screen ---------- */
+.exam-question, .exam-stem, .exam-passage { font-family: var(--font-ui); }
+.exam-question { font-size: 22px; line-height: 1.6; }
+.exam-passage { font-style: normal; }
+.exam-options { grid-template-columns: 1fr; }
+.exam-opt { font-size: 19px; line-height: 1.45; }
+.parts-progress { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0 0 4px; }
+.part-pill {
+  display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 8px; padding: 8px 10px;
+  color: #f3e6c8; background: var(--rock); border: 3px solid var(--rock-line); box-shadow: var(--bevel);
+}
+.part-pill .px { grid-row: span 2; width: 30px; height: 30px; }
+.part-pill b { font-size: 15px; }
+.part-pill span { font-size: 13px; color: #cbbca3; }
+.part-no { display: inline-block; margin-right: 10px; padding: 2px 8px; font-size: 14px; color: #fff; background: var(--rock-2); vertical-align: 3px; }
+.sim-part.is-perfect { border-color: var(--emerald-lo); }
+.part-history { margin-top: 12px; }
+.part-history summary { cursor: pointer; font-weight: 800; color: var(--ink-2); }
+.home-menu { grid-template-columns: 1fr; margin-top: 16px; }
+@media (max-width: 640px) {
+  .parts-progress { grid-template-columns: repeat(2, 1fr); }
+  .exam-question { font-size: 20px; }
+}
+
+</style>
+</head>
+<body>
+<div id="app"><noscript><p style="padding:24px">這個練習需要開啟 JavaScript。</p></noscript></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="modal-root"></div>
+<script>
+window.APP_BUILD = {"version":"2026-10-15 19:52"};
+window.APP_LOCKED = {"salt":"WjNkzyHmu6H7P6e01vrYhw==","iv":"IFgtIg+5mvOB+I2F","iter":250000,"data":"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"};
+</script>
+<script>
+/* 歷史挖礦 core: dates, the practice log, update notes and the saved progress (no DOM).
+ * The questions, rounds and scoring are ExamCore (exam-core.js, copied unchanged from 單字挖礦).
+ * Loaded as a plain <script> in the page (exposes window.Core) and required by node tests. */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.Core = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, () => {
+  'use strict';
+
+  const ISO_RE = /^\d{4}-\d{2}-\d{2}$/;
+  const PART_RE = /^[a-z0-9-]{1,20}$/;
+  const KINDS = ['full', 'redo'];
+  const MAX_QUESTIONS = 200;
+  const ROUNDS_KEPT = 100;
+  const DEFAULT_SETTINGS = Object.freeze({ examDate: '2026-10-16', sound: true, volume: 1 });
+  const GENERIC_UPDATE_NOTE = '一些小改進與修正。';
+
+  // ---------- dates (local calendar days as YYYY-MM-DD) ----------
+  const pad = (n) => String(n).padStart(2, '0');
+  const todayISO = (now = new Date()) => `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+  const toUTC = (iso) => {
+    const [y, m, d] = iso.split('-').map(Number);
+    return Date.UTC(y, m - 1, d);
+  };
+  const diffDays = (a, b) => Math.round((toUTC(a) - toUTC(b)) / 86400000);
+
+  const isDate = (d) => typeof d === 'string' && ISO_RE.test(d);
+  const intIn = (n, lo, hi, dflt) => (Number.isInteger(n) && n >= lo && n <= hi ? n : dflt);
+  const bool = (b, dflt) => (typeof b === 'boolean' ? b : dflt);
+
+  // ---------- the day's practice log ----------
+  const LOG_KEYS = ['q', 'ok', 'ms'];
+  function addToLog(log, day, delta) {
+    const cur = log[day] || { q: 0, ok: 0, ms: 0 };
+    const next = {};
+    LOG_KEYS.forEach((k) => { next[k] = (cur[k] || 0) + (delta[k] || 0); });
+    return Object.assign({}, log, { [day]: next });
+  }
+
+  // ---------- versions ----------
+  /** Notes to show once after an update, or null when there is nothing to announce.
+   * Versions are build times "YYYY-MM-DD HH:mm", so plain string order is time order. */
+  function whatsNewNotes(changelog, seen, current, hasProgress) {
+    if (!current || seen === current) return null;
+    if (seen && seen > current) return null; // an older cached copy: say nothing
+    if (!seen) return hasProgress && changelog.length ? changelog[0].notes.slice() : null;
+    const fresh = changelog.filter((c) => c.version > seen && c.version <= current);
+    return fresh.length ? fresh.reduce((all, c) => all.concat(c.notes), []) : [GENERIC_UPDATE_NOTE];
+  }
+
+  // ---------- saved progress ----------
+  function mergeSettings(s) {
+    const d = DEFAULT_SETTINGS;
+    const src = s && typeof s === 'object' ? s : {};
+    const volume = typeof src.volume === 'number' && src.volume >= 0.1 && src.volume <= 1 ? src.volume : d.volume;
+    return { examDate: isDate(src.examDate) ? src.examDate : d.examDate, sound: bool(src.sound, d.sound), volume };
+  }
+
+  /** Every finished round: the date, a whole part or 訂正, which part, the score and the numbers missed. */
+  function sanitizeRounds(list) {
+    return (Array.isArray(list) ? list : [])
+      .filter((r) => r && isDate(r.date) && KINDS.includes(r.kind) && Number.isInteger(r.ok)
+        && intIn(r.total, 1, MAX_QUESTIONS, 0) > 0)
+      .map((r) => Object.assign({
+        date: r.date, kind: r.kind, ok: Math.min(Math.max(r.ok, 0), r.total), total: r.total,
+        wrong: (Array.isArray(r.wrong) ? r.wrong : []).filter((no) => intIn(no, 1, MAX_QUESTIONS, 0) > 0).slice(0, r.total),
+      }, typeof r.part === 'string' && PART_RE.test(r.part) ? { part: r.part } : {}))
+      .slice(-ROUNDS_KEPT);
+  }
+
+  // rev counts saves, so a tab can tell that another tab wrote newer progress.
+  const emptyStore = () => ({ v: 1, rev: 0, log: {}, settings: mergeSettings(null), rounds: [] });
+
+  /** Throws a user-facing message when data is not a progress file of this app. */
+  function sanitizeStore(data) {
+    if (!data || typeof data !== 'object' || data.v !== 1 || !Array.isArray(data.rounds)) {
+      throw new Error('這不是歷史挖礦的進度檔。');
+    }
+    const log = {};
+    Object.entries(data.log && typeof data.log === 'object' ? data.log : {}).forEach(([day, e]) => {
+      if (!isDate(day) || !e || typeof e !== 'object') return;
+      log[day] = { q: intIn(e.q, 0, 1e5, 0), ok: intIn(e.ok, 0, 1e5, 0), ms: intIn(e.ms, 0, 864e5, 0) };
+    });
+    return { v: 1, rev: intIn(data.rev, 0, 1e9, 0), log, settings: mergeSettings(data.settings), rounds: sanitizeRounds(data.rounds) };
+  }
+
+  return { DEFAULT_SETTINGS, todayISO, diffDays, addToLog, whatsNewNotes, mergeSettings, emptyStore, sanitizeStore };
+});
+
+/* 模擬考卷 and 類似題練習 core: a paper's questions, scoring and a round saved mid-way (no DOM).
+ * Loaded as a plain <script> after core.js (exposes window.ExamCore) and required by node tests. */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.ExamCore = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, () => {
+  'use strict';
+
+  const LETTERS = ['A', 'B', 'C', 'D'];
+  const KINDS = ['full', 'redo']; // the whole paper (or part), or only the questions missed last time
+  // choice: a sentence with blank(s); question: asked without a blank; reading: a passage and a question;
+  // picture: choice with the paper's picture; bank: one numbered blank of a passage, options from its word box;
+  // write: a sentence to translate, checked against model answers (the child marks it when they differ).
+  const TYPES = ['choice', 'picture', 'reading', 'question', 'bank', 'write'];
+  const WRITE_GRADES = 2; // a write question's pick: 0 = right, 1 = wrong
+  const MAX_QUESTIONS = 200;
+  const MAX_OPTIONS = 10;
+  const MAX_ANSWERS = 5;
+  const MAX_TEXT = 1000;
+  const MAX_PASSAGE = 4000;
+  const MAX_PICTURE = 2 * 1024 * 1024;
+  const BLANK = /_{3,}/;
+  const BLANKS = /_{3,}/g;
+  const GAP = /(\d+)\.\s?_{3,}/g; // "3.________" in a word-box passage
+  const LABEL_RE = /^[A-Z]{1,2}$/;
+  const PART_RE = /^[a-z0-9-]{1,20}$/;
+  const ISO_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+  const isText = (s, max = MAX_TEXT) => typeof s === 'string' && s.length <= max;
+  const filled = (s, max) => isText(s, max) && s.trim() !== '';
+  const isDate = (d) => typeof d === 'string' && ISO_RE.test(d);
+  const intIn = (n, lo, hi, dflt) => (Number.isInteger(n) && n >= lo && n <= hi ? n : dflt);
+  const optional = (s, max) => (isText(s, max) ? s : '');
+  const isPart = (s) => typeof s === 'string' && PART_RE.test(s);
+  const blankCount = (s) => (s.match(BLANKS) || []).length;
+  const splitFills = (option) => option.split(/\s*;\s*/);
+  const gapNumbers = (passage) => Array.from(passage.matchAll(GAP), (m) => Number(m[1]));
+
+  function checkOptions(x, fail) {
+    const labels = x.labels === undefined ? LETTERS : x.labels;
+    if (x.labels === undefined) {
+      if (!Array.isArray(x.options) || x.options.length !== LETTERS.length || !x.options.every((o) => filled(o))) fail('要有 4 個選項');
+    } else {
+      const ok = Array.isArray(labels) && labels.length >= 2 && labels.length <= MAX_OPTIONS
+        && labels.every((l) => typeof l === 'string' && LABEL_RE.test(l)) && new Set(labels).size === labels.length
+        && Array.isArray(x.options) && x.options.length === labels.length && x.options.every((o) => filled(o));
+      if (!ok) fail('選項和代號對不起來');
+    }
+    const answer = labels.indexOf(x.answer);
+    if (answer < 0) fail(x.labels === undefined ? '答案要是 A–D' : '答案不在選項裡');
+    return { options: x.options.slice(), labels: labels.slice(), answer };
+  }
+
+  function checkQuestion(x, picture) {
+    const no = x && x.no;
+    const fail = (why) => { throw new Error(`第 ${no} 題：${why}`); };
+    if (!Number.isInteger(no) || no < 1 || no > MAX_QUESTIONS) fail('題號不對');
+    if (x.type !== undefined && !TYPES.includes(x.type)) fail('題型不對');
+    const type = x.type || 'choice';
+    const base = {
+      no, type, stem: optional(x.stem), unit: optional(x.unit), point: optional(x.point), note: optional(x.note),
+      ref: optional(x.ref), zh: optional(x.zh, MAX_PASSAGE), label: optional(x.label, 60), tag: optional(x.tag, 12),
+      part: isPart(x.part) ? x.part : '', missed: x.missed === true,
+      passage: '', question: '', blank: 0, answers: [], picture: '',
+    };
+    if (x.part !== undefined && !base.part) fail('分段代號不對');
+    if (type === 'write') {
+      if (!filled(x.stem)) fail('沒有題目');
+      if (!Array.isArray(x.answers) || !x.answers.length || x.answers.length > MAX_ANSWERS || !x.answers.every((a) => filled(a))) {
+        fail('翻譯題要有參考答案');
+      }
+      return Object.assign(base, { options: [], labels: [], answer: 0, answers: x.answers.slice() });
+    }
+    const opts = checkOptions(x, fail);
+    if (type === 'reading') {
+      if (!(filled(x.passage, MAX_PASSAGE) && filled(x.question))) fail('短文題要有短文和問題');
+      return Object.assign(base, opts, { passage: x.passage, question: x.question });
+    }
+    if (type === 'bank') {
+      if (!filled(x.passage, MAX_PASSAGE) || !gapNumbers(x.passage).includes(x.blank)) fail('選詞填空的短文裡找不到這一格');
+      return Object.assign(base, opts, { passage: x.passage, blank: x.blank });
+    }
+    if (!filled(x.stem)) fail('沒有題目');
+    if (type === 'question') return Object.assign(base, opts);
+    const blanks = blankCount(x.stem);
+    if (!blanks) fail('題目裡沒有空格');
+    if (blanks > 1 && !opts.options.every((o) => splitFills(o).length === blanks)) fail(`有 ${blanks} 個空格，每個選項要用「;」分成 ${blanks} 段`);
+    if (type === 'picture' && !picture) fail('看圖題沒有圖');
+    return Object.assign(base, opts, { picture: type === 'picture' ? picture : '' });
+  }
+
+  /** The paper from items.json ({picture: data URL, items}) in question order; throws on anything off. */
+  function buildExam(raw) {
+    if (!raw || typeof raw !== 'object' || !Array.isArray(raw.items) || !raw.items.length || raw.items.length > MAX_QUESTIONS) {
+      throw new Error('題目卷沒有題目');
+    }
+    const picture = isText(raw.picture, MAX_PICTURE) && /^data:image\/(png|jpeg|gif|webp);base64,/.test(raw.picture) ? raw.picture : '';
+    const items = raw.items.map((x) => checkQuestion(x, picture)).sort((a, b) => a.no - b.no);
+    items.forEach((q, i) => { if (i > 0 && items[i - 1].no === q.no) throw new Error(`第 ${q.no} 題重複了`); });
+    return items;
+  }
+
+  function checkErrata(e) {
+    if (e === undefined) return null;
+    const ok = e && filled(e.title) && Array.isArray(e.items) && e.items.length && e.items.length <= 20 && e.items.every((s) => filled(s));
+    if (!ok) throw new Error('勘誤要有標題和內容');
+    return { title: e.title, intro: optional(e.intro), items: e.items.slice() };
+  }
+
+  /** The sections a paper is done in ([] = the whole paper at once), each with its question numbers. */
+  function buildParts(raw, items) {
+    const list = raw && Array.isArray(raw.parts) ? raw.parts : [];
+    if (!list.length) {
+      if (items.some((q) => q.part)) throw new Error('題目有分段，卷子卻沒有分段');
+      return [];
+    }
+    const parts = list.map((p) => {
+      if (!p || !isPart(p.id) || !filled(p.title, 100)) throw new Error('每一段要有代號和標題');
+      const nos = items.filter((q) => q.part === p.id).map((q) => q.no);
+      if (!nos.length) throw new Error(`「${p.title}」沒有題目`);
+      return { id: p.id, title: p.title, short: filled(p.short, 30) ? p.short : p.title, note: optional(p.note), errata: checkErrata(p.errata), nos };
+    });
+    if (new Set(parts.map((p) => p.id)).size !== parts.length) throw new Error('分段代號重複了');
+    const stray = items.find((q) => !parts.some((p) => p.id === q.part));
+    if (stray) throw new Error(`第 ${stray.no} 題不屬於任何一段`);
+    return parts;
+  }
+
+  /** Everything the page shows of a paper: its questions, sections and heading. */
+  function buildPaper(raw) {
+    const items = buildExam(raw);
+    return { items, parts: buildParts(raw, items), title: optional(raw.title, 100), subtitle: optional(raw.subtitle, 200), intro: optional(raw.intro) };
+  }
+
+  /** "There is a ____ here." -> [{text:'There is a '}, {blank:true}, {text:' here.'}] (every blank). */
+  function stemParts(stem) {
+    const texts = stem.split(BLANKS);
+    return texts.flatMap((text, i) => (i ? [{ blank: true }, { text }] : [{ text }])).filter((p) => p.blank || p.text);
+  }
+
+  /** The stem as parts with option `choice` in the blank(s): [{text}, {fill:'place'}, {text}]; "in; at" fills two blanks. */
+  function filledParts(q, choice) {
+    const parts = stemParts(q.stem);
+    const option = q.options[choice];
+    const fills = parts.filter((p) => p.blank).length > 1 ? splitFills(option) : [option];
+    let k = -1;
+    return parts.map((p) => {
+      if (!p.blank) return p;
+      k += 1;
+      return { fill: fills[k] !== undefined ? fills[k] : option };
+    });
+  }
+  const filledText = (q, choice) => filledParts(q, choice).map((p) => (p.fill !== undefined ? p.fill : p.text)).join('');
+  const optionText = (q, i) => `(${q.labels[i]}) ${q.options[i]}`;
+  /** What the toast and 「正確答案」 show. */
+  const answerText = (q) => (q.type === 'write' ? q.answers[0] : optionText(q, q.answer));
+
+  /** A word-box passage as paragraphs of parts: {text} or {gap: n, current, fill?}; `fill` puts an option in this question's gap. */
+  function passageParts(q, fill) {
+    return q.passage.split(/\n{2,}/).map((para) => {
+      const parts = [];
+      let at = 0;
+      for (const m of para.matchAll(GAP)) {
+        if (m.index > at) parts.push({ text: para.slice(at, m.index) });
+        const gap = Number(m[1]);
+        const current = gap === q.blank;
+        parts.push(current && fill !== undefined ? { gap, current, fill: q.options[fill] } : { gap, current });
+        at = m.index + m[0].length;
+      }
+      if (at < para.length) parts.push({ text: para.slice(at) });
+      return parts;
+    });
+  }
+
+  // ---------- translations ----------
+  const CONTRACTIONS = [
+    [/\b(what|it|he|she|that|there|who|where|how)'s\b/gi, '$1 is'],
+    [/\b(they|we|you)'re\b/gi, '$1 are'],
+    [/\bI'm\b/g, 'I am'],
+    [/\b(is|are|was|were|do|does|did|has|have)n't\b/gi, '$1 not'],
+  ];
+  /** Same sentence apart from spacing, curly quotes and contractions (case and punctuation still count). */
+  function canonical(s) {
+    let t = String(s).replace(/[’‘]/g, "'").replace(/[“”]/g, '"').replace(/\s+/g, ' ').trim();
+    CONTRACTIONS.forEach(([re, to]) => { t = t.replace(re, to); });
+    return t.replace(/\s+([,.?!;:])/g, '$1');
+  }
+  /** True when the typed translation is one of the model answers. */
+  const writeMatches = (q, typed) => q.answers.some((a) => canonical(a) === canonical(typed));
+
+  // ---------- a round ----------
+  /** A round over `nos` (or the whole paper when null; 'redo' needs numbers), optionally inside one part. */
+  function newRun(items, kind, nos, today, part) {
+    const known = items.map((q) => q.no);
+    const order = nos ? known.filter((no) => nos.includes(no)) : (kind === 'redo' ? [] : known);
+    const run = { v: 1, kind: kind === 'redo' ? 'redo' : 'full', day: today, order, pos: 0, picks: {} };
+    return isPart(part) ? Object.assign(run, { part }) : run;
+  }
+
+  const currentNo = (run) => run.order[run.pos];
+  const isFinished = (run) => run.pos >= run.order.length;
+  const pickOf = (run, no) => (Object.prototype.hasOwnProperty.call(run.picks, no) ? run.picks[no] : null);
+  const choiceCount = (q) => (q.type === 'write' ? WRITE_GRADES : q.options.length);
+
+  /** Records the answer to the question on screen (a write question: 0 = right, 1 = wrong). */
+  function pickAnswer(run, q, choice) {
+    return { run: Object.assign({}, run, { picks: Object.assign({}, run.picks, { [q.no]: choice }) }), correct: choice === q.answer };
+  }
+
+  const nextQuestion = (run) => Object.assign({}, run, { pos: run.pos + 1 });
+
+  /** ok / total, the numbers answered wrong (in paper order) and points out of 100. */
+  function summarize(run, items) {
+    const answerOf = new Map(items.map((q) => [q.no, q.answer]));
+    const wrong = run.order.filter((no) => pickOf(run, no) !== answerOf.get(no));
+    const total = run.order.length;
+    const ok = total - wrong.length;
+    return { ok, total, wrong, points: total ? Math.round((ok / total) * 100) : 0 };
+  }
+
+  /** The record kept in progress after a round. */
+  const recordOf = (run, items, today) => {
+    const s = summarize(run, items);
+    const record = { date: today, kind: run.kind, ok: s.ok, total: s.total, wrong: s.wrong };
+    return run.part ? Object.assign(record, { part: run.part }) : record;
+  };
+
+  /** Rounds of one part (or of a paper without parts). */
+  const recordsOf = (records, part) => records.filter((r) => (r.part || '') === (part || ''));
+
+  /** Questions still wrong after the latest round of that part (what 「訂正」 asks next). */
+  function wrongToRedo(records, items, part) {
+    const mine = recordsOf(records, part);
+    const last = mine.length ? mine[mine.length - 1] : null;
+    if (!last) return [];
+    const known = new Set(items.filter((q) => (q.part || '') === (part || '')).map((q) => q.no));
+    return last.wrong.filter((no) => known.has(no));
+  }
+
+  /** A round read back from storage: null unless it still fits this paper. */
+  function sanitizeRun(data, items) {
+    if (!data || typeof data !== 'object' || data.v !== 1 || !KINDS.includes(data.kind)) return null;
+    const byNo = new Map(items.map((q) => [q.no, q]));
+    const order = Array.isArray(data.order) ? data.order : [];
+    if (!order.length || order.length > MAX_QUESTIONS || new Set(order).size !== order.length || !order.every((no) => byNo.has(no))) return null;
+    if (data.part !== undefined && !(isPart(data.part) && order.every((no) => byNo.get(no).part === data.part))) return null;
+    const pos = intIn(data.pos, 0, order.length - 1, -1);
+    if (pos < 0) return null;
+    const asked = new Set(order.slice(0, pos + 1));
+    const picks = {};
+    Object.entries(data.picks && typeof data.picks === 'object' ? data.picks : {}).forEach(([k, v]) => {
+      const no = Number(k);
+      if (asked.has(no) && intIn(v, 0, choiceCount(byNo.get(no)) - 1, -1) >= 0) picks[no] = v;
+    });
+    const run = { v: 1, kind: data.kind, day: isDate(data.day) ? data.day : null, order: order.slice(), pos, picks };
+    return data.part !== undefined ? Object.assign(run, { part: data.part }) : run;
+  }
+
+  return {
+    LETTERS, buildExam, buildParts, buildPaper, stemParts, filledParts, filledText, optionText, answerText, passageParts,
+    canonical, writeMatches, newRun, currentNo, isFinished, pickOf, pickAnswer, nextQuestion, summarize, recordOf, recordsOf,
+    wrongToRedo, sanitizeRun,
+  };
+});
+
+</script>
+<script>
+(function () {
+'use strict';
+// ---- dom.js ----
+/* DOM helpers, pixel-block sprites and shared bits of UI (copied from 單字挖礦, vocabulary helpers removed). */
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+function appendAll(node, children) {
+  children.flat(Infinity).forEach((c) => {
+    if (c === null || c === undefined || c === false) return;
+    node.append(c instanceof Node ? c : document.createTextNode(String(c)));
+  });
+  return node;
+}
+
+/** Like Element.replaceChildren (which older iPad Safari lacks). */
+function setChildren(node, ...children) {
+  while (node.firstChild) node.removeChild(node.firstChild);
+  return appendAll(node, children);
+}
+
+/** el('button', {class, onclick, 'aria-label'}, ...children) — never parses HTML. */
+function el(tag, attrs, ...children) {
+  const node = document.createElement(tag);
+  Object.entries(attrs || {}).forEach(([k, v]) => {
+    if (v === null || v === undefined || v === false) return;
+    if (k === 'class') node.className = v;
+    else if (k.startsWith('on') && typeof v === 'function') node.addEventListener(k.slice(2), v);
+    else node.setAttribute(k, v === true ? '' : String(v));
+  });
+  return appendAll(node, children);
+}
+
+// ---------- 8×8 pixel blocks (drawn once as <symbol>s, reused with <use>) ----------
+const SPRITE_MAPS = {
+  stone: ['SSLSSSDS', 'SDSSLSSS', 'SSSDSSSL', 'LSSSSDSS', 'SSDSSSSS', 'SSSSLSDS', 'DSLSSSSS', 'SSSSDSSL'],
+  ore: ['........', '.OO.....', '.Oo..OO.', '.....Oo.', '..OO....', '..Oo..O.', '......o.', '........'],
+  dirt: ['GGGGGGGG', 'gGgGGgGg', 'BbBBBbBB', 'BBBbBBBb', 'bBBBBBbB', 'BBbBBBBB', 'BBBBbBBb', 'bBBBBBBB'],
+  boss: ['.MMMMMM.', 'MMMMMMMM', 'MEEMMEEM', 'MEEMMEEM', 'MMMMMMMM', 'MMM..MMM', '.M.MM.M.', '.MMMMMM.'],
+  exam: ['.WWWWWW.', '.WKKKKW.', '.WWWWWW.', '.WKKKWW.', '.WWWWWWR', '.WKKWWR.', '.WWRWRW.', '.WWWRWW.'],
+};
+const STONE_COLORS = { S: '#8b8b8b', D: '#6c6c6c', L: '#a9a9a9' };
+const SPRITES = {
+  'blk-dirt': { layers: ['dirt'], colors: { G: '#6cbf3f', g: '#4f9a2c', B: '#8b5a2b', b: '#6a4222' } },
+  'blk-stone': { layers: ['stone'], colors: STONE_COLORS },
+  'blk-iron': { layers: ['stone', 'ore'], colors: Object.assign({ O: '#ecc7a3', o: '#a8714b' }, STONE_COLORS) },
+  'blk-gold': { layers: ['stone', 'ore'], colors: Object.assign({ O: '#ffe14d', o: '#c48a12' }, STONE_COLORS) },
+  'blk-diamond': { layers: ['stone', 'ore'], colors: Object.assign({ O: '#8ff7ef', o: '#17a59d' }, STONE_COLORS) },
+  'blk-boss': { layers: ['boss'], colors: { M: '#b8432a', E: '#ffd23f' } },
+  'blk-exam': { layers: ['exam'], colors: { W: '#f4efe2', K: '#8b8b8b', R: '#d23a2a' } },
+  'blk-hist': { layers: ['exam'], colors: { W: '#f1e2bf', K: '#8b5a2b', R: '#b8432a' } },
+};
+
+function spritePixels(spec) {
+  const pixels = [];
+  spec.layers.forEach((layer) => SPRITE_MAPS[layer].forEach((row, y) => [...row].forEach((ch, x) => {
+    if (spec.colors[ch]) pixels.push({ x, y, fill: spec.colors[ch] });
+  })));
+  // Later layers win: keep only the last pixel drawn at each position.
+  const top = new Map(pixels.map((p) => [`${p.x},${p.y}`, p]));
+  return [...top.values()];
+}
+
+function installSprites() {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('style', 'position:absolute;width:0;height:0;overflow:hidden');
+  Object.entries(SPRITES).forEach(([id, spec]) => {
+    const symbol = document.createElementNS(SVG_NS, 'symbol');
+    symbol.setAttribute('id', id);
+    symbol.setAttribute('viewBox', '0 0 8 8');
+    spritePixels(spec).forEach((p) => {
+      const r = document.createElementNS(SVG_NS, 'rect');
+      [['x', p.x], ['y', p.y], ['width', 1], ['height', 1], ['fill', p.fill]].forEach(([k, v]) => r.setAttribute(k, v));
+      symbol.append(r);
+    });
+    svg.append(symbol);
+  });
+  document.body.prepend(svg);
+}
+
+function sprite(id, cls) {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('class', cls ? `px ${cls}` : 'px');
+  svg.setAttribute('viewBox', '0 0 8 8');
+  svg.setAttribute('shape-rendering', 'crispEdges');
+  svg.setAttribute('aria-hidden', 'true');
+  const use = document.createElementNS(SVG_NS, 'use');
+  use.setAttribute('href', `#${id}`);
+  svg.append(use);
+  return svg;
+}
+
+const WEEKDAYS = '日一二三四五六';
+function fmtDate(iso) {
+  const [, m, d] = iso.split('-').map(Number);
+  return `${m}/${d}`;
+}
+const fmtDateW = (iso) => `${fmtDate(iso)}（${WEEKDAYS[new Date(`${iso}T00:00:00`).getDay()]}）`;
+
+function backBar(title, onBack) {
+  return el('header', { class: 'back-bar' },
+    el('button', { class: 'btn btn-dark btn-sm', onclick: onBack || (() => go('home')) }, '← 回礦坑'),
+    el('h1', {}, title));
+}
+
+// ---------- toast & modal ----------
+let toastTimer = null;
+function showToast(content, tone) {
+  const host = document.getElementById('toast');
+  setChildren(host, el('div', { class: `toast ${tone || ''}` }, content));
+  host.classList.remove('show');
+  void host.offsetWidth; // restart the slide-in animation
+  host.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => host.classList.remove('show'), 1700);
+}
+
+function openModal(content) {
+  const root = document.getElementById('modal-root');
+  const lastFocus = document.activeElement;
+  const onKey = (e) => { if (e.key === 'Escape') close(); };
+  function close() {
+    setChildren(root);
+    document.removeEventListener('keydown', onKey);
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  const closeBtn = el('button', { class: 'icon-btn modal-close', 'aria-label': '關閉', onclick: close }, '✕');
+  const box = el('div', { class: 'modal card', role: 'dialog', 'aria-modal': 'true' }, closeBtn, content);
+  const overlay = el('div', { class: 'overlay', onclick: (e) => { if (e.target === overlay) close(); } }, box);
+  setChildren(root, overlay);
+  document.addEventListener('keydown', onKey);
+  closeBtn.focus();
+  return close;
+}
+
+// ---- audio.js ----
+/* Tiny generated sound effects (no audio files needed), copied from 單字挖礦 without its speech. */
+/** One Web Audio context for the whole page (iPad allows only a few). iPad keeps it silent until it is
+ * resumed during a tap, so the first touch of any kind starts it. */
+const AudioOut = (() => {
+  let ctx = null;
+
+  function context() {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    if (!ctx) ctx = new AC();
+    if (ctx.state !== 'running') {
+      const resumed = ctx.resume();
+      if (resumed && typeof resumed.catch === 'function') resumed.catch(() => { /* retried on the next tap */ });
+    }
+    return ctx;
+  }
+
+  function startOnFirstTouch() {
+    const events = ['touchend', 'pointerdown', 'keydown'];
+    const start = () => {
+      context();
+      events.forEach((name) => document.removeEventListener(name, start, true));
+    };
+    events.forEach((name) => document.addEventListener(name, start, true));
+  }
+
+  return { context, startOnFirstTouch };
+})();
+
+/** iPad: play as media (full media volume, also when the device is in silent mode). */
+function preferPlaybackAudio() {
+  try {
+    if (navigator.audioSession) navigator.audioSession.type = 'playback';
+  } catch (e) { /* older Safari: keep the default session */ }
+}
+
+/* Game sounds, all synthesized with Web Audio (no sound files): a pickaxe "clink" whose pitch climbs
+ * with the combo, a different reward for each ore, fanfares for combos, mission and boss. */
+const Sfx = (() => {
+  let ctx = null;
+  let master = null;
+  let noiseBuf = null;
+  let enabled = true;
+  let volume = 1;
+
+  function audio() {
+    if (!enabled) return null;
+    ctx = AudioOut.context();
+    if (!ctx) return null;
+    if (!master) {
+      master = ctx.createGain();
+      master.connect(ctx.destination);
+    }
+    master.gain.value = volume;
+    return ctx;
+  }
+
+  function noiseBuffer(c) {
+    if (!noiseBuf) {
+      noiseBuf = c.createBuffer(1, Math.floor(c.sampleRate * 0.6), c.sampleRate);
+      const data = noiseBuf.getChannelData(0);
+      for (let i = 0; i < data.length; i += 1) data[i] = Math.random() * 2 - 1;
+    }
+    return noiseBuf;
+  }
+
+  /** One note; `to` glides the pitch (boing, bonk). */
+  function tone(c, t0, n) {
+    const osc = c.createOscillator();
+    const gain = c.createGain();
+    const at = t0 + (n.at || 0);
+    osc.type = n.type || 'square';
+    osc.frequency.setValueAtTime(n.f, at);
+    if (n.to) osc.frequency.exponentialRampToValueAtTime(n.to, at + n.dur);
+    gain.gain.setValueAtTime(n.vol || 0.12, at);
+    gain.gain.exponentialRampToValueAtTime(0.0001, at + n.dur);
+    osc.connect(gain);
+    gain.connect(master);
+    osc.start(at);
+    osc.stop(at + n.dur + 0.02);
+  }
+
+  /** A burst of filtered noise: pickaxe on stone, thuds, sparkles. */
+  function hiss(c, t0, h) {
+    const src = c.createBufferSource();
+    const filter = c.createBiquadFilter();
+    const gain = c.createGain();
+    const at = t0 + (h.at || 0);
+    src.buffer = noiseBuffer(c);
+    filter.type = h.filter || 'bandpass';
+    filter.frequency.value = h.f;
+    filter.Q.value = h.q || 1;
+    gain.gain.setValueAtTime(h.vol || 0.2, at);
+    gain.gain.exponentialRampToValueAtTime(0.0001, at + h.dur);
+    src.connect(filter);
+    filter.connect(gain);
+    gain.connect(master);
+    src.start(at);
+    src.stop(at + h.dur + 0.02);
+  }
+
+  function play(notes, hits) {
+    const c = audio();
+    if (!c) return;
+    const t0 = c.currentTime + 0.01;
+    (hits || []).forEach((h) => hiss(c, t0, h));
+    (notes || []).forEach((n) => tone(c, t0, n));
+  }
+
+  const semis = (f, n) => f * Math.pow(2, n / 12);
+  const arp = (freqs, gap, dur, type, vol, start) =>
+    freqs.map((f, i) => ({ f, at: (start || 0) + i * gap, dur, type, vol }));
+  const CLINK = { f: 3200, q: 4, dur: 0.05, vol: 0.35 };
+  const COMBO_MAX_STEPS = 12;
+
+  /** Pickaxe hits stone; the ding climbs a semitone per answer in a row (up to an octave). */
+  function mine(combo) {
+    const f = semis(880, Math.min(Math.max(combo, 1) - 1, COMBO_MAX_STEPS));
+    play([{ f, at: 0.03, dur: 0.08 }, { f: f * 1.5, at: 0.09, dur: 0.14 }], [CLINK]);
+  }
+
+  /** Reward for reaching a new ore. short = keep it brief when speech comes right after. */
+  function ore(lv, short) {
+    if (short || lv <= 1) {
+      // iron: a metallic clang
+      play([{ f: 660, dur: 0.16, vol: 0.09 }, { f: 993, dur: 0.16, vol: 0.07 }, { f: 1320, at: 0.08, dur: 0.18, vol: 0.09 }],
+        [CLINK, { f: 2400, q: 12, at: 0.02, dur: 0.18, vol: 0.18 }]);
+      return;
+    }
+    if (lv === 2) {
+      // gold: a bright run upwards with a sparkle
+      play(arp([1047, 1319, 1568, 2093], 0.06, 0.13, 'triangle', 0.22),
+        [CLINK, { f: 7000, filter: 'highpass', at: 0.12, dur: 0.25, vol: 0.06 }]);
+      return;
+    }
+    // diamond: a magic bell with a shimmer
+    play([
+      ...arp([784, 988, 1175, 1568, 1976], 0.07, 0.16, 'triangle', 0.2),
+      { f: 1568, at: 0.38, dur: 0.9, type: 'sine', vol: 0.22 },
+      { f: 1568 * 2.76, at: 0.38, dur: 0.5, type: 'sine', vol: 0.06 },
+    ], [CLINK, { f: 8000, filter: 'highpass', at: 0.3, dur: 0.7, vol: 0.05 }]);
+  }
+
+  /** Every 5 answers in a row: a short fanfare that gets higher with longer combos. */
+  function combo(n) {
+    const lift = Math.min(Math.floor(n / 5) - 1, 4) * 2;
+    const run = [523, 659, 784, 1047].map((f) => semis(f, lift));
+    play([
+      ...arp(run, 0.07, 0.1, 'square', 0.1),
+      ...[1047, 1319, 1568].map((f) => ({ f: semis(f, lift), at: 0.3, dur: 0.35, type: 'triangle', vol: 0.12 })),
+    ]);
+  }
+
+  return {
+    setEnabled(v) { enabled = Boolean(v); },
+    setVolume(v) {
+      volume = v;
+      if (master) master.gain.value = v;
+    },
+    mine,
+    ore,
+    combo,
+    // wrong: a cartoon "bonk" (falling pitch plus a soft thud), not a harsh buzzer
+    wrong() { play([{ f: 330, to: 110, dur: 0.22, vol: 0.12 }], [{ f: 300, filter: 'lowpass', dur: 0.12, vol: 0.35 }]); },
+    // the answer was typed out correctly after a mistake: "repaired"
+    fixed() { play(arp([660, 880], 0.07, 0.12, 'triangle', 0.2)); },
+    complete() {
+      play([...arp([392, 523, 659, 784], 0.09, 0.12, 'square', 0.1),
+        ...[523, 659, 784, 1047].map((f) => ({ f, at: 0.4, dur: 0.6, type: 'triangle', vol: 0.11 }))]);
+    },
+    // boss: every correct answer lands a hit
+    bossHit() { play([{ f: 140, to: 60, dur: 0.16, type: 'sine', vol: 0.35 }], [{ f: 500, filter: 'lowpass', dur: 0.1, vol: 0.3 }]); },
+    bossWin() {
+      play([...arp([523, 523, 523, 659, 784, 1047], 0.1, 0.12, 'square', 0.1),
+        ...[784, 1047, 1319, 1568].map((f) => ({ f, at: 0.65, dur: 0.8, type: 'triangle', vol: 0.1 }))]);
+    },
+    // boss survived: a comic "wah-wah"
+    bossLose() {
+      play([{ f: 392, to: 370, at: 0, dur: 0.3, vol: 0.09 }, { f: 349, to: 330, at: 0.32, dur: 0.3, vol: 0.09 },
+        { f: 311, to: 233, at: 0.64, dur: 0.6, vol: 0.09 }]);
+    },
+    // kept for older call sites
+    correct() { mine(1); },
+    levelUp(lv) { ore(lv); },
+  };
+})();
+
+// ---- store.js ----
+/* Progress lives in this browser's localStorage; files are the backup / move-to-another-device path. */
+const STORAGE_KEY = 'lishi-mine-115-1';
+const BACKUP_KEY = `${STORAGE_KEY}:backup`;
+const MAX_IMPORT_BYTES = 2 * 1024 * 1024;
+const DOWNLOAD_URL_TTL_MS = 60 * 1000; // iPad asks before downloading; keep the link alive meanwhile
+
+const Storage = (() => {
+  let ok = true;
+
+  function probe() {
+    try {
+      const k = `${STORAGE_KEY}:probe`;
+      localStorage.setItem(k, '1');
+      localStorage.removeItem(k);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function readRaw(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function load() {
+    ok = probe();
+    if (!ok) return Core.emptyStore();
+    const raw = readRaw(STORAGE_KEY);
+    if (!raw) return Core.emptyStore();
+    try {
+      return Core.sanitizeStore(JSON.parse(raw));
+    } catch (e) {
+      // Keep the unreadable copy instead of silently overwriting it, then start fresh.
+      try { localStorage.setItem(`${STORAGE_KEY}:unreadable-${Date.now()}`, raw); } catch (ignored) { /* quota */ }
+      return Core.emptyStore();
+    }
+  }
+
+  /** The rev of what is saved now (another tab may have written since we loaded). */
+  function savedRev() {
+    const raw = readRaw(STORAGE_KEY);
+    if (!raw) return null;
+    try {
+      const rev = JSON.parse(raw).rev;
+      return Number.isInteger(rev) ? rev : 0;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function save(store) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      ok = true;
+    } catch (e) {
+      ok = false;
+    }
+    return ok;
+  }
+
+  /** One undo slot for the destructive actions (import replaces, reset clears). */
+  function saveBackup(store, reason) {
+    try {
+      localStorage.setItem(BACKUP_KEY, JSON.stringify({ savedAt: Core.todayISO(), reason, store }));
+    } catch (e) { /* no room for a backup: the action still proceeds */ }
+  }
+
+  function loadBackup() {
+    const raw = readRaw(BACKUP_KEY);
+    if (!raw) return null;
+    try {
+      const data = JSON.parse(raw);
+      return { savedAt: data.savedAt, reason: data.reason, store: Core.sanitizeStore(data.store) };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function clearBackup() {
+    try { localStorage.removeItem(BACKUP_KEY); } catch (e) { /* nothing to clear */ }
+  }
+
+  return { load, save, savedRev, saveBackup, loadBackup, clearBackup, isOk: () => ok };
+})();
+
+function downloadProgress(store) {
+  const blob = new Blob([JSON.stringify(store)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = el('a', { href: url, download: `歷史挖礦進度-${Core.todayISO()}.json` });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), DOWNLOAD_URL_TTL_MS);
+}
+
+/** Resolves with a validated store, or rejects with a message a parent can act on. */
+function readProgressFile(file) {
+  return new Promise((resolve, reject) => {
+    if (!file) { reject(new Error('沒有選到檔案。')); return; }
+    if (file.size > MAX_IMPORT_BYTES) { reject(new Error('檔案太大，不是歷史挖礦的進度檔。')); return; }
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('讀不到這個檔案，請再試一次。'));
+    reader.onload = () => {
+      try {
+        const data = Core.sanitizeStore(JSON.parse(String(reader.result)));
+        if (!data.rounds.length && !Object.keys(data.log).length) {
+          reject(new Error('這個檔案裡沒有任何練習紀錄，所以沒有匯入。'));
+          return;
+        }
+        resolve(data);
+      } catch (e) {
+        reject(e instanceof SyntaxError ? new Error('檔案內容不是進度檔格式。') : e);
+      }
+    };
+    reader.readAsText(file);
+  });
+}
+
+// ---- lock.js ----
+/* The hosted copy carries the questions encrypted (AES-GCM, key derived from a family passphrase),
+ * so they are not readable by whoever finds the public URL. */
+const PASS_KEY = `${STORAGE_KEY}:pass`;
+const normalizePass = (s) => String(s).normalize('NFKC').trim().toLowerCase();
+const fromB64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+
+function decryptVocab(locked, pass) {
+  const subtle = window.crypto && window.crypto.subtle;
+  if (!subtle) return Promise.reject(new Error('no-crypto'));
+  return subtle.importKey('raw', new TextEncoder().encode(normalizePass(pass)), 'PBKDF2', false, ['deriveKey'])
+    .then((base) => subtle.deriveKey(
+      { name: 'PBKDF2', salt: fromB64(locked.salt), iterations: locked.iter, hash: 'SHA-256' },
+      base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']))
+    .then((key) => subtle.decrypt({ name: 'AES-GCM', iv: fromB64(locked.iv) }, key, fromB64(locked.data)))
+    .then((buf) => JSON.parse(new TextDecoder().decode(buf)));
+}
+
+function readSavedPass() {
+  try { return localStorage.getItem(PASS_KEY); } catch (e) { return null; }
+}
+function savePass(pass) {
+  try { localStorage.setItem(PASS_KEY, normalizePass(pass)); } catch (e) { /* asked again next time */ }
+}
+function forgetPass() {
+  try { localStorage.removeItem(PASS_KEY); } catch (e) { /* nothing saved */ }
+}
+
+function lockView(onSubmit, message) {
+  const input = el('input', {
+    class: 'answer', type: 'text', lang: 'en', 'aria-label': '通關密語',
+    autocomplete: 'off', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', enterkeyhint: 'go',
+  });
+  const button = el('button', { type: 'submit', class: 'btn btn-primary btn-wide' }, '開始挖礦');
+  const form = el('form', {
+    class: 'card lock', autocomplete: 'off', novalidate: true,
+    onsubmit: (e) => {
+      e.preventDefault();
+      if (!input.value.trim()) { input.focus(); return; }
+      button.disabled = true;
+      button.textContent = '解鎖中…';
+      onSubmit(input.value);
+    },
+  },
+  sprite('blk-hist', 'lock-ore'),
+  el('h1', {}, '歷史挖礦'),
+  el('p', {}, '早期臺灣・類似題練習'),
+  el('p', { class: 'lock-hint' }, '請輸入通關密語（問家長）。輸入一次之後，這台裝置就會記住。'),
+  input,
+  message ? el('p', { class: 'lock-msg', role: 'alert' }, message) : null,
+  button);
+  return el('main', { class: 'screen' }, form);
+}
+
+/** Resolves with {paper} once the saved or typed passphrase decrypts the data. */
+function unlock(locked) {
+  return new Promise((resolve) => {
+    const root = document.getElementById('app');
+    const show = (message) => {
+      setChildren(root, lockView(attempt, message));
+      root.querySelector('input').focus();
+    };
+    function attempt(pass) {
+      decryptVocab(locked, pass)
+        .then((data) => { savePass(pass); resolve(data); })
+        .catch((err) => show(err.message === 'no-crypto'
+          ? '這個瀏覽器沒辦法解鎖，請用 Safari 打開 https 開頭的網址。'
+          : '通關密語不對，再試一次。'));
+    }
+    const saved = readSavedPass();
+    if (!saved) { show(''); return; }
+    decryptVocab(locked, saved).then(resolve).catch(() => { forgetPass(); show(''); });
+  });
+}
+
+// ---- version.js ----
+/* Which version is running, what changed after an update, and a check for a newer copy online. */
+const VERSION_KEY = `${STORAGE_KEY}:version`;
+const UPDATE_CHECK_GAP_MS = 60 * 1000;
+const APP_VERSION = (window.APP_BUILD && window.APP_BUILD.version) || '';
+// Newest first; version = build time (Taiwan) of the release that brought the change.
+const CHANGELOG = [
+  { version: '2026-10-15 19:52', notes: ['第一版上線：早期臺灣的歷史類似題 67 題，分成史前文化、原住民族、荷西時期、鄭氏時期 4 段練習。'] },
+];
+
+let newerVersion = null;
+let lastUpdateCheck = -Infinity;
+let whatsNew = null;
+
+const isWebCopy = () => /^https?:$/.test(window.location.protocol);
+
+/** "2026-10-04 15:40" -> "10/4 15:40" */
+function fmtVersion(v) {
+  const m = /^\d{4}-(\d{2})-(\d{2}) (\d{2}:\d{2})$/.exec(v || '');
+  return m ? `${Number(m[1])}/${Number(m[2])} ${m[3]}` : (v || '開發版');
+}
+
+function readSeenVersion() {
+  try { return localStorage.getItem(VERSION_KEY); } catch (e) { return null; }
+}
+
+function markVersionSeen() {
+  try { localStorage.setItem(VERSION_KEY, APP_VERSION); } catch (e) { /* shown again next time */ }
+  whatsNew = null;
+}
+
+function initWhatsNew(hasProgress) {
+  if (!APP_VERSION) return;
+  const seen = readSeenVersion();
+  const notes = Core.whatsNewNotes(CHANGELOG, seen, APP_VERSION, hasProgress);
+  if (notes) whatsNew = { notes };
+  else if (!seen || seen < APP_VERSION) markVersionSeen();
+}
+
+/** Web copy only: asks the server which version is live (never cached). Resolves true if newer. */
+function checkForUpdate(force) {
+  if (!isWebCopy() || !APP_VERSION) return Promise.resolve(false);
+  const now = performance.now();
+  if (!force && now - lastUpdateCheck < UPDATE_CHECK_GAP_MS) return Promise.resolve(Boolean(newerVersion));
+  lastUpdateCheck = now;
+  return fetch(`version.json?t=${Date.now()}`, { cache: 'no-store' })
+    .then((r) => (r.ok ? r.json() : null))
+    .then((info) => {
+      const remote = info && typeof info.version === 'string' ? info.version : '';
+      if (remote > APP_VERSION && remote !== newerVersion) {
+        newerVersion = remote;
+        if (!inPractice()) render();
+      }
+      return Boolean(newerVersion);
+    })
+    .catch(() => Boolean(newerVersion)); // offline: keep practicing, check again later
+}
+
+/** Reload the page past any cached copy; progress lives in storage, so nothing is lost. */
+function applyUpdate() {
+  const params = new URLSearchParams(window.location.search);
+  params.set('v', newerVersion || String(Date.now()));
+  window.location.replace(`${window.location.pathname}?${params.toString()}`);
+}
+
+function updateBanner() {
+  if (!newerVersion) return null;
+  return el('div', { class: 'update-banner', role: 'status' },
+    sprite('blk-gold', 'update-ore'),
+    el('span', {}, el('b', {}, '有新版本'), `（${fmtVersion(newerVersion)}），練習進度不會受影響。`),
+    el('button', { class: 'btn btn-gold btn-sm', onclick: applyUpdate }, '立即更新'));
+}
+
+function whatsNewCard() {
+  if (!whatsNew) return null;
+  return el('section', { class: 'card whats-new', role: 'status' },
+    el('h2', {}, `已更新到新版（${fmtVersion(APP_VERSION)}）`),
+    el('ul', {}, whatsNew.notes.map((n) => el('li', {}, n))),
+    el('p', { class: 'muted' }, '練習進度都還在。'),
+    el('button', { class: 'btn btn-dark btn-sm', onclick: () => { markVersionSeen(); render(); } }, '知道了'));
+}
+
+const versionLabel = () => `目前版本 ${fmtVersion(APP_VERSION)}${isWebCopy() ? '' : '（電腦版）'}`;
+
+function versionCard() {
+  const check = () => checkForUpdate(true).then((hasNew) => {
+    if (hasNew) render();
+    else showToast(el('span', {}, '已經是最新版'), 'good');
+  });
+  return el('section', { class: 'card' },
+    el('h2', {}, '版本與更新'),
+    el('p', {}, `目前版本：${fmtVersion(APP_VERSION)}`,
+      isWebCopy() ? '。有新版本時，畫面上方會出現「立即更新」。' : '（電腦版不會自動更新）'),
+    isWebCopy() ? el('button', { class: 'btn btn-dark btn-sm', onclick: check }, '檢查更新') : null,
+    el('h3', {}, '更新紀錄'),
+    el('ul', { class: 'changelog' }, CHANGELOG.map((c) =>
+      el('li', {}, el('b', {}, fmtVersion(c.version)), el('span', {}, c.notes.join(' '))))));
+}
+
+// ---- exam.js ----
+/* 類似題練習: the paper one question a screen, done one part at a time. A mistake shows the right answer and
+ * why at once; each part's round in progress is saved after every answer (own key per part, beside the
+ * progress). Adapted from 單字挖礦's exam.js: one paper, Chinese text, no speech, no word box or translation. */
+const EXAM_WIN_POINTS = 80;
+const EXAM_HISTORY_SHOWN = 4;
+const EXAM_RECORDS_KEPT = 100;
+const EXAM_TAP_GUARD_MS = 400; // a second tap on 確定 must not also press 下一題 in the same spot
+const ACTIVE_CAP_MS = 90 * 1000; // a question left open longer counts as this much practice time
+const COMBO_STEP = 5;      // fanfare every 5 answers in a row
+const COMBO_BADGE_MIN = 3; // show the 🔥 counter from 3 in a row
+const SHOWN_TYPES = ['question', 'choice', 'reading']; // build.mjs refuses a paper with anything else
+const RUN_KEY = `${STORAGE_KEY}:run`;
+
+// Filled in by startApp().
+const PAPER = { items: [], byNo: new Map(), parts: [], title: '', subtitle: '', intro: '' };
+let examRun = null;    // the round on screen (route 'exam-q')
+let examPick = null;   // the option tapped but not yet confirmed
+let examCombo = 0;
+let examLastActive = 0;
+let examResult = null; // { part, kind, sum, picks } of the round just finished
+
+function setPaper(raw) {
+  const built = ExamCore.buildPaper(raw);
+  const odd = built.items.find((q) => !SHOWN_TYPES.includes(q.type));
+  if (odd) throw new Error(`第 ${odd.no} 題的題型（${odd.type}）這個網頁不能顯示`);
+  if (!built.parts.length) throw new Error('題目卷要分段');
+  Object.assign(PAPER, built, { byNo: new Map(built.items.map((q) => [q.no, q])) });
+}
+
+const examPoints = (r) => Math.round((r.ok / r.total) * 100);
+const examQuestionNow = () => PAPER.byNo.get(ExamCore.currentNo(examRun));
+const partOf = (id) => PAPER.parts.find((p) => p.id === id) || null;
+const partName = (id) => { const part = partOf(id); return part ? part.short : '類似題'; };
+const examRecords = (part) => ExamCore.recordsOf(store.rounds, part);
+const lastFull = (part) => examRecords(part).filter((r) => r.kind === 'full').pop() || null;
+const examTapGuarded = (fn) => () => { if (performance.now() - lastRenderAt >= EXAM_TAP_GUARD_MS) fn(); };
+
+// ---------- the saved round (one per part) ----------
+const runKeyOf = (part) => `${RUN_KEY}:${part}`;
+
+function saveExamRun() {
+  try {
+    localStorage.setItem(runKeyOf(examRun.part), JSON.stringify(examRun));
+  } catch (e) { /* answers are still counted in the day's log; only the place in the part is lost */ }
+}
+
+function clearExamRun(run) {
+  try { localStorage.removeItem(runKeyOf(run.part)); } catch (e) { /* nothing saved */ }
+}
+
+function loadExamRun(part) {
+  try {
+    const raw = localStorage.getItem(runKeyOf(part));
+    const run = raw ? ExamCore.sanitizeRun(JSON.parse(raw), PAPER.items) : null;
+    return run && run.part === part ? run : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+// ---------- playing a round ----------
+function openExamRound(run) {
+  examRun = run;
+  examPick = null;
+  examCombo = 0;
+  examLastActive = Date.now();
+  saveExamRun();
+  go('exam-q');
+}
+
+/** `nos` null = the whole part. */
+function startExam(kind, nos, part) {
+  const run = ExamCore.newRun(PAPER.items, kind, nos || partOf(part).nos, Core.todayISO(), part);
+  if (!run.order.length) {
+    showToast(el('span', {}, '沒有要訂正的題目'), 'info');
+    return;
+  }
+  openExamRound(run);
+}
+
+function resumeExam(part) {
+  const run = loadExamRun(part);
+  if (run) openExamRound(run);
+  else render();
+}
+
+function leaveExam() {
+  examRun = null;
+  examPick = null;
+  go('home');
+}
+
+function logExamAnswer(correct) {
+  const now = Date.now();
+  const delta = { q: 1, ok: correct ? 1 : 0, ms: Math.min(now - examLastActive, ACTIVE_CAP_MS) };
+  commit((s) => Object.assign({}, s, { log: Core.addToLog(s.log, Core.todayISO(), delta) }));
+  examLastActive = now;
+}
+
+function confirmExamPick() {
+  if (!examRun || examPick === null) return;
+  const q = examQuestionNow();
+  if (ExamCore.pickOf(examRun, q.no) !== null) return;
+  const res = ExamCore.pickAnswer(examRun, q, examPick);
+  examRun = res.run;
+  logExamAnswer(res.correct);
+  if (res.correct) {
+    examCombo += 1;
+    examCheer(q);
+    nextExamQuestion();
+    return;
+  }
+  examCombo = 0;
+  Sfx.wrong();
+  saveExamRun();
+  render();
+  window.scrollTo(0, 0);
+}
+
+function examCheer(q) {
+  const combo = examCombo;
+  const milestone = combo >= COMBO_STEP && combo % COMBO_STEP === 0;
+  Sfx.mine(combo);
+  if (milestone) setTimeout(() => Sfx.combo(combo), 280);
+  showToast(el('div', { class: milestone ? 'toast-body is-combo' : 'toast-body' },
+    sprite('blk-gold', 'toast-ore'),
+    el('div', { class: 'toast-text' }, el('b', {}, ExamCore.answerText(q)), el('span', {}, '答對了！'),
+      milestone ? el('span', { class: 'toast-combo' }, `🔥 連續答對 ${combo} 題！`) : null)), 'good');
+}
+
+function nextExamQuestion() {
+  if (!examRun) return;
+  examRun = ExamCore.nextQuestion(examRun);
+  examPick = null;
+  if (ExamCore.isFinished(examRun)) {
+    finishExam();
+    return;
+  }
+  saveExamRun();
+  render();
+  window.scrollTo(0, 0);
+}
+
+function finishExam() {
+  const run = examRun;
+  const record = ExamCore.recordOf(run, PAPER.items, Core.todayISO());
+  commit((s) => Object.assign({}, s, { rounds: [...s.rounds, record].slice(-EXAM_RECORDS_KEPT) }));
+  examResult = { part: run.part, kind: run.kind, sum: ExamCore.summarize(run, PAPER.items), picks: run.picks };
+  clearExamRun(run);
+  examRun = null;
+  (examResult.sum.points >= EXAM_WIN_POINTS ? Sfx.bossWin : Sfx.complete)();
+  go('exam-done');
+}
+
+// ---------- pieces of a question ----------
+const paragraphs = (text) => text.split(/\n{2,}/).map((t) => el('p', {}, t));
+
+function examPrompt(q, fill) {
+  if (q.type === 'question') return el('p', { class: 'exam-question' }, q.stem);
+  const parts = fill === undefined ? ExamCore.stemParts(q.stem) : ExamCore.filledParts(q, fill);
+  return [
+    q.stem ? el('p', { class: 'exam-stem' }, parts.map((p) => {
+      if (p.blank) return el('span', { class: 'exam-blank', role: 'img', 'aria-label': '空格' });
+      if (p.fill !== undefined) return el('b', { class: 'exam-fill' }, p.fill);
+      return p.text;
+    })) : null,
+    q.passage ? el('blockquote', { class: 'exam-passage' }, paragraphs(q.passage)) : null,
+    q.question ? el('p', { class: 'exam-question' }, q.question) : null,
+  ];
+}
+
+const examChip = (q) => el('span', { class: 'chip chip-exam' }, `第 ${q.no} 題`);
+const examLetter = (q, i) => el('span', { class: 'exam-letter', 'aria-hidden': 'true' }, q.labels[i]);
+
+/** The options after answering: the right one in green, a wrong pick crossed out. */
+function examOptionsReview(q, picked) {
+  return el('ul', { class: 'exam-options exam-review', 'aria-label': '選項' }, q.options.map((text, i) => {
+    const right = i === q.answer;
+    const mine = i === picked && !right;
+    return el('li', { class: `exam-opt${right ? ' is-right' : ''}${mine ? ' is-wrong' : ''}` },
+      examLetter(q, i), el('span', { class: 'exam-opt-text' }, text),
+      right ? el('span', { class: 'exam-tag' }, '正確答案') : null,
+      mine ? el('span', { class: 'exam-tag' }, '你選的') : null);
+  }));
+}
+
+function examWhy(q) {
+  const rows = [['考點', q.point], ['說明', q.note], ['對應', q.ref]].filter(([, text]) => text);
+  return rows.length ? el('dl', { class: 'exam-why' }, rows.map(([k, text]) => [el('dt', {}, k), el('dd', {}, text)])) : null;
+}
+
+/** The question with its answer, as shown after a mistake and when looked up later. */
+const examReview = (q, picked) => [examPrompt(q, q.answer), examOptionsReview(q, picked), examWhy(q)];
+
+function examBar() {
+  const total = examRun.order.length;
+  const pos = examRun.pos;
+  return el('header', { class: 'session-bar' },
+    el('button', { class: 'icon-btn', 'aria-label': '先休息（做到哪一題會記住）', title: '先休息', onclick: leaveExam }, '✕'),
+    el('span', { class: 'session-title' }, `${partName(examRun.part)}${examRun.kind === 'redo' ? '・訂正' : ''}`),
+    el('div', { class: 'progress', role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': total, 'aria-valuenow': pos },
+      el('span', { style: `width:${Math.round((pos / total) * 100)}%` })),
+    examCombo >= COMBO_BADGE_MIN
+      ? el('span', { class: 'combo-badge', title: '連續答對', 'aria-label': `連續答對 ${examCombo} 題` }, '🔥', el('b', {}, examCombo))
+      : null,
+    el('span', { class: 'count' }, `${pos + 1} / ${total}`));
+}
+
+function examQuizCard(q) {
+  const confirm = el('button', { type: 'button', class: 'btn btn-primary', disabled: examPick === null, onclick: confirmExamPick }, '確定');
+  const options = q.options.map((text, i) => el('button', {
+    type: 'button', class: 'exam-opt', 'aria-pressed': examPick === i ? 'true' : 'false',
+    onclick: () => {
+      examPick = i;
+      options.forEach((b, k) => b.setAttribute('aria-pressed', k === i ? 'true' : 'false'));
+      confirm.disabled = false;
+    },
+  }, examLetter(q, i), el('span', { class: 'exam-opt-text' }, text)));
+  return el('section', { class: 'card quiz-card exam-card' },
+    examChip(q),
+    examPrompt(q),
+    el('div', { class: 'exam-options', role: 'group', 'aria-label': '選項' }, options),
+    el('div', { class: 'quiz-actions' }, el('span', { class: 'exam-hint' }, '先點一個答案，再按確定'), confirm));
+}
+
+function examFeedbackCard(q, picked) {
+  const last = examRun.pos + 1 >= examRun.order.length;
+  return el('section', { class: 'card fb-card exam-card' },
+    el('div', { class: 'fb-head', role: 'alert' },
+      el('span', { class: 'fb-icon', 'aria-hidden': 'true' }, '✗'),
+      el('div', {}, el('b', {}, '答錯了，看一下為什麼'),
+        el('div', { class: 'fb-answer' }, '正確答案：', el('b', {}, ExamCore.answerText(q))))),
+    examChip(q),
+    examReview(q, picked),
+    el('button', { type: 'button', class: 'btn btn-primary btn-wide', onclick: examTapGuarded(nextExamQuestion) }, last ? '看成績 →' : '下一題 →'));
+}
+
+function examQuestionView() {
+  if (!examRun || ExamCore.isFinished(examRun)) return homeView();
+  const q = examQuestionNow();
+  const picked = ExamCore.pickOf(examRun, q.no);
+  return el('main', { class: 'screen session mode-exam' }, examBar(), picked === null ? examQuizCard(q) : examFeedbackCard(q, picked));
+}
+
+// ---------- looking a question up later ----------
+function openExamDetail(q, picked) {
+  openModal(el('div', { class: 'exam-detail' }, el('h2', {}, `第 ${q.no} 題`), examReview(q, picked)));
+}
+
+function examNumberChips(nos, picks) {
+  return el('div', { class: 'chips' }, nos.map((no) => PAPER.byNo.get(no)).filter(Boolean).map((q) =>
+    el('button', { class: 'word-chip', onclick: () => openExamDetail(q, picks && picks[q.no] !== undefined ? picks[q.no] : null) }, `第 ${q.no} 題`)));
+}
+
+// ---------- the parts (on the home screen) ----------
+function examRecordText(r) {
+  const name = partName(r.part);
+  return r.kind === 'full'
+    ? `${fmtDateW(r.date)}　${name} ${examPoints(r)} 分（答對 ${r.ok} / ${r.total} 題）`
+    : `${fmtDateW(r.date)}　${name} 訂正 ${r.total} 題，答對 ${r.ok} 題`;
+}
+
+function examStartRow(part, run, redo) {
+  if (run) {
+    return el('div', { class: 'confirm exam-resume' },
+      el('p', {}, `${run.kind === 'redo' ? '訂正' : '這一段'}做到第 ${run.pos + 1} / ${run.order.length} 題。`),
+      el('button', { class: 'btn btn-primary btn-big', onclick: () => resumeExam(part.id) }, '繼續作答'),
+      el('button', { class: 'btn btn-ghost btn-sm', onclick: () => startExam(run.kind, run.order, part.id) }, '從第一題重新開始'));
+  }
+  return el('div', { class: 'row exam-start' },
+    el('button', { class: 'btn btn-primary btn-big', onclick: () => startExam('full', null, part.id) }, `開始作答（${part.nos.length} 題）`),
+    redo.length ? el('button', { class: 'btn btn-gold', onclick: () => startExam('redo', redo, part.id) }, `訂正上次答錯的 ${redo.length} 題`) : null);
+}
+
+function partCard(part, i) {
+  const run = loadExamRun(part.id);
+  const redo = ExamCore.wrongToRedo(store.rounds, PAPER.items, part.id);
+  const last = lastFull(part.id);
+  const history = examRecords(part.id).slice(-EXAM_HISTORY_SHOWN).reverse();
+  const meta = [part.note || `${part.nos.length} 題`, last ? `上次 ${examPoints(last)} 分（答對 ${last.ok} / ${last.total} 題）` : '還沒做過'];
+  return el('section', { class: `card sim-part${last && examPoints(last) === 100 ? ' is-perfect' : ''}`, 'data-part': part.id },
+    el('h2', {}, el('span', { class: 'part-no' }, `第 ${i + 1} 段`), part.title),
+    el('p', { class: 'sim-meta' }, meta.join('・')),
+    examStartRow(part, run, redo),
+    redo.length && !run ? el('div', { class: 'result-block' }, el('h3', {}, '上次答錯的題目（點一下看說明）'), examNumberChips(redo, null)) : null,
+    history.length > 1 ? el('details', { class: 'part-history' }, el('summary', {}, '作答紀錄'),
+      el('ul', { class: 'boss-history' }, history.map((r) => el('li', {}, examRecordText(r))))) : null);
+}
+
+/** One block per part: how far along it is, at a glance. */
+function partsProgress() {
+  return el('div', { class: 'parts-progress', role: 'list', 'aria-label': '各段進度' }, PAPER.parts.map((part, i) => {
+    const last = lastFull(part.id);
+    const going = loadExamRun(part.id);
+    const icon = !last ? 'blk-dirt' : ['blk-stone', 'blk-iron', 'blk-gold', 'blk-diamond'][Math.min(3, Math.floor(examPoints(last) / 30))];
+    return el('div', { class: 'part-pill', role: 'listitem' }, sprite(icon),
+      el('b', {}, `${i + 1}. ${part.short}`),
+      el('span', {}, going ? `做到 ${going.pos + 1}/${going.order.length}` : (last ? `${examPoints(last)} 分` : '還沒做')));
+  }));
+}
+
+// ---------- after a round ----------
+function examVerdict(kind, points) {
+  if (kind === 'redo') return points === 100 ? '全部訂正好了！' : '再訂正一次就好了';
+  if (points >= 90) return '太強了！';
+  if (points >= EXAM_WIN_POINTS) return '很棒！';
+  if (points >= 60) return '及格了，把答錯的訂正好';
+  return '別灰心，把答錯的一題一題訂正';
+}
+
+function nextPart(id) {
+  const i = PAPER.parts.findIndex((p) => p.id === id);
+  return PAPER.parts.slice(i + 1).find((p) => !lastFull(p.id)) || null;
+}
+
+function examResultView() {
+  if (!examResult) return homeView();
+  const { part, kind, sum, picks } = examResult;
+  const after = kind === 'full' ? nextPart(part) : null;
+  const back = () => { examResult = null; go('home'); };
+  return el('main', { class: 'screen' }, el('section', { class: 'card result exam-result' },
+    sprite('blk-hist', 'result-boss'),
+    el('p', { class: 'muted' }, partOf(part).title),
+    el('h1', {}, examVerdict(kind, sum.points)),
+    kind === 'full'
+      ? el('p', { class: 'result-score' }, el('b', {}, `${sum.points} 分`), `（答對 ${sum.ok} / ${sum.total} 題）`)
+      : el('p', { class: 'result-score' }, el('b', {}, `${sum.ok} / ${sum.total}`), ' 題訂正成功'),
+    sum.wrong.length
+      ? el('div', { class: 'result-block' }, el('h2', {}, '答錯的題目（點一下看說明）'), examNumberChips(sum.wrong, picks))
+      : el('p', { class: 'all-right' }, '全部答對，太強了！'),
+    el('div', { class: 'result-actions' },
+      sum.wrong.length ? el('button', { class: 'btn btn-gold', onclick: () => startExam('redo', sum.wrong, part) }, `訂正答錯的 ${sum.wrong.length} 題`) : null,
+      after ? el('button', { class: 'btn btn-dark', onclick: () => { examResult = null; startExam('full', null, after.id); } }, `接著做「${after.short}」`) : null,
+      el('button', { class: 'btn btn-primary', onclick: back }, '回礦坑'))));
+}
+
+/** Parent page: every round, newest first. */
+function roundsParentCard() {
+  return el('section', { class: 'card' }, el('h2', {}, '作答成績'),
+    store.rounds.length
+      ? el('ul', { class: 'boss-history' }, store.rounds.slice(-20).reverse().map((r) => el('li', {},
+        examRecordText(r), r.wrong.length ? el('span', { class: 'muted' }, `　答錯：第 ${r.wrong.join('、')} 題`) : null)))
+      : el('p', { class: 'muted' }, '還沒有做完任何一段。'));
+}
+
+// ---- screens.js ----
+/* Home (the parts of the paper) and the parent page (records, settings, backup). */
+const LOG_DAYS_SHOWN = 14;
+let pendingImport = null;
+let resetArmed = false;
+
+const setSettings = (patch) => commit((s) => Object.assign({}, s, { settings: Object.assign({}, s.settings, patch) }));
+const daysLeft = () => Core.diffDays(store.settings.examDate, Core.todayISO());
+
+// ---------- home ----------
+function countdownText(n) {
+  const day = fmtDate(store.settings.examDate);
+  if (n > 0) return el('span', {}, `歷史段考 ${day}　還有 `, el('b', {}, n), ' 天');
+  if (n === 0) return el('span', {}, '今天考歷史，加油！');
+  return el('span', {}, '段考結束了，辛苦了！');
+}
+
+function homeTop() {
+  return el('header', { class: 'home-top' },
+    el('div', { class: 'brand' }, sprite('blk-hist', 'brand-ore'),
+      el('div', {}, el('h1', {}, '歷史挖礦'), el('p', {}, `${PAPER.title.replace(/^歷史類似題練習：/, '')}・類似題 ${PAPER.items.length} 題`))),
+    el('div', { class: 'countdown' }, countdownText(daysLeft())));
+}
+
+function storageWarning() {
+  return el('section', { class: 'card warn', role: 'alert' },
+    el('b', {}, '這個瀏覽器沒辦法保存進度。'),
+    ' 可能是開了無痕模式。請改用一般模式開啟，或練完後到「家長」頁匯出進度。');
+}
+
+function introCard() {
+  return el('section', { class: 'card intro' },
+    el('h2', {}, '怎麼玩'),
+    el('ol', {},
+      el('li', {}, `一共 ${PAPER.parts.length} 段，每一段分開做，做完會打分數。`),
+      el('li', {}, '先點一個答案，再按「確定」。答錯會馬上看到正確答案、考點和說明。'),
+      el('li', {}, '做完可以只「訂正」答錯的題目，直到全部答對。中途離開也沒關係，下次會從同一題接著做。')),
+    PAPER.intro ? el('p', { class: 'muted' }, PAPER.intro) : null);
+}
+
+function homeView() {
+  return el('main', { class: 'screen home' },
+    homeTop(),
+    Storage.isOk() ? null : storageWarning(),
+    whatsNewCard(),
+    store.rounds.length ? null : introCard(),
+    partsProgress(),
+    PAPER.parts.map((part, i) => partCard(part, i)),
+    el('nav', { class: 'menu home-menu', 'aria-label': '其他' },
+      el('button', { class: 'menu-btn', onclick: () => go('parent') }, sprite('blk-diamond'), el('b', {}, '家長'), el('span', {}, '成績、設定、備份'))),
+    el('footer', { class: 'foot' },
+      el('p', {}, '每答一題都會自動存檔。進度存在這台裝置裡，清除瀏覽紀錄前請先到「家長」頁匯出備份。'),
+      el('p', { class: 'version' }, versionLabel())));
+}
+
+// ---------- parent page ----------
+function practicedDays() {
+  return Object.keys(store.log).filter((d) => store.log[d].q > 0);
+}
+
+function overviewCard() {
+  const days = practicedDays();
+  const minutes = Math.round(days.reduce((s, d) => s + store.log[d].ms, 0) / 60000);
+  const q = days.reduce((s, d) => s + store.log[d].q, 0);
+  const ok = days.reduce((s, d) => s + store.log[d].ok, 0);
+  const rows = PAPER.parts.map((part) => {
+    const last = lastFull(part.id);
+    const redo = ExamCore.wrongToRedo(store.rounds, PAPER.items, part.id);
+    return el('tr', {}, el('td', {}, part.short), el('td', {}, part.nos.length),
+      el('td', {}, last ? `${examPoints(last)} 分` : '—'), el('td', {}, last ? (redo.length ? `${redo.length} 題` : '都訂正了') : '—'));
+  });
+  return el('section', { class: 'card' },
+    el('h2', {}, '進度總覽'),
+    el('p', {}, q ? `練了 ${days.length} 天，共約 ${minutes} 分鐘，作答 ${q} 題，答對率 ${Math.round((ok / q) * 100)}%。` : '還沒有開始練習。'),
+    el('table', { class: 'table' },
+      el('thead', {}, el('tr', {}, ['段落', '題數', '最近一次全段', '還沒訂正'].map((h) => el('th', {}, h)))),
+      el('tbody', {}, rows)));
+}
+
+function logCard() {
+  const days = practicedDays().sort().reverse().slice(0, LOG_DAYS_SHOWN);
+  const rows = days.map((d) => {
+    const e = store.log[d];
+    return el('tr', {}, el('td', {}, fmtDateW(d)), el('td', {}, e.q), el('td', {}, `${Math.round((e.ok / e.q) * 100)}%`),
+      el('td', {}, Math.max(1, Math.round(e.ms / 60000))));
+  });
+  return el('section', { class: 'card' }, el('h2', {}, '每天練習紀錄'),
+    days.length
+      ? el('table', { class: 'table' }, el('thead', {}, el('tr', {}, ['日期', '題數', '答對率', '分鐘'].map((h) => el('th', {}, h)))), el('tbody', {}, rows))
+      : el('p', { class: 'muted' }, '還沒有練習紀錄。'));
+}
+
+function field(label, control, hint) {
+  return el('label', { class: 'field' }, el('span', { class: 'field-label' }, label), control, hint ? el('span', { class: 'field-hint' }, hint) : null);
+}
+
+function volumeControl() {
+  const pct = (v) => `${Math.round(v * 100)}%`;
+  const label = el('span', {}, pct(store.settings.volume));
+  return el('div', { class: 'voice' },
+    field('音效音量', el('div', { class: 'rate' },
+      el('input', { type: 'range', min: '0.1', max: '1', step: '0.05', value: String(store.settings.volume), 'aria-label': '音量',
+        oninput: (e) => { label.textContent = pct(Number(e.target.value)); },
+        onchange: (e) => { setSettings({ volume: Number(e.target.value) }); applyAudioSettings(); } }),
+      label)),
+    el('button', { type: 'button', class: 'btn btn-dark btn-sm', onclick: () => Sfx.correct() }, '🔊 試聽音量'));
+}
+
+function settingsCard() {
+  return el('section', { class: 'card settings' }, el('h2', {}, '設定'),
+    field('歷史段考日期', el('input', { type: 'date', value: store.settings.examDate,
+      onchange: (e) => { if (/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) { setSettings({ examDate: e.target.value }); render(); } } }),
+    '首頁的倒數會用這個日期。'),
+    volumeControl(),
+    el('label', { class: 'check' }, el('input', { type: 'checkbox', checked: store.settings.sound,
+      onchange: (e) => { setSettings({ sound: e.target.checked }); Sfx.setEnabled(e.target.checked); } }), '遊戲音效（答對、連續答對、做完一段）'));
+}
+
+/** Keep one copy of the current progress before a destructive action, so it can be undone. */
+function replaceProgress(next, reason) {
+  Storage.saveBackup(store, reason);
+  commit(() => next);
+  applyAudioSettings();
+}
+
+const progressSummary = (s) => `${s.rounds.length} 次作答紀錄`;
+
+function importPanel() {
+  if (!pendingImport) return null;
+  const lastDay = Object.keys(pendingImport.log).sort().pop();
+  const apply = () => {
+    replaceProgress(pendingImport, '匯入');
+    pendingImport = null;
+    showToast(el('span', {}, '已匯入進度'), 'good');
+    render();
+  };
+  return el('div', { class: 'confirm', role: 'alert' },
+    el('p', {}, `這個檔案有 ${progressSummary(pendingImport)}${lastDay ? `，最後練習是 ${fmtDateW(lastDay)}` : ''}。要用它取代這台裝置上的進度嗎？`),
+    el('button', { class: 'btn btn-red btn-sm', onclick: apply }, '取代目前進度'),
+    el('button', { class: 'btn btn-dark btn-sm', onclick: () => { pendingImport = null; render(); } }, '取消'));
+}
+
+function onImportFile(e) {
+  readProgressFile(e.target.files[0])
+    .then((data) => { pendingImport = data; render(); })
+    .catch((err) => { showToast(el('span', {}, err.message), 'bad'); });
+}
+
+function clearSavedRounds() {
+  PAPER.parts.forEach((part) => { try { localStorage.removeItem(runKeyOf(part.id)); } catch (e) { /* nothing saved */ } });
+}
+
+function resetButton() {
+  const reset = () => {
+    if (!resetArmed) {
+      resetArmed = true;
+      render();
+      setTimeout(() => { if (resetArmed) { resetArmed = false; render(); } }, 5000);
+      return;
+    }
+    resetArmed = false;
+    replaceProgress(Object.assign(Core.emptyStore(), { settings: store.settings }), '清除');
+    clearSavedRounds();
+    showToast(el('span', {}, '進度已清除'), 'info');
+    render();
+  };
+  return el('button', { class: resetArmed ? 'btn btn-red btn-sm' : 'btn btn-ghost btn-sm', onclick: reset },
+    resetArmed ? '再按一次：確定清除全部進度' : '清除全部進度');
+}
+
+function undoPanel() {
+  const backup = Storage.loadBackup();
+  if (!backup) return null;
+  const undo = () => {
+    replaceProgress(backup.store, '復原');
+    Storage.clearBackup();
+    showToast(el('span', {}, '已復原'), 'good');
+    render();
+  };
+  return el('div', { class: 'confirm' },
+    el('p', {}, `${fmtDateW(backup.savedAt)}「${backup.reason}」之前的進度還留著（${progressSummary(backup.store)}）。`),
+    el('button', { class: 'btn btn-dark btn-sm', onclick: undo }, `復原到「${backup.reason}」之前`),
+    el('button', { class: 'btn btn-ghost btn-sm', onclick: () => { Storage.clearBackup(); render(); } }, '不用了'));
+}
+
+function backupCard() {
+  const fileInput = el('input', { type: 'file', accept: '.json,application/json', class: 'visually-hidden', onchange: onImportFile });
+  return el('section', { class: 'card' }, el('h2', {}, '進度備份'),
+    el('p', {}, '每答一題就會自動存檔，網頁更新也不會影響進度。進度只存在這台裝置裡：清除瀏覽紀錄、刪掉主畫面圖示或換裝置前，先匯出一個檔案，之後用「匯入」放回來。'),
+    el('div', { class: 'row' },
+      el('button', { class: 'btn btn-primary btn-sm', onclick: () => downloadProgress(store) }, '匯出進度'),
+      el('button', { class: 'btn btn-dark btn-sm', onclick: () => fileInput.click() }, '匯入進度'),
+      fileInput, resetButton()),
+    importPanel(),
+    undoPanel());
+}
+
+function parentView() {
+  return el('main', { class: 'screen parent' }, backBar('家長'),
+    overviewCard(), roundsParentCard(), logCard(), settingsCard(), backupCard(), versionCard());
+}
+
+// ---- main.js ----
+/* Boot, routing, rendering, and keeping tabs and days in sync. */
+const VIEWS = { home: homeView, parent: parentView, 'exam-q': examQuestionView, 'exam-done': examResultView };
+// Mid-question screens: no update banner, and no re-render from other tabs.
+const PRACTICE_ROUTES = ['exam-q'];
+
+let store = null;
+let route = 'home';
+let lastRenderAt = 0;
+let renderedDay = Core.todayISO();
+
+/** change(store) returns the next store. Re-reads first when another tab saved in the meantime. */
+function commit(change) {
+  const saved = Storage.savedRev();
+  if (saved !== null && saved !== store.rev) store = Storage.load();
+  store = Object.assign({}, change(store), { rev: store.rev + 1 });
+  Storage.save(store);
+}
+
+function render() {
+  const root = document.getElementById('app');
+  setChildren(root, inPractice() ? null : updateBanner(), (VIEWS[route] || homeView)());
+  lastRenderAt = performance.now();
+  renderedDay = Core.todayISO();
+}
+
+function inPractice() {
+  return PRACTICE_ROUTES.includes(route);
+}
+
+function go(name) {
+  route = name;
+  render();
+  window.scrollTo(0, 0);
+}
+
+/** Another tab saved, or a new day started while this tab stayed open: show the latest. */
+function syncFromStorage() {
+  const saved = Storage.savedRev();
+  const changed = saved !== null && saved !== store.rev;
+  if (changed) store = Storage.load();
+  const newDay = renderedDay !== Core.todayISO();
+  if ((changed || newDay) && !inPractice()) render();
+}
+
+function applyAudioSettings() {
+  Sfx.setEnabled(store.settings.sound);
+  Sfx.setVolume(store.settings.volume);
+}
+
+/** Asks the browser not to evict saved progress when space runs low (silently granted or not). */
+function requestPersistentStorage() {
+  try {
+    if (window.location.protocol === 'https:' && navigator.storage && navigator.storage.persist) {
+      navigator.storage.persist().catch(() => { /* keep best-effort storage */ });
+    }
+  } catch (e) { /* unsupported */ }
+}
+
+function startApp(data) {
+  setPaper(data.paper);
+  store = Storage.load();
+  initWhatsNew(store.rounds.length > 0 || Object.keys(store.log).length > 0);
+  applyAudioSettings();
+  preferPlaybackAudio();
+  requestPersistentStorage();
+  window.addEventListener('storage', (e) => { if (e.key === STORAGE_KEY) syncFromStorage(); });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    syncFromStorage();
+    checkForUpdate();
+  });
+  window.addEventListener('focus', syncFromStorage);
+  if (/[?&]e2e\b/.test(window.location.search)) {
+    window.__histMine = {
+      store: () => store,
+      sync: syncFromStorage,
+      checkUpdate: () => checkForUpdate(true),
+      exam: () => (examRun && !ExamCore.isFinished(examRun) ? { no: ExamCore.currentNo(examRun), answer: examQuestionNow().answer } : null),
+    };
+  }
+  render();
+  checkForUpdate();
+}
+
+function boot() {
+  installSprites();
+  AudioOut.startOnFirstTouch();
+  if (window.APP_LOCKED) unlock(window.APP_LOCKED).then(startApp);
+  else startApp({ paper: window.APP_PAPER });
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+else boot();
+
+})();
+</script>
+</body>
+</html>
