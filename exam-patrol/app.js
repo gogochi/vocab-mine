@@ -19,6 +19,16 @@ const subjects = {
     color: "#afc8a4",
     scope: "細胞與滲透、組成層次、食物養分與酵素",
   },
+  physics: {
+    name: "理化",
+    color: "#a8cbd0",
+    scope: "分子與化學式、物質分類、原子計數與粒子圖",
+  },
+  history: {
+    name: "歷史",
+    color: "#deb89a",
+    scope: "大航海時代的臺灣、原住民族與荷西政權的互動",
+  },
 };
 const main = document.querySelector("main");
 const byId = new Map();
@@ -132,7 +142,7 @@ function home() {
     )
     .join("");
   main.innerHTML =
-    '<section class="hero"><div class="hero-copy"><span class="issue">七年級　／　第二次段考</span><h1><span>段考特訓</span><span class="red">派出所</span></h1><p>四科 114 道複習題，今天要挑戰哪一科？</p><div class="actions">' +
+    `<section class="hero"><div class="hero-copy"><span class="issue">七年級　／　第二次段考</span><h1><span>段考特訓</span><span class="red">派出所</span></h1><p>${Object.keys(subjects).length} 科 ${byId.size} 道複習題，今天要挑戰哪一科？</p><div class="actions">` +
     action("pick", "選擇科目　↓", "redbtn") +
     action("random", "隨機練 10 題", "simple") +
     '</div></div><div class="hero-art"><img src="assets/station.webp" alt="街角派出所前，巡警拿著鉛筆和測驗板。" fetchpriority="high"></div></section>' +
@@ -220,6 +230,29 @@ function startRun(ids, label, scope) {
   persist();
   location.hash = "quiz/" + id;
 }
+function diagram(path, alt) {
+  if (!path) return "";
+  const src = escape(path);
+  return (
+    '<a class="diagram" href="' +
+    src +
+    '" target="_blank" rel="noopener" aria-label="' +
+    escape("開啟大圖：" + alt) +
+    '"><img src="' +
+    src +
+    '" alt="' +
+    escape(alt) +
+    '"></a>'
+  );
+}
+function explanation(q) {
+  return (
+    "<p>" +
+    formula(q.explanation) +
+    "</p>" +
+    diagram(q.explanationImage, q.explanationAlt || "答案圖解")
+  );
+}
 function questionMaterial(q) {
   if (!q.passage && !q.table && !q.image) return "";
   const table = q.table
@@ -243,13 +276,7 @@ function questionMaterial(q) {
     '<aside class="material" aria-label="題組資料">' +
     (q.passage ? "<p>" + formula(q.passage) + "</p>" : "") +
     table +
-    (q.image
-      ? '<img src="' +
-        escape(q.image) +
-        '" alt="' +
-        escape(q.alt || "題目附圖") +
-        '">'
-      : "") +
+    diagram(q.image, q.alt || "題目附圖") +
     "</aside>"
   );
 }
@@ -336,9 +363,8 @@ function renderQuiz(runId) {
       head +
       "</strong><p><b>參考答案　</b>" +
       formula(keyAnswer(q)) +
-      "</p><p>" +
-      formula(q.explanation) +
-      "</p>";
+      "</p>" +
+      explanation(q);
     if (!marked)
       feedback +=
         '<div class="actions">' +
@@ -390,13 +416,13 @@ function renderQuiz(runId) {
     subjects[q.sub].name +
     "　" +
     escape(q.unit) +
-    "　原卷第 " +
+    "　第 " +
     escape(q.number) +
     " 題</span>" +
-    questionMaterial(q) +
     '<h1 class="qtitle">' +
     formula(q.prompt) +
     "</h1>" +
+    questionMaterial(q) +
     inputs +
     feedback +
     controls +
@@ -470,9 +496,9 @@ function reviewRow(q, a) {
     formula(userAnswer(q, a)) +
     "</p><p><b>參考答案　</b>" +
     formula(keyAnswer(q)) +
-    "</p><p>" +
-    formula(q.explanation) +
-    "</p></details>"
+    "</p>" +
+    explanation(q) +
+    "</details>"
   );
 }
 function result(runId) {
@@ -646,8 +672,8 @@ main.addEventListener("click", (e) => {
   if (act === "random") {
     startRun(
       shuffle([...byId.keys()]).slice(0, 10),
-      "四科隨機 10 題",
-      "random",
+      "跨科隨機 10 題",
+      "random:" + Object.keys(subjects).join(","),
     );
     return;
   }

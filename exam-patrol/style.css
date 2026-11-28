@@ -281,7 +281,7 @@ h2.section-title,
 }
 .cards {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 17px;
 }
 .subject {
@@ -497,7 +497,11 @@ footer b {
 .material p {
   margin: 0;
 }
-.material img {
+.diagram {
+  display: block;
+  cursor: zoom-in;
+}
+.diagram img {
   display: block;
   width: auto;
   max-width: 100%;
